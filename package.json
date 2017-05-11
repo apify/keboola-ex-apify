@@ -1,5 +1,5 @@
 {
-  "name": "apify-keebola-extractor",
+  "name": "keboola-ex-apify",
   "version": "1.0.0",
   "description": "Apify extractor for Keboola Connection",
   "main": "index.js",
