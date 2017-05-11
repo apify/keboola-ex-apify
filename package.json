@@ -14,7 +14,7 @@
     "Extractor"
   ],
   "author": "Apifier <info@apifier.com>",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/Apifier/keboola-ex-apify/issues"
   },
@@ -38,7 +38,10 @@
     "moment": "^2.15.1",
     "mz": "^2.4.0",
     "nconf": "^0.8.4",
+    "request": "^2.81.0",
     "rimraf-promise": "^2.0.0",
-    "tmp": "0.0.29"
+    "tmp": "0.0.29",
+    "underscore": "^1.8.3",
+    "wait-promise": "^0.4.1"
   }
 }

@@ -1,10 +1,11 @@
 import fs from 'mz/fs';
 import path from 'path';
 import rimraf from 'rimraf-promise';
+
 import command from './helpers/cliHelper';
 import { size, isNull, flatten } from 'lodash';
 import { getConfig } from './helpers/configHelper';
-import * as firebase from './helpers/firebaseHelper';
+import * as apify from './helpers/apifyHelper';
 import { parseConfiguration } from './helpers/keboolaHelper';
 import {
   CONFIG_FILE,
@@ -12,8 +13,10 @@ import {
 } from './constants';
 import {
   createTmpDirectory,
-  transferFilesBetweenDirectories
+  transferFilesBetweenDirectories,
+  createOutputFile
 } from './helpers/fsHelper';
+
 /**
  * This is the main part of the program.
  */
@@ -26,20 +29,22 @@ import {
       crawlerId,
       crawlerSettings
     } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
-    // const tmp = await createTmpDirectory();
-    // const tmpDir = tmp.path;
     const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
-    // const firebaseIds = await firebase.fetchData({ apiKey, domain, endpoint, shallow: true });
-    // const keys = Object.keys(firebaseIds).sort();
-    // const pageCount = keys.length / pageSize;
-    const data = [{a: 'b'},{}]// await Promise.all(firebase.generateDataArray({ apiKey, domain, endpoint, pageCount, pageSize, keys }));
+
+    const execution = await apify.startCrawler(crawlerId, {}, userId, token);
+    const executionId = execution['_id'];
+    console.log('Crawler started. ExecutionId: ' + executionId);
+
+    console.log('Waiting for execution ' + executionId + ' to finish');
+    await apify.waitUntilFinished(executionId);
+
+    const executionResult = await apify.getExecutionResults(executionId);
+    let data = [];
+    executionResult.forEach((page) => { data = data.concat(page.pageFunctionResult) });
     console.log('Data ready!');
-    for (const element of data) {
-      // const events = firebase.groupDataByEventType(flatten(firebase.prepareDataForOutput(element)));
-      // const result = await Promise.all(firebase.generateOutputFiles(tableOutDir, events));
-    }
+
+    await createOutputFile(path.join(tableOutDir, 'crawlerResult.csv'), data);
     console.log('Files created!')
-    const files = await fs.readdir(tableOutDir);
     // console.log('Manifests created');
     // const manifests = await Promise.all(firebase.generateOutputManifests(tableOutDir, bucketName, files));
     process.exit(0);
