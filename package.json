@@ -1,0 +1,44 @@
+{
+  "name": "apify-keebola-extractor",
+  "version": "1.0.0",
+  "description": "Apify extractor for Keboola Connection",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lubos-turek/apify-keebola-extractor.git"
+  },
+  "keywords": [
+    "Keboola",
+    "Firebase",
+    "Extractor"
+  ],
+  "author": "Lubos Turek <lubos.turek@gmail.com>",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/lubos-turek/apify-keebola-extractor/issues"
+  },
+  "homepage": "https://github.com/lubos-turek/apify-keebola-extractor#readme",
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-stage-0": "^6.5.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.13.0",
+    "commander": "^2.9.0",
+    "fast-csv": "^2.3.0",
+    "firebase": "^3.4.1",
+    "install": "^0.8.1",
+    "is-there": "^4.3.3",
+    "jsonfile": "^2.4.0",
+    "lodash": "^4.16.2",
+    "moment": "^2.15.1",
+    "mz": "^2.4.0",
+    "nconf": "^0.8.4",
+    "rimraf-promise": "^2.0.0",
+    "tmp": "0.0.29"
+  }
+}
