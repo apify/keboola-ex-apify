@@ -17,20 +17,20 @@ import {
 export function parseConfiguration(configObject) {
   return new Promise((resolve, reject) => {
 
-    const userId = configObject.get('userId');
+    const userId = configObject.get('parameters:userId');
     if (!userId) {
       reject('Parameter userId is not defined!');
     }
-    const token = configObject.get('#token');
+    const token = configObject.get('parameters:#token');
     if (!token) {
       reject('Parameter token is not defined!');
     }
-    const crawlerId = configObject.get('crawlerId');
+    const crawlerId = configObject.get('parameters:crawlerId');
     if (!crawlerId) {
       reject('Parameter crawlerId is not defined!');
     }
 
-    const crawlerSettings = configObject.get('crawlerSettings');
+    const crawlerSettings = configObject.get('parameters:crawlerSettings');
     if (!crawlerSettings) {
       reject('Parameter crawlerSettings is not defined!');
     }
