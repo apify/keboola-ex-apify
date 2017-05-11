@@ -13,7 +13,7 @@
     "Apify",
     "Extractor"
   ],
-  "author": "Lubos Turek <lubos.turek@gmail.com>",
+  "author": "Apifier <info@apifier.com>",
   "license": "Apache 2.0",
   "bugs": {
     "url": "https://github.com/Apifier/keboola-ex-apify/issues"

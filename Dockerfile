@@ -1,5 +1,5 @@
 FROM radektomasek/keboola-base-node
-MAINTAINER Lubos Turek <lubos.turek@gmail.com>
+MAINTAINER Apifier <info@apifier.com>
 
 WORKDIR /home
 
