@@ -21,33 +21,27 @@ import {
   try {
     // Reading of the input configuration.
     const {
-      apiKey,
-      domain,
-      endpoint,
-      pageSize,
-      privateKey,
-      authDomain,
-      bucketName,
-      clientEmail,
-      databaseURL,
-      storageBucket
+      userId,
+      token,
+      crawlerId,
+      crawlerSettings
     } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
     // const tmp = await createTmpDirectory();
     // const tmpDir = tmp.path;
     const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
-    const firebaseIds = await firebase.fetchData({ apiKey, domain, endpoint, shallow: true });
-    const keys = Object.keys(firebaseIds).sort();
-    const pageCount = keys.length / pageSize;
-    const data = await Promise.all(firebase.generateDataArray({ apiKey, domain, endpoint, pageCount, pageSize, keys }));
+    // const firebaseIds = await firebase.fetchData({ apiKey, domain, endpoint, shallow: true });
+    // const keys = Object.keys(firebaseIds).sort();
+    // const pageCount = keys.length / pageSize;
+    const data = [{a: 'b'},{}]// await Promise.all(firebase.generateDataArray({ apiKey, domain, endpoint, pageCount, pageSize, keys }));
     console.log('Data ready!');
     for (const element of data) {
-      const events = firebase.groupDataByEventType(flatten(firebase.prepareDataForOutput(element)));
-      const result = await Promise.all(firebase.generateOutputFiles(tableOutDir, events));
+      // const events = firebase.groupDataByEventType(flatten(firebase.prepareDataForOutput(element)));
+      // const result = await Promise.all(firebase.generateOutputFiles(tableOutDir, events));
     }
     console.log('Files created!')
     const files = await fs.readdir(tableOutDir);
-    console.log('Manifests created');
-    const manifests = await Promise.all(firebase.generateOutputManifests(tableOutDir, bucketName, files));
+    // console.log('Manifests created');
+    // const manifests = await Promise.all(firebase.generateOutputManifests(tableOutDir, bucketName, files));
     process.exit(0);
   } catch(error) {
     console.log(error);
