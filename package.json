@@ -6,19 +6,19 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lubos-turek/apify-keebola-extractor.git"
+    "url": "git+https://github.com/Apifier/keboola-ex-apify"
   },
   "keywords": [
     "Keboola",
-    "Firebase",
+    "Apify",
     "Extractor"
   ],
   "author": "Lubos Turek <lubos.turek@gmail.com>",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/lubos-turek/apify-keebola-extractor/issues"
+    "url": "https://github.com/Apifier/keboola-ex-apify/issues"
   },
-  "homepage": "https://github.com/lubos-turek/apify-keebola-extractor#readme",
+  "homepage": "https://github.com/Apifier/keboola-ex-apify#readme",
   "devDependencies": {
     "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
