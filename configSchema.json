@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Apify extractor config",
+    "type": "object",
+    "properties": {
+        "parameters": {
+            "id": "/properties/parameters",
+            "properties": {
+                "#token": {
+                    "id": "/properties/parameters/properties/#token",
+                    "type": "string"
+                },
+                "crawlerId": {
+                    "id": "/properties/parameters/properties/crawlerId",
+                    "type": "string"
+                },
+                "crawlerSettings": {
+                    "id": "/properties/parameters/properties/crawlerSettings",
+                    "type": "object"
+                },
+                "userId": {
+                    "id": "/properties/parameters/properties/userId",
+                    "type": "string"
+                }
+            },
+            "type": "object",
+            "required": [
+                "userId",
+                "#token",
+                "crawlerId"
+            ]
+        }
+    }
+}
+
