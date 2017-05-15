@@ -1,4 +1,3 @@
-'use strict';
 import program from 'commander';
 import { DEFAULT_DATA_DIR } from '../constants';
 

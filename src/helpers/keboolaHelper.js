@@ -1,4 +1,3 @@
-'use strict';
 import {
   first,
   isNumber
@@ -16,7 +15,6 @@ import {
  */
 export function parseConfiguration(configObject) {
   return new Promise((resolve, reject) => {
-
     const userId = configObject.get('parameters:userId');
     if (!userId) {
       reject('Parameter userId is not defined!');

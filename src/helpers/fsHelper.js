@@ -3,7 +3,7 @@ import tmp from 'tmp';
 import path from 'path';
 import csv from 'fast-csv';
 import isThere from 'is-there';
-import jsonfile from 'jsonfile'
+import jsonfile from 'jsonfile';
 import {
   EVENT_CLOSE,
   EVENT_ERROR,
@@ -34,7 +34,7 @@ export function createOutputFile(fileName, data) {
     const headers = !isThere(fileName);
     const includeEndRowDelimiter = true;
     csv
-      .writeToStream(fs.createWriteStream(fileName, {'flags': 'a'}), data, { headers, includeEndRowDelimiter })
+      .writeToStream(fs.createWriteStream(fileName, { flags: 'a' }), data, { headers, includeEndRowDelimiter })
       .on(EVENT_ERROR, () => reject('Problem with writing data into output!'))
       .on(EVENT_FINISH, () => resolve('File created!'));
   });
@@ -61,14 +61,14 @@ export function createManifestFile(fileName, data) {
 export function transferFilesBetweenDirectories(sourceDir, destinationDir, fileName) {
   return new Promise((resolve, reject) => {
     const readStream = fs.createReadStream(path.join(sourceDir, fileName));
-    readStream.on(EVENT_ERROR, error => {
+    readStream.on(EVENT_ERROR, (error) => {
       reject(error)
     });
     const writeStream = fs.createWriteStream(path.join(destinationDir, fileName));
-    writeStream.on(EVENT_ERROR, error => {
+    writeStream.on(EVENT_ERROR, (error) => {
       reject(error);
     });
-    writeStream.on(EVENT_CLOSE, result => {
+    writeStream.on(EVENT_CLOSE, (result) => {
       resolve(`file ${fileName} created!`);
     });
     readStream.pipe(writeStream);

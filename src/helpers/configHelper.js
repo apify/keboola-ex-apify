@@ -1,5 +1,3 @@
-'use strict';
-import path from 'path';
 import nconf from 'nconf';
 import isThere from 'is-there';
 
@@ -10,8 +8,7 @@ import isThere from 'is-there';
 export function getConfig(configPath) {
   if (isThere(configPath)) {
     return nconf.env().file(configPath);
-  } else {
-    console.error('No configuration specified!');
-    process.exit(1);
   }
+  console.error('No configuration specified!');
+  process.exit(1);
 }
