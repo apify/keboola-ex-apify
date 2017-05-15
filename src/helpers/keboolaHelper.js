@@ -28,10 +28,7 @@ export function parseConfiguration(configObject) {
       reject('Parameter crawlerId is not defined!');
     }
 
-    const crawlerSettings = configObject.get('parameters:crawlerSettings');
-    if (!crawlerSettings) {
-      reject('Parameter crawlerSettings is not defined!');
-    }
+    const crawlerSettings = configObject.get('parameters:crawlerSettings') || {};
 
     resolve({
       userId,
