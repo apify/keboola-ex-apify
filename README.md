@@ -8,5 +8,5 @@ Apifier extractor for Keboola Connection is a component extracting data from Api
       "userId": "Apifier user ID",
       "#token": "Apifier API token",
       "crawlerId": "Internal or custom ID of the crawler to execute",
-      "crawlerSettings": { "Optional object with overridden crawler settings." }
+      "crawlerSettings": { "Optional object with overridden crawler settings" }
     }
