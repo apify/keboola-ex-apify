@@ -30,6 +30,7 @@
     "eslint-plugin-import": "^2.2.0"
   },
   "dependencies": {
+    "apify-client": "git+https://github.com/Apifier/apify-client-js.git#9018b6753be5118063cdf0c4831727977a0da47e",
     "babel-polyfill": "^6.13.0",
     "commander": "^2.9.0",
     "fast-csv": "^2.3.0",
