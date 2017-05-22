@@ -29,7 +29,7 @@ import { createOutputFile } from './helpers/fsHelper';
     console.log('Crawler started. ExecutionId: ' + executionId);
 
     console.log('Waiting for execution ' + executionId + ' to finish');
-    await apifyHelper.waitUntilFinished(executionId);
+    await apifyHelper.waitUntilFinished(executionId, crawlerClient);
 
     const executionResult = await crawlerClient.getExecutionResults({ executionId });
     let data = [];
