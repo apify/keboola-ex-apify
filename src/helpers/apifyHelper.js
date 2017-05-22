@@ -25,34 +25,9 @@ const requestPromise = (options) => {
   });
 };
 
-export function startCrawler(crawler, params = {}, userId, token) {
-  params.token = token;
-
-  const queryString = objectToQueryString(params);
-  const requestParams = {
-    url: `${APIFY_API_BASE_URL}/${userId}/crawlers/${crawler}/execute${queryString}`,
-    method: 'POST',
-    json: true,
-    resolveWithFullResponse: true,
-  };
-
-  return requestPromise(requestParams);
-}
-
 export function getExecution(execution) {
   const requestParams = {
     url: `${APIFY_API_BASE_URL}/execs/${execution}`,
-    method: 'GET',
-    json: true,
-    resolveWithFullResponse: true,
-  };
-
-  return requestPromise(requestParams);
-}
-
-export function getExecutionResults(execution) {
-  const requestParams = {
-    url: `${APIFY_API_BASE_URL}/execs/${execution}/results`,
     method: 'GET',
     json: true,
     resolveWithFullResponse: true,
