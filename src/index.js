@@ -7,6 +7,7 @@ import { parseConfiguration } from './helpers/keboolaHelper';
 import { CONFIG_FILE, DEFAULT_TABLES_OUT_DIR } from './constants';
 
 import runAction from './actions/run';
+import listCrawlersAction from './actions/listCrawlers';
 
 /**
  * This is the main part of the program.
@@ -26,6 +27,10 @@ import runAction from './actions/run';
 
     if (action === 'run') {
       await runAction(crawlerClient, crawlerId, crawlerSettings, tableOutDir);
+    } else if (action === 'listCrawlers') {
+      await listCrawlersAction(crawlerClient);
+    } else {
+      throw new Error(`Error: Unknown Action ${action}`);
     }
 
     process.exit(0);

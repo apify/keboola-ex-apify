@@ -1,12 +1,5 @@
-import {
-  first,
-  isNumber
-} from 'lodash';
-import {
-  DEFAULT_BATCH,
-  IS_INCREMENTAL,
-  DEFAULT_PAGE_SIZE
-} from '../constants';
+import { first } from 'lodash';
+import { IS_INCREMENTAL } from '../constants';
 
 /**
  * This is a simple helper that checks whether the input configuration is valid.
