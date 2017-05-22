@@ -1,21 +1,9 @@
 import _ from 'underscore';
 import request from 'request';
+
 import { sleep } from 'wait-promise';
 
 import { APIFY_API_BASE_URL } from '../constants';
-
-/**
- * Parses simple map { a: 'aa', b: 'bb' } to query string ?a=aa&b=bb.
- */
-const objectToQueryString = (object) => {
-  const query = _.chain(object)
-                 .mapObject(val => encodeURIComponent(val))
-                 .mapObject((val, key) => `${key}=${val}`)
-                 .toArray()
-                 .join('&');
-
-  return query ? `?${query}` : '';
-};
 
 /**
  * Promised version of request(options) function.

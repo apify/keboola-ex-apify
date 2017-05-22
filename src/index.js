@@ -1,9 +1,9 @@
+import * as apifyClient from 'apify-client';
 import path from 'path';
-
 import command from './helpers/cliHelper';
 
 import { getConfig } from './helpers/configHelper';
-import * as apify from './helpers/apifyHelper';
+import * as apifyHelper from './helpers/apifyHelper';
 import { parseConfiguration } from './helpers/keboolaHelper';
 import { CONFIG_FILE, DEFAULT_TABLES_OUT_DIR } from './constants';
 import { createOutputFile } from './helpers/fsHelper';
@@ -22,14 +22,16 @@ import { createOutputFile } from './helpers/fsHelper';
     } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
     const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
 
-    const execution = await apify.startCrawler(crawlerId, {}, userId, token);
+    const crawlerClient = apifyClient.default({ userId, token }).crawlers;
+
+    const execution = await crawlerClient.startCrawler({ crawler: crawlerId });
     const executionId = execution['_id'];
     console.log('Crawler started. ExecutionId: ' + executionId);
 
     console.log('Waiting for execution ' + executionId + ' to finish');
-    await apify.waitUntilFinished(executionId);
+    await apifyHelper.waitUntilFinished(executionId);
 
-    const executionResult = await apify.getExecutionResults(executionId);
+    const executionResult = await crawlerClient.getExecutionResults({ executionId });
     let data = [];
     executionResult.forEach((page) => { data = data.concat(page.pageFunctionResult); });
     console.log('Data ready!');
