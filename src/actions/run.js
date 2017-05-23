@@ -12,12 +12,10 @@ export default async function runAction(crawlerClient, crawlerId, crawlerSetting
   console.log(`Waiting for execution ${executionId} to finish`);
   await apifyHelper.waitUntilFinished(executionId, crawlerClient);
 
-  const executionResult = await crawlerClient.getExecutionResults({ executionId });
-  let data = [];
-  executionResult.forEach((page) => { data = data.concat(page.pageFunctionResult); });
+  const executionResult = await crawlerClient.getExecutionResults({ executionId, simplified: 1 });
   console.log('Data ready!');
 
-  await createOutputFile(path.join(tableOutDir, 'crawlerResult.csv'), data);
+  await createOutputFile(path.join(tableOutDir, 'crawlerResult.csv'), executionResult);
   console.log('Files created!');
   // console.log('Manifests created');
   // const manifests = await Promise.all(firebase.generateOutputManifests(tableOutDir, bucketName, files));
