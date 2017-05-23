@@ -9,5 +9,5 @@ export default async function runAction(crawlerClient) {
       settingsLink,
     });
   });
-  console.log(res);
+  console.log(JSON.stringify(res));
 }
