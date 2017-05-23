@@ -2,7 +2,7 @@ import * as apifyClient from 'apify-client';
 import path from 'path';
 
 import command from './helpers/cliHelper';
-import { getConfig } from './helpers/configHelper';
+import getConfig from './helpers/configHelper';
 import { parseConfiguration } from './helpers/keboolaHelper';
 import { CONFIG_FILE, DEFAULT_TABLES_OUT_DIR } from './constants';
 
