@@ -5,18 +5,18 @@ import { createOutputFile } from '../helpers/fsHelper';
 
 // todo: add timeout
 export default async function runAction(crawlerClient, crawlerId, crawlerSettings, tableOutDir) {
-  const execution = await crawlerClient.startCrawler({ crawler: crawlerId });
-  const executionId = execution._id;
-  console.log(`Crawler started. ExecutionId: ${executionId}`);
+    const execution = await crawlerClient.startCrawler({ crawler: crawlerId });
+    const executionId = execution._id;
+    console.log(`Crawler started. ExecutionId: ${executionId}`);
 
-  console.log(`Waiting for execution ${executionId} to finish`);
-  await apifyHelper.waitUntilFinished(executionId, crawlerClient);
+    console.log(`Waiting for execution ${executionId} to finish`);
+    await apifyHelper.waitUntilFinished(executionId, crawlerClient);
 
-  const executionResult = await crawlerClient.getExecutionResults({ executionId, simplified: 1 });
-  console.log('Data ready!');
+    const executionResult = await crawlerClient.getExecutionResults({ executionId, simplified: 1 });
+    console.log('Data ready!');
 
-  await createOutputFile(path.join(tableOutDir, 'crawlerResult.csv'), executionResult);
-  console.log('Files created!');
+    await createOutputFile(path.join(tableOutDir, 'crawlerResult.csv'), executionResult);
+    console.log('Files created!');
   // console.log('Manifests created');
   // const manifests = await Promise.all(firebase.generateOutputManifests(tableOutDir, bucketName, files));
 }

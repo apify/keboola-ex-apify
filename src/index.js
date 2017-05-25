@@ -13,29 +13,29 @@ import listCrawlersAction from './actions/listCrawlers';
  * This is the main part of the program.
  */
 (async () => {
-  try {
+    try {
     // Reading of the input configuration.
-    const {
+        const {
       action,
       userId,
       token,
       crawlerId,
       crawlerSettings,
     } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
-    const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
-    const crawlerClient = apifyClient.default({ userId, token }).crawlers;
+        const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
+        const crawlerClient = apifyClient.default({ userId, token }).crawlers;
 
-    if (action === 'run') {
-      await runAction(crawlerClient, crawlerId, crawlerSettings, tableOutDir);
-    } else if (action === 'listCrawlers') {
-      await listCrawlersAction(crawlerClient);
-    } else {
-      throw new Error(`Error: Unknown Action ${action}`);
+        if (action === 'run') {
+            await runAction(crawlerClient, crawlerId, crawlerSettings, tableOutDir);
+        } else if (action === 'listCrawlers') {
+            await listCrawlersAction(crawlerClient);
+        } else {
+            throw new Error(`Error: Unknown Action ${action}`);
+        }
+
+        process.exit(0);
+    } catch (error) {
+        console.log(error);
+        process.exit(1);
     }
-
-    process.exit(0);
-  } catch (error) {
-    console.log(error);
-    process.exit(1);
-  }
 })();
