@@ -7,6 +7,8 @@ export const DEFAULT_EXECUTOR_TIMEOUT = 55 * 60 * 1000;
 export const DEFAULT_DATA_DIR = '/data';
 export const DEFAULT_TABLES_IN_DIR = '/in/tables';
 export const DEFAULT_TABLES_OUT_DIR = '/out/tables';
+export const STATE_IN_FILE = '/in/state.json';
+export const STATE_OUT_FILE = '/out/state.json';
 
 // Event constants
 export const EVENT_FINISH = 'finish';

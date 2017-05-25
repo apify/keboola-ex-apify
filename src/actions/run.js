@@ -1,22 +1,49 @@
 import path from 'path';
 
+import command from '../helpers/cliHelper';
 import * as apifyHelper from '../helpers/apifyHelper';
-import { createOutputFile } from '../helpers/fsHelper';
-import { DEFAULT_EXECUTOR_TIMEOUT } from '../constants';
+import {
+  loadJson,
+  saveJson,
+  createOutputFile,
+} from '../helpers/fsHelper';
+import {
+  DEFAULT_EXECUTOR_TIMEOUT,
+  DEFAULT_TABLES_OUT_DIR,
+  STATE_IN_FILE,
+  STATE_OUT_FILE,
+} from '../constants';
 
-function saveState(state) {
+/**
+ * Either gets executionId from state file, or creates a new execution.
+ * Then it waits for the execution to finish.
+ * When the execution is finished, it fetches the results and saves them into relevant file
+ * Execution can be timouted. In such case executionId is saved into state file. This state file will be present
+ * next time extractor is run with the same configuration
+ */
+export default async function runAction(crawlerClient, crawlerId, crawlerSettings, timeout = DEFAULT_EXECUTOR_TIMEOUT) {
+    let executionId;
 
-}
+    const stateInFile = path.join(command.data, STATE_IN_FILE);
+    const state = await loadJson(stateInFile);
 
-export default async function runAction(crawlerClient, crawlerId, crawlerSettings, tableOutDir, timeout = DEFAULT_EXECUTOR_TIMEOUT) {
-    const execution = await crawlerClient.startCrawler({ crawler: crawlerId });
-    const executionId = execution._id;
-    console.log(`Crawler started. ExecutionId: ${executionId}`);
+    if (state.executionId) {
+        // executionId was stored in state file. Let's use it
+        executionId = state.executionId;
+        console.log(`ExecutionId loaded from state file. ExecutionId: ${executionId}`);
+    } else {
+        // there is no executionId in state file. Start the crawler
+        const execution = await crawlerClient.startCrawler({ crawler: crawlerId });
+        executionId = execution._id;
+        console.log(`Crawler started. ExecutionId: ${executionId}`);
+    }
 
+    // Create a timeout limit, after which state will be saved and executor will stop
     if (timeout) {
-        setTimeout(() => {
+        setTimeout(async () => {
             console.log('Executor Timeouted. Saving the state');
-            saveState({ executionId });
+            const stateOutFile = path.join(command.data, STATE_OUT_FILE);
+            await saveJson({ executionId }, stateOutFile);
             console.log('State saved. Exiting.');
             process.exit(0);
         }, timeout);
@@ -28,6 +55,7 @@ export default async function runAction(crawlerClient, crawlerId, crawlerSetting
     const executionResult = await crawlerClient.getExecutionResults({ executionId, simplified: 1 });
     console.log('Data ready!');
 
+    const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
     await createOutputFile(path.join(tableOutDir, 'crawlerResult.csv'), executionResult);
     console.log('Files created!');
 }

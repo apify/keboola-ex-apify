@@ -1,5 +1,5 @@
 /**
- * Helper that checks whether the input configuration is valid.
+ * Checks whether the input configuration is valid.
  * If so, the particular object with relevant parameters is returned.
  * If not, rejected promise is returned.
  */

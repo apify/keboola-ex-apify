@@ -8,8 +8,10 @@
       "no-underscore-dangle": [2, {
         "allow": [ "_id" ]
         }],
+      "consistent-return": 0,
       "no-console": 0,
       "no-await-in-loop": 0,
-      "max-len": ["error", 150]
+      "max-len": ["error", 150],
+      "import/prefer-default-export": 0
     }
 }

@@ -1,4 +1,7 @@
-export default async function runAction(crawlerClient) {
+/**
+ * Outputs list of crawlers to console
+ */
+export default async function listCrawlersAction(crawlerClient) {
     const crawlers = await crawlerClient.listCrawlers();
     const res = [];
     crawlers.forEach((crawler) => {

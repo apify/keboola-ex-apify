@@ -1,5 +1,8 @@
 import { sleep } from 'wait-promise';
 
+/**
+ * Asynchronously waits until execution is finished
+ */
 export async function waitUntilFinished(executionId, crawlerClient, interval = 2000) {
     let running = true;
 
