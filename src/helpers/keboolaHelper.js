@@ -1,6 +1,3 @@
-import { first } from 'lodash';
-import { IS_INCREMENTAL } from '../constants';
-
 /**
  * This is a simple helper that checks whether the input configuration is valid.
  * If so, the particular object with relevant parameters is returned.
@@ -42,15 +39,4 @@ export function parseConfiguration(configObject) {
             });
         }
     });
-}
-
-/**
- * This function prepares object containing metadata required for writing
- * output data into Keboola (output files & manifests).
- */
-export function getKeboolaStorageMetadata(tableOutDir, bucketName, fileName) {
-    const incremental = IS_INCREMENTAL;
-    const destination = `${bucketName}.${first(fileName.split('.'))}`;
-    const manifestFileName = `${tableOutDir}/${fileName}.manifest`;
-    return { fileName, incremental, destination, manifestFileName };
 }

@@ -1,11 +1,9 @@
 import fs from 'fs';
 import tmp from 'tmp';
-import path from 'path';
 import csv from 'fast-csv';
 import isThere from 'is-there';
 import jsonfile from 'jsonfile';
 import {
-  EVENT_CLOSE,
   EVENT_ERROR,
   EVENT_FINISH,
 } from '../constants';
@@ -52,25 +50,5 @@ export function createManifestFile(fileName, data) {
                 resolve('Manifest created!');
             }
         });
-    });
-}
-
-/**
- * This functions transfer files from one directory into another one
- */
-export function transferFilesBetweenDirectories(sourceDir, destinationDir, fileName) {
-    return new Promise((resolve, reject) => {
-        const readStream = fs.createReadStream(path.join(sourceDir, fileName));
-        readStream.on(EVENT_ERROR, (error) => {
-            reject(error);
-        });
-        const writeStream = fs.createWriteStream(path.join(destinationDir, fileName));
-        writeStream.on(EVENT_ERROR, (error) => {
-            reject(error);
-        });
-        writeStream.on(EVENT_CLOSE, () => {
-            resolve(`file ${fileName} created!`);
-        });
-        readStream.pipe(writeStream);
     });
 }
