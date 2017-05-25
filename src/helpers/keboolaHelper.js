@@ -29,6 +29,7 @@ export function parseConfiguration(configObject) {
             }
 
             const crawlerSettings = configObject.get('parameters:crawlerSettings') || {};
+            const timeout = configObject.get('parameters:timeout');
 
             resolve({
                 action,
@@ -36,6 +37,7 @@ export function parseConfiguration(configObject) {
                 token,
                 crawlerId,
                 crawlerSettings,
+                timeout,
             });
         }
     });

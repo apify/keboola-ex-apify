@@ -2,12 +2,25 @@ import path from 'path';
 
 import * as apifyHelper from '../helpers/apifyHelper';
 import { createOutputFile } from '../helpers/fsHelper';
+import { DEFAULT_EXECUTOR_TIMEOUT } from '../constants';
 
-// todo: add timeout
-export default async function runAction(crawlerClient, crawlerId, crawlerSettings, tableOutDir) {
+function saveState(state) {
+
+}
+
+export default async function runAction(crawlerClient, crawlerId, crawlerSettings, tableOutDir, timeout = DEFAULT_EXECUTOR_TIMEOUT) {
     const execution = await crawlerClient.startCrawler({ crawler: crawlerId });
     const executionId = execution._id;
     console.log(`Crawler started. ExecutionId: ${executionId}`);
+    console.log(`timeout: ${timeout}`);
+    if (timeout) {
+        setTimeout(() => {
+            console.log('Executor Timeouted. Saving the state');
+            saveState({ executionId });
+            console.log('State saved. Exiting.');
+            process.exit(0);
+        }, timeout);
+    }
 
     console.log(`Waiting for execution ${executionId} to finish`);
     await apifyHelper.waitUntilFinished(executionId, crawlerClient);
@@ -17,6 +30,4 @@ export default async function runAction(crawlerClient, crawlerId, crawlerSetting
 
     await createOutputFile(path.join(tableOutDir, 'crawlerResult.csv'), executionResult);
     console.log('Files created!');
-  // console.log('Manifests created');
-  // const manifests = await Promise.all(firebase.generateOutputManifests(tableOutDir, bucketName, files));
 }

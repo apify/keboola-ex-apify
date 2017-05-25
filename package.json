@@ -40,11 +40,8 @@
     "jsonfile": "^2.4.0",
     "lodash": "^4.16.2",
     "moment": "^2.15.1",
-    "mz": "^2.4.0",
     "nconf": "^0.8.4",
     "request": "^2.81.0",
-    "rimraf-promise": "^2.0.0",
-    "tmp": "0.0.29",
     "underscore": "^1.8.3",
     "wait-promise": "^0.4.1"
   }

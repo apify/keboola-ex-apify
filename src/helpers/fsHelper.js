@@ -1,5 +1,4 @@
 import fs from 'fs';
-import tmp from 'tmp';
 import csv from 'fast-csv';
 import isThere from 'is-there';
 import jsonfile from 'jsonfile';
@@ -7,21 +6,6 @@ import {
   EVENT_ERROR,
   EVENT_FINISH,
 } from '../constants';
-
-/**
- * This function creates a tmp directory and returns a valid path
- * which will be used later for storing the files.
- */
-export function createTmpDirectory() {
-    return new Promise((resolve, reject) => {
-        tmp.dir((error, path, cleanupCallback) => {
-            if (error) {
-                reject(error);
-            }
-            resolve({ path, cleanupCallback });
-        });
-    });
-}
 
 /**
  * This function just stores data to selected destination.

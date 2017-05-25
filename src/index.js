@@ -21,12 +21,14 @@ import listCrawlersAction from './actions/listCrawlers';
       token,
       crawlerId,
       crawlerSettings,
+      timeout,
     } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
+
         const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
         const crawlerClient = apifyClient.default({ userId, token }).crawlers;
 
         if (action === 'run') {
-            await runAction(crawlerClient, crawlerId, crawlerSettings, tableOutDir);
+            await runAction(crawlerClient, crawlerId, crawlerSettings, tableOutDir, timeout);
         } else if (action === 'listCrawlers') {
             await listCrawlersAction(crawlerClient);
         } else {
