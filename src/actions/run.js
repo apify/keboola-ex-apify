@@ -12,7 +12,7 @@ export default async function runAction(crawlerClient, crawlerId, crawlerSetting
     const execution = await crawlerClient.startCrawler({ crawler: crawlerId });
     const executionId = execution._id;
     console.log(`Crawler started. ExecutionId: ${executionId}`);
-    console.log(`timeout: ${timeout}`);
+
     if (timeout) {
         setTimeout(() => {
             console.log('Executor Timeouted. Saving the state');

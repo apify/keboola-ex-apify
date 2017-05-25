@@ -21,18 +21,3 @@ export function createOutputFile(fileName, data) {
       .on(EVENT_FINISH, () => resolve('File created!'));
     });
 }
-
-/**
- * Creates manifest file related to the output data
- */
-export function createManifestFile(fileName, data) {
-    return new Promise((resolve, reject) => {
-        jsonfile.writeFile(fileName, data, {}, (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve('Manifest created!');
-            }
-        });
-    });
-}
