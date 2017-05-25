@@ -1,7 +1,7 @@
 /**
- * This is a simple helper that checks whether the input configuration is valid.
+ * Helper that checks whether the input configuration is valid.
  * If so, the particular object with relevant parameters is returned.
- * Otherwise, an error is thrown.
+ * If not, rejected promise is returned.
  */
 export function parseConfiguration(configObject) {
     return new Promise((resolve, reject) => {

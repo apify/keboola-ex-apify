@@ -8,8 +8,8 @@ import {
 } from '../constants';
 
 /**
- * This function just stores data to selected destination.
- * Data is appending to a file, the first one needs to have a header.
+ * Saves data to selected destination.
+ * Data appends to a file, the first one needs to have a header.
  */
 export function createOutputFile(fileName, data) {
     return new Promise((resolve, reject) => {
@@ -23,7 +23,7 @@ export function createOutputFile(fileName, data) {
 }
 
 /**
- * This function simply create a manifest file related to the output data
+ * Creates manifest file related to the output data
  */
 export function createManifestFile(fileName, data) {
     return new Promise((resolve, reject) => {

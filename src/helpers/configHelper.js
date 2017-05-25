@@ -2,8 +2,8 @@ import nconf from 'nconf';
 import isThere from 'is-there';
 
 /**
- * This function simply reads the config and parse the input JSON object.
- * If requested file doesn't exist, program stop running.
+ * Reads the config and parse the input JSON object.
+ * If requested file doesn't exist, program stops.
  */
 export default function getConfig(configPath) {
     if (isThere(configPath)) {

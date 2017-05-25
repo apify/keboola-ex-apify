@@ -10,19 +10,18 @@ import runAction from './actions/run';
 import listCrawlersAction from './actions/listCrawlers';
 
 /**
- * This is the main part of the program.
+ * Main part of the program.
  */
 (async () => {
     try {
-    // Reading of the input configuration.
         const {
-      action,
-      userId,
-      token,
-      crawlerId,
-      crawlerSettings,
-      timeout,
-    } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
+          action,
+          userId,
+          token,
+          crawlerId,
+          crawlerSettings,
+          timeout,
+        } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
 
         const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
         const crawlerClient = apifyClient.default({ userId, token }).crawlers;
