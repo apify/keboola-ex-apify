@@ -52,7 +52,7 @@ export default async function runAction(crawlerClient, crawlerId, crawlerSetting
     console.log(`Waiting for execution ${executionId} to finish`);
     await apifyHelper.waitUntilFinished(executionId, crawlerClient);
 
-    const executionResult = await crawlerClient.getExecutionResults({ executionId, simplified: 1 });
+    const executionResult = await crawlerClient.getExecutionResults({ executionId, simplified: 1, format: 'csv' });
     console.log('Data ready!');
 
     const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
