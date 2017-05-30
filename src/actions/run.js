@@ -33,7 +33,8 @@ export default async function runAction(crawlerClient, crawlerId, crawlerSetting
         console.log(`ExecutionId loaded from state file. ExecutionId: ${executionId}`);
     } else {
         // there is no executionId in state file. Start the crawler
-        const execution = await crawlerClient.startCrawler({ crawler: crawlerId });
+        const settings = Object.assign({ crawler: crawlerId }, crawlerSettings);
+        const execution = await crawlerClient.startCrawler(settings);
         executionId = execution._id;
         console.log(`Crawler started. ExecutionId: ${executionId}`);
     }
