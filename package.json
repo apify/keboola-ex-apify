@@ -30,7 +30,7 @@
     "eslint-plugin-import": "^2.2.0"
   },
   "dependencies": {
-    "apify-client": "0.1.2",
+    "apify-client": "^0.1.15",
     "babel-polyfill": "^6.13.0",
     "commander": "^2.9.0",
     "fast-csv": "^2.3.0",
