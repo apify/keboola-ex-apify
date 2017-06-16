@@ -12,5 +12,5 @@ export default async function listCrawlersAction(crawlerClient) {
             settingsLink,
         });
     });
-    console.log(JSON.stringify(res));
+    process.stdout.write(JSON.stringify(res));
 }
