@@ -38,7 +38,7 @@ Before run, you need to have one of configuration in `path_to_data_folder` folde
 
 `docker build --tag=test .`
 
-`docker run --volume=path_to_data_folder test`
+`docker run --volume=path_to_data_folder:/data/ test`
 
 ### Run without docker
 
