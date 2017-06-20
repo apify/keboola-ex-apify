@@ -2,7 +2,7 @@
 
 Apifier extractor for Keboola Connection
 
-## Developement
+## Test
 
 ### Sample configuration
 
@@ -46,7 +46,13 @@ Before run, you need to have one of configuration in `path_to_data_folder` folde
 
 `node_modules/.bin/babel-node --presets es2015,stage-0 ./src/index.js --data=path_to_data_folder`
 
-### Push to docker hub
+## Deploy
+
+1. Commit last version to github and create tag.
+
+2. Update tag of keboola-ex-apify to latest number in dockerfile of keboola-ex-apify-docker.
+
+3. Push keboola-ex-apify-docker to docker hub:
 
 `docker login`
 
