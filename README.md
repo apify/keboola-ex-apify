@@ -21,6 +21,16 @@ Before run, you need to have one of configuration in `path_to_data_folder` folde
 }
 ```
 
+#### To get results from existing execution
+
+```
+{
+  "parameters": {
+    "executionId": "Execution Id"
+  }
+}
+```
+
 #### To list crawlers:
 ```
 {
