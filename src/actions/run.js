@@ -5,7 +5,8 @@ import * as apifyHelper from '../helpers/apifyHelper';
 import {
     loadJson,
     saveJson,
-    createOutputFile,
+    createFilePromised,
+    createFolderPromised,
 } from '../helpers/fsHelper';
 import {
     DEFAULT_EXTRACTOR_TIMEOUT,
@@ -13,17 +14,73 @@ import {
     STATE_IN_FILE,
     STATE_OUT_FILE,
 } from '../constants';
+import parse from 'csv-parse';
+
+
+const RESULTS_FILE_LIMIT = 50000;
+const DEFAULT_PAGINATION_LIMIT = 10000;
+
+const parseCsvPromised = (input, opts) => {
+    return new Promise((resolve, reject) => {
+        parse(input, opts, (err, output) => {
+            if (err) reject(err);
+            resolve(output);
+        });
+    });
+};
 
 const getAndSaveResults = async (executionId, crawlerClient) => {
-    const executionResult = await crawlerClient.getExecutionResults({
+    const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
+    const fileName = 'crawlerResult.csv';
+    const resultsOpts = {
         executionId,
         simplified: 1,
         format: 'csv',
+        hideUrl: 1,
+        skipFailedPages: 1,
+    };
+    const sampleExecutionResults = await crawlerClient.getExecutionResults(Object.assign(resultsOpts, { limit: 10 }));
+    const executionDetail = await crawlerClient.getExecutionDetails({ executionId });
+    const parsedCsv = await parseCsvPromised(sampleExecutionResults.items);
+    const headerRowColumns = parsedCsv[0];
+    const outputtedPages = executionDetail.stats.pagesOutputted;
+    const resultCount = executionDetail.stats.resultCount || outputtedPages;
+    const resultPerPage = Math.ceil(resultCount / outputtedPages);
+    const resultsFileLimit = Math.ceil(RESULTS_FILE_LIMIT / resultPerPage);
+    const resultsPaginationLimit = Math.ceil(DEFAULT_PAGINATION_LIMIT / resultPerPage);
+    console.log(`Start saving ${outputtedPages} results pages with ${resultCount} results from execution ${executionId}`);
+
+    let paginationResultsOpts = Object.assign(resultsOpts, {
+        limit: resultsPaginationLimit,
+        offset: 0,
     });
-    console.log('Data ready!');
-    const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
-    await createOutputFile(path.join(tableOutDir, 'crawlerResult.csv'), executionResult.items);
-    console.log('Files created!');
+    if (outputtedPages > resultsFileLimit) {
+        // save results by chunks to sliced tables
+        const manifest = {
+            source: fileName,
+            columns: headerRowColumns,
+        };
+        const resultDir = path.join(tableOutDir, fileName);
+        await createFolderPromised(resultDir);
+
+        let fileCounter = 1;
+        while (true) {
+            const resultFile = path.join(resultDir, `slice${fileCounter}`);
+
+            if (outputtedPages < paginationResultsOpts.offset) break;
+
+            paginationResultsOpts = await apifyHelper.saveResultsToFile(crawlerClient, paginationResultsOpts, resultsFileLimit, resultFile, true);
+            fileCounter += 1;
+        }
+
+        await createFilePromised(path.join(tableOutDir, `${fileName}.manifest`), JSON.stringify(manifest));
+    } else {
+        // save result to one file
+        const resultFile = path.join(tableOutDir, fileName);
+        await createFilePromised(resultFile, '');
+        await apifyHelper.saveResultsToFile(crawlerClient, paginationResultsOpts, resultsFileLimit, resultFile, false);
+    }
+    console.log(`Results from execution ${executionId} were saved!`);
 };
 
 /**
