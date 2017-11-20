@@ -1,6 +1,8 @@
 {
-  "userId": "hNNQbYhnwafECWc8f",
-  "#token": "5dvKh9hQykho9erbfwxNesSCS",
-  "crawlerId": "Hacker%20News",
-  "crawlerSettings": {}
+  "parameters": {
+    "userId": "hNNQbYhnwafECWc8f",
+    "#token": "5dvKh9hQykho9erbfwxNesSCS",
+    "crawlerId": "Hacker%20News",
+    "crawlerSettings": {}
+  }
 }

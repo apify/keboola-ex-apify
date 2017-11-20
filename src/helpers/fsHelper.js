@@ -36,15 +36,36 @@ export function loadJson(fileName) {
 }
 
 /**
- * Saves data to fileName
+ * Saves data to fileName promised
  */
-export function createOutputFile(fileName, data) {
+export function createFilePromised(fileName, data) {
     return new Promise((resolve, reject) => {
         fs.writeFile(fileName, data, (err) => {
-            if (err) {
-                return reject(err);
-            }
+            if (err) return reject(err);
+            resolve();
+        });
+    });
+}
 
+/**
+ * Append data to fileName promised
+ */
+export function appendFilePromised(fileName, data) {
+    return new Promise((resolve, reject) => {
+        fs.appendFile(fileName, data, (err) => {
+            if (err) return reject(err);
+            resolve();
+        });
+    });
+}
+
+/**
+ * Create folder promised
+ */
+export function createFolderPromised(dir) {
+    return new Promise((resolve, reject) => {
+        fs.mkdir(dir, (err) => {
+            if (err && err.code !== 'EEXIST') return reject(err);
             resolve();
         });
     });

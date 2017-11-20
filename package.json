@@ -13,7 +13,7 @@
     "Apify",
     "Extractor"
   ],
-  "author": "Apifier <info@apifier.com>",
+  "author": "Apify <info@apify.com>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/Apifier/keboola-ex-apify/issues"
@@ -30,9 +30,10 @@
     "eslint-plugin-import": "^2.2.0"
   },
   "dependencies": {
-    "apify-client": "^0.1.15",
+    "apify-client": "^0.1.55",
     "babel-polyfill": "^6.13.0",
     "commander": "^2.9.0",
+    "csv-parse": "^2.0.0",
     "fast-csv": "^2.3.0",
     "firebase": "^3.4.1",
     "install": "^0.8.1",
@@ -42,7 +43,7 @@
     "moment": "^2.15.1",
     "nconf": "^0.8.4",
     "request": "^2.81.0",
-    "underscore": "^1.8.3",
-    "wait-promise": "^0.4.1"
+    "strip-eof": "^1.0.0",
+    "underscore": "^1.8.3"
   }
 }
