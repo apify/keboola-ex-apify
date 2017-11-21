@@ -57,11 +57,12 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
     if (outputtedPages > resultsFileLimit) {
         // save results by chunks to sliced tables
         // fix empty header row column
-        const headerRowColumnsClean = headerRowColumns.map(column => column || ' ');
+        const headerRowColumnsClean = headerRowColumns.map(column => {
+            return (column === '') ? 'x' : column;
+        });
         const manifest = {
             columns: headerRowColumnsClean,
         };
-        console.log(headerRowColumnsClean);
         const resultDir = path.join(tableOutDir, fileName);
         await createFolderPromised(resultDir);
 
