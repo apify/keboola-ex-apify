@@ -31,7 +31,7 @@ const parseCsvPromised = (input, opts) => {
 
 const getAndSaveResults = async (executionId, crawlerClient) => {
     const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
-    const fileName = 'crawlerResult.csv';
+    const fileName = 'crawler-result.csv';
     const resultsOpts = {
         executionId,
         simplified: 1,
