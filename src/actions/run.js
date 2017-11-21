@@ -57,8 +57,6 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
     if (outputtedPages > resultsFileLimit) {
         // save results by chunks to sliced tables
         const manifest = {
-            source: fileName,
-            destination: `out.c-data.${fileName}`,
             columns: headerRowColumns,
         };
         const resultDir = path.join(tableOutDir, fileName);
