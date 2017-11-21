@@ -18,7 +18,7 @@ import parse from 'csv-parse';
 
 
 const RESULTS_FILE_LIMIT = 50000;
-const DEFAULT_PAGINATION_LIMIT = 10000;
+const DEFAULT_PAGINATION_LIMIT = 1000;
 
 const parseCsvPromised = (input, opts) => {
     return new Promise((resolve, reject) => {
