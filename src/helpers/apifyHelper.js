@@ -49,9 +49,7 @@ export async function saveResultsToFile(crawlerClient, executionResultsOpts, fil
 
         if (resultCount === 0) break;
 
-        // NOTE: Apify API return in items file with csv line,
-        // if we want to append next pagination file we have to strip eof
-        fileWriteStream.write(stripEof(executionResults.items));
+        fileWriteStream.write(executionResults.items);
 
         fileResultsCount += resultCount;
 
