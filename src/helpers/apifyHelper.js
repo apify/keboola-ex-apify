@@ -1,5 +1,6 @@
 import fs from 'fs';
 import stripEof  from 'strip-eof';
+import { createFilePromised } from './fsHelper';
 
 const WAIT_BETWEEN_REQUESTS = 100; // Time in ms to wait between request, to avoid rate limiting
 const DEFAULT_POOLING_INTERVAL = 2000; // ms
@@ -38,7 +39,7 @@ export async function waitUntilFinished(executionId, crawlerClient, interval = D
  */
 export async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit, file, skipHeaderRow) {
     let fileResultsCount = 0;
-    const fileWriteStream = fs.createWriteStream(file, { encoding: 'UTF-8' });
+    const fileWriteStream = fs.createWriteStream(file, { encoding: 'UTF-8', flags: 'a' });
     while (true) {
         console.log(`Saving ${executionResultsOpts.offset} - ${executionResultsOpts.offset + executionResultsOpts.limit} pages with results ...`);
 
@@ -49,7 +50,9 @@ export async function saveResultsToFile(crawlerClient, executionResultsOpts, fil
 
         if (resultCount === 0) break;
 
-        fileWriteStream.write(executionResults.items);
+        // NOTE: clean spaces around string and add newline, without this we get malformed csv
+        fileWriteStream.write(executionResults.items.trim());
+        fileWriteStream.write('\n');
 
         fileResultsCount += resultCount;
 
