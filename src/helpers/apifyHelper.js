@@ -38,7 +38,7 @@ export async function waitUntilFinished(executionId, crawlerClient, interval = D
  */
 export async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit, file, skipHeaderRow) {
     let fileResultsCount = 0;
-    const fileWriteStream = fs.createWriteStream(file);
+    const fileWriteStream = fs.createWriteStream(file, { encoding: 'UTF-8' });
     while (true) {
         console.log(`Saving ${executionResultsOpts.offset} - ${executionResultsOpts.offset + executionResultsOpts.limit} pages with results ...`);
 
@@ -49,7 +49,9 @@ export async function saveResultsToFile(crawlerClient, executionResultsOpts, fil
 
         if (resultCount === 0) break;
 
-        fileWriteStream.write(executionResults.items);
+        // NOTE: Apify API return in items file with csv line,
+        // if we want to append next pagination file we have to strip eof
+        fileWriteStream.write(stripEof(executionResults.items));
 
         fileResultsCount += resultCount;
 
@@ -59,6 +61,6 @@ export async function saveResultsToFile(crawlerClient, executionResultsOpts, fil
 
         await sleepPromised(WAIT_BETWEEN_REQUESTS);
     }
-    fileWriteStream.end('');
+    fileWriteStream.end();
     return executionResultsOpts;
 }
