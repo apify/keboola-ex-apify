@@ -1,4 +1,4 @@
-import * as apifyClient from 'apify-client';
+import ApifyClient from 'apify-client';
 import path from 'path';
 
 import command from './helpers/cliHelper';
@@ -24,14 +24,14 @@ import listCrawlersAction from './actions/listCrawlers';
             executionId
         } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
 
-        const crawlerClient = apifyClient.default({ userId, token }).crawlers;
+        const apifyClient = new ApifyClient({ userId, token });
 
         switch (action) {
             case 'run':
-                await runAction(crawlerClient, executionId, crawlerId, crawlerSettings, timeout);
+                await runAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout);
                 break;
             case 'listCrawlers':
-                await listCrawlersAction(crawlerClient);
+                await listCrawlersAction(apifyClient);
                 break;
             default:
                 throw new Error(`Error: Unknown Action ${action}`);

@@ -1,5 +1,6 @@
 import fs from 'fs';
 import jsonfile from 'jsonfile';
+const util = require('util');
 
 /**
  * Saves Object as JSON into fileName
@@ -70,3 +71,19 @@ export function createFolderPromised(dir) {
         });
     });
 }
+
+
+/**
+ * Check file/folder stats
+ */
+export const fileStatPromied = util.promisify(fs.stat);
+
+/**
+ * Get folder files
+ */
+export const readDirPromised = util.promisify(fs.readdir);
+
+/**
+ * Read file
+ */
+export const readFilePromised = util.promisify(fs.readFile);

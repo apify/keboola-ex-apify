@@ -1,11 +1,11 @@
 /**
  * Outputs list of crawlers to stdout
  */
-export default async function listCrawlersAction(crawlerClient) {
-    const crawlers = await crawlerClient.listCrawlers();
+export default async function listCrawlersAction(apifyClient) {
+    const crawlers = await apifyClient.crawlers.listCrawlers();
     const res = [];
     crawlers.items.forEach((crawler) => {
-        const settingsLink = `https://www.apifier.com/crawlers/${crawler._id}`;
+        const settingsLink = `https://my.apify.com/crawlers/${crawler._id}`;
         res.push({
             id: crawler._id,
             customId: crawler.customId,
