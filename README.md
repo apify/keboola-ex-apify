@@ -1,6 +1,6 @@
-# Apifier Keboola Extractor
+# Apify Keboola Extractor
 
-Apifier extractor for Keboola Connection
+Apify extractor for Keboola Connection
 
 ## Test
 
@@ -13,8 +13,8 @@ Before run, you need to have one of configuration in `path_to_data_folder` folde
 ```
 {
   "parameters": {
-    "userId": "Apifier user ID",
-    "#token": "Apifier API token"
+    "userId": "Apify user ID",
+    "#token": "Apify API token"
     "crawlerId": "H8Xo8nhNDHJkmEfJG",
     "crawlerSettings": {}
   }
@@ -36,8 +36,8 @@ Before run, you need to have one of configuration in `path_to_data_folder` folde
 {
   "action": "listCrawlers",
   "parameters": {
-    "userId": "Apifier user ID",
-    "#token": "Apifier API token"
+    "userId": "Apify user ID",
+    "#token": "Apify API token"
   }
 }
 ```
