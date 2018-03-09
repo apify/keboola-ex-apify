@@ -6,7 +6,7 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Apifier/keboola-ex-apify"
+    "url": "git+https://github.com/apifytech/keboola-ex-apify"
   },
   "keywords": [
     "Keboola",
@@ -16,9 +16,9 @@
   "author": "Apify <info@apify.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/Apifier/keboola-ex-apify/issues"
+    "url": "https://github.com/apifytech/keboola-ex-apify/issues"
   },
-  "homepage": "https://github.com/Apifier/keboola-ex-apify#readme",
+  "homepage": "https://github.com/apifytech/keboola-ex-apify#readme",
   "devDependencies": {
     "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",

@@ -1,5 +1,5 @@
 // Apify constants
-export const APIFY_API_BASE_URL = 'https://api.apifier.com/v1';
+export const APIFY_API_BASE_URL = 'https://api.apify.com/v1';
 
 // Default constants of the application.
 export const CONFIG_FILE = 'config.json';
