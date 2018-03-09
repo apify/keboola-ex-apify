@@ -35,6 +35,7 @@ export async function waitUntilFinished(executionId, crawlerClient, interval = D
  * @param executionResultsOpts
  * @param fileLimit
  * @param file
+ * @param skipHeaderRow
  * @return {}
  */
 export async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit, file, skipHeaderRow) {
@@ -64,4 +65,41 @@ export async function saveResultsToFile(crawlerClient, executionResultsOpts, fil
     }
     fileWriteStream.end();
     return executionResultsOpts;
+}
+
+/**
+ * Appends csv items from dataset to file using pagination.
+ * @param apifyDatasets
+ * @param paginationItemsOpts
+ * @param fileLimit
+ * @param file
+ * @param skipHeaderRow
+ * @return {}
+ */
+export async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
+    let fileItemsCount = 0;
+    const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
+    while (true) {
+        console.log(`Saving ${paginationItemsOpts.offset} - ${paginationItemsOpts.offset + paginationItemsOpts.limit} pages with results ...`);
+
+        paginationItemsOpts.skipHeaderRow = (!skipHeaderRow && paginationItemsOpts.offset === 0) ? '' : 1;
+
+        const itemsPagination = await apifyDatasets.getItems(paginationItemsOpts);
+        const itemsCount = parseInt(itemsPagination.count);
+
+        if (itemsCount === 0) break;
+
+        // NOTE: clean spaces around string and add newline, without this we get malformed csv
+        fileWriteStream.write(itemsPagination.items);
+
+        fileItemsCount += itemsCount;
+
+        paginationItemsOpts.offset = paginationItemsOpts.offset + paginationItemsOpts.limit;
+
+        if (fileItemsCount >= fileLimit) break;
+
+        await sleepPromised(WAIT_BETWEEN_REQUESTS);
+    }
+    fileWriteStream.end();
+    return paginationItemsOpts;
 }

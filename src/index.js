@@ -8,6 +8,7 @@ import { CONFIG_FILE } from './constants';
 
 import runAction from './actions/run';
 import listCrawlersAction from './actions/listCrawlers';
+import getDatasetItems from './actions/getDatasetItems';
 
 /**
  * Main part of the program.
@@ -21,7 +22,8 @@ import listCrawlersAction from './actions/listCrawlers';
             crawlerId,
             crawlerSettings,
             timeout,
-            executionId
+            executionId,
+            datasetId,
         } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
 
         const apifyClient = new ApifyClient({ userId, token });
@@ -32,6 +34,9 @@ import listCrawlersAction from './actions/listCrawlers';
                 break;
             case 'listCrawlers':
                 await listCrawlersAction(apifyClient);
+                break;
+            case 'getDatasetItems':
+                await getDatasetItems(apifyClient, datasetId);
                 break;
             default:
                 throw new Error(`Error: Unknown Action ${action}`);

@@ -19,21 +19,12 @@ import {
     STATE_OUT_FILE,
     DEFAULT_TABLES_IN_DIR,
 } from '../constants';
-import parse from 'csv-parse';
+import parseCsvPromised from '../helpers/csvHelpers';
 
 
 const RESULTS_FILE_LIMIT = 50000;
 const DEFAULT_PAGINATION_LIMIT = 1000;
 const NAME_OF_KEBOOLA_INPUTS_STORE = 'KEBOOLA-INPUTS'; // Name of Apify keyvalue store for Keboola inputs files
-
-const parseCsvPromised = (input, opts) => {
-    return new Promise((resolve, reject) => {
-        parse(input, opts, (err, output) => {
-            if (err) reject(err);
-            resolve(output);
-        });
-    });
-};
 
 const getAndSaveResults = async (executionId, crawlerClient) => {
     const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);

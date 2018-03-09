@@ -16,7 +16,7 @@ export function parseConfiguration(configObject) {
                 userId,
                 token,
             });
-        } else {
+        } else if (action === 'run') {
             const executionId = configObject.get('parameters:executionId');
             const crawlerId = configObject.get('parameters:crawlerId');
             if (!executionId && !userId) reject('Parameter userId is not defined!');
@@ -34,6 +34,18 @@ export function parseConfiguration(configObject) {
                 crawlerSettings,
                 timeout,
                 executionId,
+            });
+        } else if (action === 'getDatasetItems') {
+            if (!userId) reject('Parameter userId is not defined!');
+            if (!token) reject('Parameter token is not defined!');
+            const datasetId = configObject.get('parameters:datasetId');
+            if (!datasetId) reject('Parameter datasetId is not defined!');
+
+            resolve({
+                action,
+                userId,
+                token,
+                datasetId,
             });
         }
     });
