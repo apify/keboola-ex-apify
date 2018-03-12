@@ -4,11 +4,12 @@ import path from 'path';
 import command from './helpers/cliHelper';
 import getConfig from './helpers/configHelper';
 import { parseConfiguration } from './helpers/keboolaHelper';
-import { CONFIG_FILE } from './constants';
+import { CONFIG_FILE, ACTIONS, ACTION_TYPES } from './constants';
 
 import runAction from './actions/run';
 import listCrawlersAction from './actions/listCrawlers';
 import getDatasetItems from './actions/getDatasetItems';
+
 
 /**
  * Main part of the program.
@@ -24,19 +25,21 @@ import getDatasetItems from './actions/getDatasetItems';
             timeout,
             executionId,
             datasetId,
+            actionType,
         } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
 
         const apifyClient = new ApifyClient({ userId, token });
 
         switch (action) {
-            case 'run':
-                await runAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout);
+            case ACTIONS.run:
+                if (actionType === ACTION_TYPES.getDatasetItems) {
+                    await getDatasetItems(apifyClient, datasetId);
+                } else {
+                    await runAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout);
+                }
                 break;
-            case 'listCrawlers':
+            case ACTIONS.listCrawlers:
                 await listCrawlersAction(apifyClient);
-                break;
-            case 'getDatasetItems':
-                await getDatasetItems(apifyClient, datasetId);
                 break;
             default:
                 throw new Error(`Error: Unknown Action ${action}`);

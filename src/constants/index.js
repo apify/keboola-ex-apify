@@ -16,3 +16,13 @@ export const EVENT_CLOSE = 'close';
 export const EVENT_ERROR = 'error';
 export const EVENT_DATA = 'data';
 export const EVENT_END = 'end';
+
+export const ACTIONS = {
+    run: 'run',
+    listCrawlers: 'listCrawlers',
+}
+
+export const ACTION_TYPES = {
+    runExecution: 'runExecution',
+    getDatasetItems: 'getDatasetItems',
+}
