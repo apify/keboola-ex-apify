@@ -80,9 +80,9 @@ export async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLi
     let fileItemsCount = 0;
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     while (true) {
-        console.log(`Saving ${paginationItemsOpts.offset} - ${paginationItemsOpts.offset + paginationItemsOpts.limit} pages with results ...`);
+        console.log(`Saving ${paginationItemsOpts.offset} - ${paginationItemsOpts.offset + paginationItemsOpts.limit} items ...`);
 
-        paginationItemsOpts.skipHeaderRow = (!skipHeaderRow && paginationItemsOpts.offset === 0) ? '' : 1;
+        paginationItemsOpts.skipHeaderRow = (!skipHeaderRow && paginationItemsOpts.offset === 0) ? 0 : 1;
 
         const itemsPagination = await apifyDatasets.getItems(paginationItemsOpts);
         const itemsCount = parseInt(itemsPagination.count);

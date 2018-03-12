@@ -67,7 +67,7 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
         while (true) {
             const resultFile = path.join(resultDir, `slice${fileCounter}`);
 
-            if (outputtedPages < paginationResultsOpts.offset) break;
+            if (outputtedPages <= paginationResultsOpts.offset) break;
 
             paginationResultsOpts = await apifyHelper.saveResultsToFile(crawlerClient, paginationResultsOpts, resultsFileLimit, resultFile, true);
             fileCounter += 1;

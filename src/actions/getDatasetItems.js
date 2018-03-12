@@ -58,7 +58,7 @@ export default async function getDatasetItems(apifyClient, maybeDatasetId) {
         while (true) {
             const resultFile = path.join(resultDir, `slice${fileCounter}`);
 
-            if (dataset.itemCount < paginationItemsOpts.offset) break;
+            if (dataset.itemCount <= paginationItemsOpts.offset) break;
 
             paginationItemsOpts = await apifyHelper.saveItemsToFile(apifyDatasets, paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, true);
             fileCounter += 1;
