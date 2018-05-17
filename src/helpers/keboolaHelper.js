@@ -1,4 +1,4 @@
-import { ACTIONS, ACTION_TYPES } from '../constants';
+const { ACTIONS, ACTION_TYPES } = require('../constants');
 
 
 /**
@@ -6,7 +6,7 @@ import { ACTIONS, ACTION_TYPES } from '../constants';
  * If so, the particular object with relevant parameters is returned.
  * If not, rejected promise is returned.
  */
-export function parseConfiguration(configObject) {
+function parseConfiguration(configObject) {
     return new Promise((resolve, reject) => {
         const action = configObject.get('action') || ACTIONS.run;
         const userId = configObject.get('parameters:userId');
@@ -60,4 +60,8 @@ export function parseConfiguration(configObject) {
             }
         }
     });
+};
+
+module.exports = {
+    parseConfiguration,
 }

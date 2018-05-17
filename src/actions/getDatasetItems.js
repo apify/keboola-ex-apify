@@ -1,9 +1,8 @@
-import * as apifyHelper from '../helpers/apifyHelper';
-import path from 'path';
-import parseCsvPromised from '../helpers/csvHelpers';
-import { createFilePromised, createFolderPromised } from '../helpers/fsHelper';
-import command from '../helpers/cliHelper';
-import { DEFAULT_TABLES_OUT_DIR } from '../constants';
+const apifyHelper = require('../helpers/apifyHelper');
+const path = require('path');
+const parseCsvPromised = require('../helpers/csvHelpers');
+const { createFilePromised, createFolderPromised } = require('../helpers/fsHelper');
+const { DEFAULT_TABLES_OUT_DIR, DATA_DIR } = require('../constants');
 
 const RESULTS_FILE_LIMIT = 50000;
 const DEFAULT_PAGINATION_LIMIT = 1000;
@@ -12,7 +11,7 @@ const DEFAULT_PAGINATION_LIMIT = 1000;
 /**
  * Outputs all data from Apify datasets to data/out
  */
-export default async function getDatasetItems(apifyClient, maybeDatasetId) {
+module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
     const apifyDatasets = await apifyClient.datasets;
     let dataset = await apifyDatasets.getDataset({ datasetId: maybeDatasetId });
     if (!dataset) {
@@ -26,7 +25,7 @@ export default async function getDatasetItems(apifyClient, maybeDatasetId) {
     if (!dataset) throw new Error(`Error: Apify dataset with ${maybeDatasetId} name or id doesn't exist.`);
 
     const datasetId = dataset.id;
-    const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
+    const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
     const fileName = 'dataset-items.csv';
     const getItemsOpts = {
         datasetId,
@@ -72,4 +71,4 @@ export default async function getDatasetItems(apifyClient, maybeDatasetId) {
         await apifyHelper.saveItemsToFile(apifyDatasets, paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, false);
     }
     console.log(`Items from dataset ${datasetId} were saved!`);
-}
+};

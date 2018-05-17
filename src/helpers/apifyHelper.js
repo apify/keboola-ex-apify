@@ -1,6 +1,6 @@
-import fs from 'fs';
-import stripEof  from 'strip-eof';
-import { createFilePromised } from './fsHelper';
+const fs = require('fs');
+const stripEof = require('strip-eof');
+const { createFilePromised } = require('./fsHelper');
 
 const WAIT_BETWEEN_REQUESTS = 100; // Time in ms to wait between request, to avoid rate limiting
 const DEFAULT_POOLING_INTERVAL = 2000; // ms
@@ -11,12 +11,12 @@ const DEFAULT_POOLING_INTERVAL = 2000; // ms
  * await sleepPromised(3000);
  * @param ms
  */
-export const sleepPromised = ms => new Promise(resolve => setTimeout(resolve, ms));
+const sleepPromised = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * Asynchronously waits until execution is finished
  */
-export async function waitUntilFinished(executionId, crawlerClient, interval = DEFAULT_POOLING_INTERVAL) {
+async function waitUntilFinished(executionId, crawlerClient, interval = DEFAULT_POOLING_INTERVAL) {
     let running = true;
 
     while (running) {
@@ -38,7 +38,7 @@ export async function waitUntilFinished(executionId, crawlerClient, interval = D
  * @param skipHeaderRow
  * @return {}
  */
-export async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit, file, skipHeaderRow) {
+async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit, file, skipHeaderRow) {
     let fileResultsCount = 0;
     const fileWriteStream = fs.createWriteStream(file, { encoding: 'UTF-8', flags: 'a' });
     while (true) {
@@ -76,7 +76,7 @@ export async function saveResultsToFile(crawlerClient, executionResultsOpts, fil
  * @param skipHeaderRow
  * @return {}
  */
-export async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
+async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
     let fileItemsCount = 0;
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     while (true) {
@@ -103,3 +103,9 @@ export async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLi
     fileWriteStream.end();
     return paginationItemsOpts;
 }
+
+module.exports = {
+    sleepPromised,
+    saveItemsToFile,
+    saveResultsToFile,
+};

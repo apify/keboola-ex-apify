@@ -1,11 +1,11 @@
-import fs from 'fs';
-import jsonfile from 'jsonfile';
+const fs = require('fs');
+const jsonfile = require('jsonfile');
 const util = require('util');
 
 /**
  * Saves Object as JSON into fileName
  */
-export function saveJson(json, fileName) {
+function saveJson(json, fileName) {
     return new Promise((resolve, reject) => {
         jsonfile.writeFile(fileName, json, {}, (error) => {
             if (error) {
@@ -20,7 +20,7 @@ export function saveJson(json, fileName) {
 /**
  * Loads Object in JSON format from fileName
  */
-export function loadJson(fileName) {
+function loadJson(fileName) {
     return new Promise((resolve) => {
         if (!fs.existsSync(fileName)) {
             resolve({});
@@ -39,7 +39,7 @@ export function loadJson(fileName) {
 /**
  * Saves data to fileName promised
  */
-export function createFilePromised(fileName, data) {
+function createFilePromised(fileName, data) {
     return new Promise((resolve, reject) => {
         fs.writeFile(fileName, data, (err) => {
             if (err) return reject(err);
@@ -51,7 +51,7 @@ export function createFilePromised(fileName, data) {
 /**
  * Append data to fileName promised
  */
-export function appendFilePromised(fileName, data) {
+function appendFilePromised(fileName, data) {
     return new Promise((resolve, reject) => {
         fs.appendFile(fileName, data, (err) => {
             if (err) return reject(err);
@@ -63,7 +63,7 @@ export function appendFilePromised(fileName, data) {
 /**
  * Create folder promised
  */
-export function createFolderPromised(dir) {
+function createFolderPromised(dir) {
     return new Promise((resolve, reject) => {
         fs.mkdir(dir, (err) => {
             if (err && err.code !== 'EEXIST') return reject(err);
@@ -76,14 +76,25 @@ export function createFolderPromised(dir) {
 /**
  * Check file/folder stats
  */
-export const fileStatPromied = util.promisify(fs.stat);
+const fileStatPromied = util.promisify(fs.stat);
 
 /**
  * Get folder files
  */
-export const readDirPromised = util.promisify(fs.readdir);
+const readDirPromised = util.promisify(fs.readdir);
 
 /**
  * Read file
  */
-export const readFilePromised = util.promisify(fs.readFile);
+const readFilePromised = util.promisify(fs.readFile);
+
+module.exports = {
+  saveJson,
+  loadJson,
+  createFilePromised,
+  appendFilePromised,
+  createFolderPromised,
+  fileStatPromied,
+  readDirPromised,
+  readFilePromised,
+};

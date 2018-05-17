@@ -2,8 +2,11 @@
   "name": "keboola-ex-apify",
   "version": "1.5.0",
   "description": "Apify extractor for Keboola Connection",
-  "main": "index.js",
-  "scripts": {},
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "DATA_DIR=/data node ./src/index.js",
+    "dev": "DATA_DIR=./.temp/data node ./src/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/apifytech/keboola-ex-apify"
@@ -20,11 +23,6 @@
   },
   "homepage": "https://github.com/apifytech/keboola-ex-apify#readme",
   "devDependencies": {
-    "babel-cli": "^6.14.0",
-    "babel-core": "^6.14.0",
-    "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.14.0",
-    "babel-preset-stage-0": "^6.5.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.2.0"
@@ -32,7 +30,6 @@
   "dependencies": {
     "apify-client": "beta",
     "babel-polyfill": "^6.13.0",
-    "commander": "^2.9.0",
     "csv-parse": "^2.0.0",
     "fast-csv": "^2.3.0",
     "firebase": "^3.4.1",
