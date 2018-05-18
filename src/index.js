@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { DATA_DIR } = require('./constants');
 const ApifyClient = require('apify-client');
 const path = require('path');
