@@ -6,7 +6,8 @@
   "scripts": {
     "start": "DATA_DIR=/data node ./src/index.js",
     "dev": "DATA_DIR=./.temp/data node ./src/index.js",
-    "lint": "eslint src test"
+    "lint": "eslint src test",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -24,10 +25,12 @@
   },
   "homepage": "https://github.com/apifytech/keboola-ex-apify#readme",
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-promise": "^3.7.0"
+    "eslint-plugin-promise": "^3.7.0",
+    "mocha": "^5.1.1"
   },
   "dependencies": {
     "apify-client": "beta",
