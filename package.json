@@ -7,7 +7,7 @@
     "start": "DATA_DIR=/data node ./src/index.js",
     "dev": "DATA_DIR=./.temp/data node ./src/index.js",
     "lint": "eslint src test",
-    "test": "mocha"
+    "test": "DATA_DIR=./test/test_data mocha --recursive --timeout 600000"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,8 @@
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-promise": "^3.7.0",
-    "mocha": "^5.1.1"
+    "mocha": "^5.1.1",
+    "sinon": "^5.0.7"
   },
   "dependencies": {
     "apify-client": "beta",
@@ -44,6 +45,7 @@
     "moment": "^2.19.3",
     "nconf": "^0.8.4",
     "request": "^2.81.0",
+    "rimraf": "^2.6.2",
     "shortid": "^2.2.8",
     "underscore": "^1.8.3"
   }

@@ -1,0 +1,9 @@
+{
+  "action": "run",
+  "parameters": {
+    "userId": "myUserId",
+    "#token": "myToken",
+    "crawlerId": "Example_Hacker_News",
+    "crawlerSettings": {}
+  }
+}
