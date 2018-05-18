@@ -1,6 +1,4 @@
 const fs = require('fs');
-const stripEof = require('strip-eof');
-const { createFilePromised } = require('./fsHelper');
 
 const WAIT_BETWEEN_REQUESTS = 100; // Time in ms to wait between request, to avoid rate limiting
 const DEFAULT_POOLING_INTERVAL = 2000; // ms
@@ -47,7 +45,7 @@ async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit,
         executionResultsOpts.skipHeaderRow = (!skipHeaderRow && executionResultsOpts.offset === 0) ? '' : 1;
 
         const executionResults = await crawlerClient.getExecutionResults(executionResultsOpts);
-        const resultCount = parseInt(executionResults.count);
+        const resultCount = parseInt(executionResults.count, 10);
 
         if (resultCount === 0) break;
 
@@ -57,7 +55,7 @@ async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit,
 
         fileResultsCount += resultCount;
 
-        executionResultsOpts.offset = executionResultsOpts.offset + executionResultsOpts.limit;
+        executionResultsOpts.offset += executionResultsOpts.limit;
 
         if (fileResultsCount >= fileLimit) break;
 
@@ -85,7 +83,7 @@ async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, fi
         paginationItemsOpts.skipHeaderRow = (!skipHeaderRow && paginationItemsOpts.offset === 0) ? 0 : 1;
 
         const itemsPagination = await apifyDatasets.getItems(paginationItemsOpts);
-        const itemsCount = parseInt(itemsPagination.count);
+        const itemsCount = parseInt(itemsPagination.count, 10);
 
         if (itemsCount === 0) break;
 
@@ -94,7 +92,7 @@ async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, fi
 
         fileItemsCount += itemsCount;
 
-        paginationItemsOpts.offset = paginationItemsOpts.offset + paginationItemsOpts.limit;
+        paginationItemsOpts.offset += paginationItemsOpts.limit;
 
         if (fileItemsCount >= fileLimit) break;
 
@@ -108,4 +106,5 @@ module.exports = {
     sleepPromised,
     saveItemsToFile,
     saveResultsToFile,
+    waitUntilFinished,
 };

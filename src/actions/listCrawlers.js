@@ -18,4 +18,4 @@ module.exports = async function listCrawlersAction(apifyClient) {
     for (let i = 0; i < crawlersListOut.length; i += maxChunkLength) {
         process.stdout.write(crawlersListOut.substring(i, i + maxChunkLength));
     }
-}
+};

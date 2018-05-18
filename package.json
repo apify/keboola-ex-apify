@@ -5,7 +5,8 @@
   "main": "./src/index.js",
   "scripts": {
     "start": "DATA_DIR=/data node ./src/index.js",
-    "dev": "DATA_DIR=./.temp/data node ./src/index.js"
+    "dev": "DATA_DIR=./.temp/data node ./src/index.js",
+    "lint": "eslint src test"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,8 @@
   "devDependencies": {
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
-    "eslint-plugin-import": "^2.2.0"
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-promise": "^3.7.0"
   },
   "dependencies": {
     "apify-client": "beta",

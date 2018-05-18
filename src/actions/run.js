@@ -54,7 +54,7 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
     if (outputtedPages > resultsFileLimit) {
         // save results by chunks to sliced tables
         // fix empty header row column
-        const headerRowColumnsClean = headerRowColumns.map(column => {
+        const headerRowColumnsClean = headerRowColumns.map((column) => {
             return (column === '') ? 'x' : column;
         });
         const manifest = {
@@ -69,7 +69,8 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
 
             if (outputtedPages <= paginationResultsOpts.offset) break;
 
-            paginationResultsOpts = await apifyHelper.saveResultsToFile(crawlerClient, paginationResultsOpts, resultsFileLimit, resultFile, true);
+            paginationResultsOpts = await apifyHelper.saveResultsToFile(crawlerClient,
+                paginationResultsOpts, resultsFileLimit, resultFile, true);
             fileCounter += 1;
         }
 

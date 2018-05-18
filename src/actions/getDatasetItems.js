@@ -17,9 +17,8 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
     if (!dataset) {
         // Try to find by name
         const datasets = await apifyDatasets.listDatasets({ limit: 99999 });
-        for (const maybeDataset of datasets.items) {
-            if (maybeDataset.name === maybeDatasetId) dataset = await apifyDatasets.getDataset({ datasetId: maybeDataset.id });
-        }
+        const datasetByName = datasets.items.find(maybeDataset => maybeDataset.name === maybeDatasetId);
+        if (datasetByName) dataset = await apifyDatasets.getDataset({ datasetId: datasetByName.id });
     }
 
     if (!dataset) throw new Error(`Error: Apify dataset with ${maybeDatasetId} name or id doesn't exist.`);
@@ -44,7 +43,7 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
     if (dataset.itemCount > RESULTS_FILE_LIMIT) {
         // save results by chunks to sliced tables
         // fix empty header row column
-        const headerRowColumnsClean = headerRowColumns.map(column => {
+        const headerRowColumnsClean = headerRowColumns.map((column) => {
             return (column === '') ? 'x' : column;
         });
         const manifest = {
@@ -59,7 +58,8 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
 
             if (dataset.itemCount <= paginationItemsOpts.offset) break;
 
-            paginationItemsOpts = await apifyHelper.saveItemsToFile(apifyDatasets, paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, true);
+            paginationItemsOpts = await apifyHelper.saveItemsToFile(apifyDatasets,
+                paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, true);
             fileCounter += 1;
         }
 

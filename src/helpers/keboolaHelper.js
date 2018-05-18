@@ -60,8 +60,8 @@ function parseConfiguration(configObject) {
             }
         }
     });
-};
+}
 
 module.exports = {
     parseConfiguration,
-}
+};

@@ -89,12 +89,12 @@ const readDirPromised = util.promisify(fs.readdir);
 const readFilePromised = util.promisify(fs.readFile);
 
 module.exports = {
-  saveJson,
-  loadJson,
-  createFilePromised,
-  appendFilePromised,
-  createFolderPromised,
-  fileStatPromied,
-  readDirPromised,
-  readFilePromised,
+    saveJson,
+    loadJson,
+    createFilePromised,
+    appendFilePromised,
+    createFolderPromised,
+    fileStatPromied,
+    readDirPromised,
+    readFilePromised,
 };
