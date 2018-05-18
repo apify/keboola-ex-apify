@@ -1,14 +1,13 @@
-import ApifyClient from 'apify-client';
-import path from 'path';
+const { DATA_DIR } = require('./constants');
+const ApifyClient = require('apify-client');
+const path = require('path');
+const getConfig = require('./helpers/configHelper');
+const { parseConfiguration } = require('./helpers/keboolaHelper');
+const { CONFIG_FILE, ACTIONS, ACTION_TYPES } = require('./constants');
 
-import command from './helpers/cliHelper';
-import getConfig from './helpers/configHelper';
-import { parseConfiguration } from './helpers/keboolaHelper';
-import { CONFIG_FILE, ACTIONS, ACTION_TYPES } from './constants';
-
-import runAction from './actions/run';
-import listCrawlersAction from './actions/listCrawlers';
-import getDatasetItems from './actions/getDatasetItems';
+const runAction = require('./actions/run');
+const listCrawlersAction = require('./actions/listCrawlers');
+const getDatasetItems = require('./actions/getDatasetItems');
 
 
 /**
@@ -26,7 +25,7 @@ import getDatasetItems from './actions/getDatasetItems';
             executionId,
             datasetId,
             actionType,
-        } = await parseConfiguration(getConfig(path.join(command.data, CONFIG_FILE)));
+        } = await parseConfiguration(getConfig(path.join(DATA_DIR, CONFIG_FILE)));
 
         const apifyClient = new ApifyClient({ userId, token });
 

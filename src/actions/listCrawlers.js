@@ -1,7 +1,7 @@
 /**
  * Outputs list of crawlers to stdout
  */
-export default async function listCrawlersAction(apifyClient) {
+module.exports = async function listCrawlersAction(apifyClient) {
     const crawlers = await apifyClient.crawlers.listCrawlers();
     const res = [];
     crawlers.items.forEach((crawler) => {
@@ -18,4 +18,4 @@ export default async function listCrawlersAction(apifyClient) {
     for (let i = 0; i < crawlersListOut.length; i += maxChunkLength) {
         process.stdout.write(crawlersListOut.substring(i, i + maxChunkLength));
     }
-}
+};
