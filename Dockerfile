@@ -1,8 +1,13 @@
-FROM radektomasek/keboola-base-node
+FROM node:carbon
+
 MAINTAINER Apify <info@apify.com>
 
-WORKDIR /home
+WORKDIR /usr/src/app
 
-RUN npm install
+COPY package*.json ./
 
-ENTRYPOINT node_modules/.bin/babel-node --presets es2015,stage-0 ./src/index.js --data=/data
+RUN npm install --only=production
+
+COPY . .
+
+CMD [ "npm", "start" ]
