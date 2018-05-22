@@ -1,6 +1,4 @@
-import fs from 'fs';
-import stripEof  from 'strip-eof';
-import { createFilePromised } from './fsHelper';
+const fs = require('fs');
 
 const WAIT_BETWEEN_REQUESTS = 100; // Time in ms to wait between request, to avoid rate limiting
 const DEFAULT_POOLING_INTERVAL = 2000; // ms
@@ -11,12 +9,12 @@ const DEFAULT_POOLING_INTERVAL = 2000; // ms
  * await sleepPromised(3000);
  * @param ms
  */
-export const sleepPromised = ms => new Promise(resolve => setTimeout(resolve, ms));
+const sleepPromised = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * Asynchronously waits until execution is finished
  */
-export async function waitUntilFinished(executionId, crawlerClient, interval = DEFAULT_POOLING_INTERVAL) {
+async function waitUntilFinished(executionId, crawlerClient, interval = DEFAULT_POOLING_INTERVAL) {
     let running = true;
 
     while (running) {
@@ -38,7 +36,7 @@ export async function waitUntilFinished(executionId, crawlerClient, interval = D
  * @param skipHeaderRow
  * @return {}
  */
-export async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit, file, skipHeaderRow) {
+async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit, file, skipHeaderRow) {
     let fileResultsCount = 0;
     const fileWriteStream = fs.createWriteStream(file, { encoding: 'UTF-8', flags: 'a' });
     while (true) {
@@ -47,7 +45,7 @@ export async function saveResultsToFile(crawlerClient, executionResultsOpts, fil
         executionResultsOpts.skipHeaderRow = (!skipHeaderRow && executionResultsOpts.offset === 0) ? '' : 1;
 
         const executionResults = await crawlerClient.getExecutionResults(executionResultsOpts);
-        const resultCount = parseInt(executionResults.count);
+        const resultCount = parseInt(executionResults.count, 10);
 
         if (resultCount === 0) break;
 
@@ -57,7 +55,7 @@ export async function saveResultsToFile(crawlerClient, executionResultsOpts, fil
 
         fileResultsCount += resultCount;
 
-        executionResultsOpts.offset = executionResultsOpts.offset + executionResultsOpts.limit;
+        executionResultsOpts.offset += executionResultsOpts.limit;
 
         if (fileResultsCount >= fileLimit) break;
 
@@ -76,7 +74,7 @@ export async function saveResultsToFile(crawlerClient, executionResultsOpts, fil
  * @param skipHeaderRow
  * @return {}
  */
-export async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
+async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
     let fileItemsCount = 0;
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     while (true) {
@@ -85,7 +83,7 @@ export async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLi
         paginationItemsOpts.skipHeaderRow = (!skipHeaderRow && paginationItemsOpts.offset === 0) ? 0 : 1;
 
         const itemsPagination = await apifyDatasets.getItems(paginationItemsOpts);
-        const itemsCount = parseInt(itemsPagination.count);
+        const itemsCount = parseInt(itemsPagination.count, 10);
 
         if (itemsCount === 0) break;
 
@@ -94,7 +92,7 @@ export async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLi
 
         fileItemsCount += itemsCount;
 
-        paginationItemsOpts.offset = paginationItemsOpts.offset + paginationItemsOpts.limit;
+        paginationItemsOpts.offset += paginationItemsOpts.limit;
 
         if (fileItemsCount >= fileLimit) break;
 
@@ -103,3 +101,10 @@ export async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLi
     fileWriteStream.end();
     return paginationItemsOpts;
 }
+
+module.exports = {
+    sleepPromised,
+    saveItemsToFile,
+    saveResultsToFile,
+    waitUntilFinished,
+};

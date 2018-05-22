@@ -1,9 +1,8 @@
-import path from 'path';
-import shortid from 'shortid';
+const path = require('path');
+const shortid = require('shortid');
 
-import command from '../helpers/cliHelper';
-import * as apifyHelper from '../helpers/apifyHelper';
-import {
+const apifyHelper = require('../helpers/apifyHelper');
+const {
     loadJson,
     saveJson,
     createFilePromised,
@@ -11,15 +10,16 @@ import {
     fileStatPromied,
     readDirPromised,
     readFilePromised,
-} from '../helpers/fsHelper';
-import {
+} = require('../helpers/fsHelper');
+const {
     DEFAULT_EXTRACTOR_TIMEOUT,
     DEFAULT_TABLES_OUT_DIR,
     STATE_IN_FILE,
     STATE_OUT_FILE,
     DEFAULT_TABLES_IN_DIR,
-} from '../constants';
-import parseCsvPromised from '../helpers/csvHelpers';
+    DATA_DIR,
+} = require('../constants');
+const parseCsvPromised = require('../helpers/csvHelpers');
 
 
 const RESULTS_FILE_LIMIT = 50000;
@@ -27,7 +27,7 @@ const DEFAULT_PAGINATION_LIMIT = 1000;
 const NAME_OF_KEBOOLA_INPUTS_STORE = 'KEBOOLA-INPUTS'; // Name of Apify keyvalue store for Keboola inputs files
 
 const getAndSaveResults = async (executionId, crawlerClient) => {
-    const tableOutDir = path.join(command.data, DEFAULT_TABLES_OUT_DIR);
+    const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
     const fileName = 'crawler-result.csv';
     const resultsOpts = {
         executionId,
@@ -54,7 +54,7 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
     if (outputtedPages > resultsFileLimit) {
         // save results by chunks to sliced tables
         // fix empty header row column
-        const headerRowColumnsClean = headerRowColumns.map(column => {
+        const headerRowColumnsClean = headerRowColumns.map((column) => {
             return (column === '') ? 'x' : column;
         });
         const manifest = {
@@ -69,7 +69,8 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
 
             if (outputtedPages <= paginationResultsOpts.offset) break;
 
-            paginationResultsOpts = await apifyHelper.saveResultsToFile(crawlerClient, paginationResultsOpts, resultsFileLimit, resultFile, true);
+            paginationResultsOpts = await apifyHelper.saveResultsToFile(crawlerClient,
+                paginationResultsOpts, resultsFileLimit, resultFile, true);
             fileCounter += 1;
         }
 
@@ -88,7 +89,7 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
  * @return {Promise<Buffer>||Promise<null>}
  */
 const getInputFile = async () => {
-    const tablesInDirPath = path.join(command.data, DEFAULT_TABLES_IN_DIR);
+    const tablesInDirPath = path.join(DATA_DIR, DEFAULT_TABLES_IN_DIR);
     try {
         await fileStatPromied(tablesInDirPath);
     } catch (e) {
@@ -110,8 +111,8 @@ const getInputFile = async () => {
  * executionId is saved into state file. This state file will be present next time extractor is run
  * with the same configuration
  */
-export default async function runAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout = DEFAULT_EXTRACTOR_TIMEOUT) {
-    const stateInFile = path.join(command.data, STATE_IN_FILE);
+module.exports = async function runAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout = DEFAULT_EXTRACTOR_TIMEOUT) {
+    const stateInFile = path.join(DATA_DIR, STATE_IN_FILE);
     const state = await loadJson(stateInFile);
     const crawlerClient = apifyClient.crawlers;
 
@@ -154,7 +155,7 @@ export default async function runAction(apifyClient, executionId, crawlerId, cra
     if (timeout) {
         setTimeout(async () => {
             console.log('Extractor Timeouted. Saving the state');
-            const stateOutFile = path.join(command.data, STATE_OUT_FILE);
+            const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
             await saveJson({ executionId }, stateOutFile);
             console.log('State saved. Exiting.');
             process.exit(0);
@@ -164,4 +165,4 @@ export default async function runAction(apifyClient, executionId, crawlerId, cra
     console.log(`Waiting for execution ${executionId} to finish`);
     await apifyHelper.waitUntilFinished(executionId, crawlerClient);
     await getAndSaveResults(executionId, crawlerClient);
-}
+};
