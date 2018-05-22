@@ -34,6 +34,8 @@ const getDatasetItems = require('./actions/getDatasetItems');
             case ACTIONS.run:
                 if (actionType === ACTION_TYPES.getDatasetItems) {
                     await getDatasetItems(apifyClient, datasetId);
+                } else if (actionType === ACTION_TYPES.getDatasetItems) {
+                    await getDatasetItems(apifyClient, datasetId);
                 } else {
                     await runAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout);
                 }

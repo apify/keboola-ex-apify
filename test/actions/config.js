@@ -61,7 +61,7 @@ const actionsTestsSetup = async () => {
     console.log('<-- Test set up -->');
 };
 
-const actionsTestsTeardown = async () => {
+const actionsTestsTeardown = () => {
     console.log('<-- Test tear down -->');
     console.log(`Deleting folder ${process.env.DATA_DIR}`);
     rimraf.sync(process.env.DATA_DIR);
