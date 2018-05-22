@@ -6,7 +6,8 @@
   "scripts": {
     "start": "DATA_DIR=/data node ./src/index.js",
     "dev": "DATA_DIR=./.temp/data node ./src/index.js",
-    "lint": "eslint src test"
+    "lint": "eslint src test",
+    "test": "DATA_DIR=./test/test_data mocha --timeout 1200000 --recursive"
   },
   "repository": {
     "type": "git",
@@ -24,14 +25,16 @@
   },
   "homepage": "https://github.com/apifytech/keboola-ex-apify#readme",
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-promise": "^3.7.0"
+    "eslint-plugin-promise": "^3.7.0",
+    "mocha": "^5.1.1",
+    "sinon": "^5.0.7"
   },
   "dependencies": {
-    "apify-client": "beta",
-    "babel-polyfill": "^6.13.0",
+    "apify-client": "^0.2.9",
     "csv-parse": "^2.0.0",
     "fast-csv": "^2.3.0",
     "firebase": "^3.4.1",
@@ -42,6 +45,7 @@
     "moment": "^2.19.3",
     "nconf": "^0.8.4",
     "request": "^2.81.0",
+    "rimraf": "^2.6.2",
     "shortid": "^2.2.8",
     "strip-eof": "^1.0.0",
     "underscore": "^1.8.3"

@@ -1,0 +1,9 @@
+{
+  "action": "run",
+  "parameters": {
+    "actionType": "getDatasetItems",
+    "userId": "myUserId",
+    "#token": "myToken",
+    "datasetId": "test-dataset"
+  }
+}

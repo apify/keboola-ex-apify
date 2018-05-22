@@ -1,8 +1,13 @@
-FROM radektomasek/keboola-base-node
+FROM node:carbon
+
 MAINTAINER Apify <info@apify.com>
 
-WORKDIR /home
+WORKDIR /usr/src/app
 
-RUN git clone https://github.com/apifytech/keboola-ex-apify ./ && npm install
+COPY package*.json ./
 
-ENTRYPOINT node_modules/.bin/babel-node --presets es2015,stage-0 ./src/index.js --data=/data
+RUN npm install
+
+COPY . .
+
+CMD [ "npm", "start" ]

@@ -9,6 +9,8 @@ exports.DEFAULT_TABLES_IN_DIR = '/in/tables';
 exports.DEFAULT_TABLES_OUT_DIR = '/out/tables';
 exports.STATE_IN_FILE = '/in/state.json';
 exports.STATE_OUT_FILE = '/out/state.json';
+exports.RESULTS_FILE_NAME = 'crawler-result.csv';
+exports.DATASET_FILE_NAME = 'dataset-items.csv';
 
 // Data dir
 exports.DATA_DIR = process.env.DATA_DIR || exports.DEFAULT_DATA_DIR;
