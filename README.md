@@ -46,29 +46,35 @@ Before run, you need to have one of configuration in `path_to_data_folder` folde
 
 `cd keboola-ex-apify-docker`
 
-`docker build --tag=test .`
+`docker build --tag=test-ex .`
 
-`docker run --volume=path_to_data_folder:/data/ test`
+`docker run --volume=path_to_data_folder:/data/ test-ex`
 
 ### Run without docker
 
 `cd keboola-ex-apify`
 
-`node_modules/.bin/babel-node --presets es2015,stage-0 ./src/index.js --data=path_to_data_folder`
+`npm run dev`
+
+### Run docker image on top of Keboola platform
+Follow instruction on https://developers.keboola.com/extend/component/deployment/#test-live-configurations.
+
+### Run tests in node js app
+
+`DATA_DIR=path_to_data_folder APIFY_TEST_USER_ID=testUserIs APIFY_TEST_TOKEN=testUserToken npm run test`
+
+### Run test in build docker container
+
+`docker build --tag=test-ex .`
+
+`docker run -e DATA_DIR=path_to_data_folder -e APIFY_TEST_USER_ID=testUserIs -e APIFY_TEST_TOKEN=testUserToken test-ex npm test`
 
 ## Deploy
 
+Deploy process was build regarding keboola developer portals recommendations.
+https://developers.keboola.com/extend/component/deployment/https://developers.keboola.com/extend/component/deployment/tag
+
 1. Commit last version to github and create tag.
 
-2. Update tag of keboola-ex-apify to latest number in dockerfile of keboola-ex-apify-docker.
-
-3. Push keboola-ex-apify-docker to docker hub:
-
-`docker login`
-
-`cd keboola-ex-apify-docker`
-
-`docker build -t apify/keboola-extractor:latest .`
-
-`docker push apify/keboola-extractor:latest`
+2. Tags with proper version like `x.y.z` goes to public version on production extractor! Other tags like `x.y.z-beta` goes to private version and you can test it on top of Keboola platform.
 
