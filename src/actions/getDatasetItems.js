@@ -2,10 +2,10 @@ const apifyHelper = require('../helpers/apifyHelper');
 const path = require('path');
 const parseCsvPromised = require('../helpers/csvHelpers');
 const { createFilePromised, createFolderPromised } = require('../helpers/fsHelper');
-const { DEFAULT_TABLES_OUT_DIR, DATA_DIR } = require('../constants');
+const { DEFAULT_TABLES_OUT_DIR, DATA_DIR, DATASET_FILE_NAME } = require('../constants');
 
 const RESULTS_FILE_LIMIT = 50000;
-const DEFAULT_PAGINATION_LIMIT = 1000;
+const DEFAULT_PAGINATION_LIMIT = 5000;
 
 
 /**
@@ -23,9 +23,8 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
 
     if (!dataset) throw new Error(`Error: Apify dataset with ${maybeDatasetId} name or id doesn't exist.`);
 
-    const datasetId = dataset.id;
+    const datasetId = dataset.id || dataset._id;
     const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
-    const fileName = 'dataset-items.csv';
     const getItemsOpts = {
         datasetId,
         format: 'csv',
@@ -49,7 +48,7 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
         const manifest = {
             columns: headerRowColumnsClean,
         };
-        const resultDir = path.join(tableOutDir, fileName);
+        const resultDir = path.join(tableOutDir, DATASET_FILE_NAME);
         await createFolderPromised(resultDir);
 
         let fileCounter = 1;
@@ -63,10 +62,10 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
             fileCounter += 1;
         }
 
-        await createFilePromised(path.join(tableOutDir, `${fileName}.manifest`), JSON.stringify(manifest));
+        await createFilePromised(path.join(tableOutDir, `${DATASET_FILE_NAME}.manifest`), JSON.stringify(manifest));
     } else {
         // save result to one file
-        const resultFile = path.join(tableOutDir, fileName);
+        const resultFile = path.join(tableOutDir, DATASET_FILE_NAME);
         await createFilePromised(resultFile, '');
         await apifyHelper.saveItemsToFile(apifyDatasets, paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, false);
     }

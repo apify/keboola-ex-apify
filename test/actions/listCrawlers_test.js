@@ -1,4 +1,4 @@
-const apifyClient = require('./config');
+const { apifyClient } = require('./config');
 const { expect } = require('chai');
 const sinon = require('sinon');
 const listCrawlers = require('../../src/actions/listCrawlers');
@@ -7,9 +7,7 @@ describe('List Crawlers action', () => {
     beforeEach(() => {
         sinon.spy(process.stdout, 'write');
     });
-
     it('should returns crawlers list to stdout', async () => {
-
         const crawlers = await apifyClient.crawlers.listCrawlers();
 
         await listCrawlers(apifyClient);
@@ -20,7 +18,6 @@ describe('List Crawlers action', () => {
         expect(crawlersInStdOut.length).to.eql(crawlers.items.length);
         crawlers.items.forEach((crawler, i) => expect(crawler._id).to.eql(crawlersInStdOut[i].id));
     });
-
     afterEach(() => {
         process.stdout.write.restore();
     });

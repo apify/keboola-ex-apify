@@ -18,6 +18,7 @@ const {
     STATE_OUT_FILE,
     DEFAULT_TABLES_IN_DIR,
     DATA_DIR,
+    RESULTS_FILE_NAME,
 } = require('../constants');
 const parseCsvPromised = require('../helpers/csvHelpers');
 
@@ -28,7 +29,6 @@ const NAME_OF_KEBOOLA_INPUTS_STORE = 'KEBOOLA-INPUTS'; // Name of Apify keyvalue
 
 const getAndSaveResults = async (executionId, crawlerClient) => {
     const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
-    const fileName = 'crawler-result.csv';
     const resultsOpts = {
         executionId,
         simplified: 1,
@@ -60,7 +60,7 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
         const manifest = {
             columns: headerRowColumnsClean,
         };
-        const resultDir = path.join(tableOutDir, fileName);
+        const resultDir = path.join(tableOutDir, RESULTS_FILE_NAME);
         await createFolderPromised(resultDir);
 
         let fileCounter = 1;
@@ -74,10 +74,10 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
             fileCounter += 1;
         }
 
-        await createFilePromised(path.join(tableOutDir, `${fileName}.manifest`), JSON.stringify(manifest));
+        await createFilePromised(path.join(tableOutDir, `${RESULTS_FILE_NAME}.manifest`), JSON.stringify(manifest));
     } else {
         // save result to one file
-        const resultFile = path.join(tableOutDir, fileName);
+        const resultFile = path.join(tableOutDir, RESULTS_FILE_NAME);
         await createFilePromised(resultFile, '');
         await apifyHelper.saveResultsToFile(crawlerClient, paginationResultsOpts, resultsFileLimit, resultFile, false);
     }
