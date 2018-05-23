@@ -13,6 +13,8 @@ if (!process.env.APIFY_TEST_USER_ID || !process.env.APIFY_TEST_TOKEN) {
     throw new Error('Missing APIFY_TEST_USER_ID or APIFY_TEST_TOKEN environment variable for tests!');
 }
 
+const apifyClient = new ApifyClient({ userId: process.env.APIFY_TEST_USER_ID, token: process.env.APIFY_TEST_TOKEN })
+
 const getLocalResultRows = async (dataset) => {
     const fileName = (dataset) ? DATASET_FILE_NAME : RESULTS_FILE_NAME;
     const resultsPath = path.join(process.env.DATA_DIR, DEFAULT_TABLES_OUT_DIR, fileName);
@@ -73,12 +75,21 @@ const saveInputFile = async (content) => {
     fs.writeFileSync(filePath, content);
 };
 
+const getDatasetItemsRows = async (datasetId, opts = {}) => {
+    const apiResults = await apifyClient.datasets.getItems(Object.assign({
+        datasetId,
+        format: 'csv',
+    }, opts));
+    return apiResults.items.toString().split(/\r?\n/);
+};
+
 module.exports = {
-    apifyClient: new ApifyClient({ userId: process.env.APIFY_TEST_USER_ID, token: process.env.APIFY_TEST_TOKEN }),
+    apifyClient,
     getLocalResultRows,
     getManifest,
     actionsTestsTeardown,
     actionsTestsSetup,
     checkRows,
     saveInputFile,
+    getDatasetItemsRows,
 };

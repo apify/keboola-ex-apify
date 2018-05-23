@@ -35,6 +35,27 @@ function parseConfiguration(configObject) {
                     datasetId,
                     actionType,
                 });
+            } else if (actionType === ACTION_TYPES.runActor) {
+                if (!userId) reject('Parameter userId is not defined!');
+                if (!token) reject('Parameter token is not defined!');
+
+                const actId = configObject.get('parameters:actId');
+                if (!actId) reject('Parameter actId is not defined!');
+
+                const input = configObject.get('parameters:input');
+                const memory = configObject.get('parameters:memory');
+                const build = configObject.get('parameters:build');
+
+                resolve({
+                    action,
+                    actionType,
+                    userId,
+                    token,
+                    actId,
+                    input,
+                    memory,
+                    build,
+                });
             } else {
                 // This is default action type for gets results from specific execution or
                 // strarts execution and gets results after finished

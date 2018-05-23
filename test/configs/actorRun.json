@@ -1,0 +1,14 @@
+{
+  "action": "run",
+  "parameters": {
+    "actionType": "runActor",
+    "userId": "myUserId",
+    "#token": "myToken",
+    "actId": "my-user-name/actor",
+    "input": {
+      "pages": 1
+    },
+    "memory": "512",
+    "build": "latest"
+  }
+}

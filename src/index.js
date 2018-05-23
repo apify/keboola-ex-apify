@@ -9,6 +9,7 @@ const { CONFIG_FILE, ACTIONS, ACTION_TYPES } = require('./constants');
 const runAction = require('./actions/run');
 const listCrawlersAction = require('./actions/listCrawlers');
 const getDatasetItems = require('./actions/getDatasetItems');
+const runActorAction = require('./actions/runActor');
 
 
 /**
@@ -26,6 +27,10 @@ const getDatasetItems = require('./actions/getDatasetItems');
             executionId,
             datasetId,
             actionType,
+            actId,
+            input,
+            memory,
+            build,
         } = await parseConfiguration(getConfig(path.join(DATA_DIR, CONFIG_FILE)));
 
         const apifyClient = new ApifyClient({ userId, token });
@@ -34,8 +39,8 @@ const getDatasetItems = require('./actions/getDatasetItems');
             case ACTIONS.run:
                 if (actionType === ACTION_TYPES.getDatasetItems) {
                     await getDatasetItems(apifyClient, datasetId);
-                } else if (actionType === ACTION_TYPES.getDatasetItems) {
-                    await getDatasetItems(apifyClient, datasetId);
+                } else if (actionType === ACTION_TYPES.runActor) {
+                    await runActorAction(apifyClient, actId, input, memory, build);
                 } else {
                     await runAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout);
                 }

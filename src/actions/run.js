@@ -154,7 +154,7 @@ module.exports = async function runAction(apifyClient, executionId, crawlerId, c
     // Create a timeout limit, after which executionId will be saved and extractor will stop
     if (timeout) {
         setTimeout(async () => {
-            console.log('Extractor Timeouted. Saving the state');
+            console.log('Extractor timeouts. Saving the state');
             const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
             await saveJson({ executionId }, stateOutFile);
             console.log('State saved. Exiting.');
@@ -163,6 +163,6 @@ module.exports = async function runAction(apifyClient, executionId, crawlerId, c
     }
 
     console.log(`Waiting for execution ${executionId} to finish`);
-    await apifyHelper.waitUntilFinished(executionId, crawlerClient);
+    await apifyHelper.waitUntilExecutionFinished(executionId, crawlerClient);
     await getAndSaveResults(executionId, crawlerClient);
 };

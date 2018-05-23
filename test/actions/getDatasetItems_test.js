@@ -1,5 +1,5 @@
 const { apifyClient, getLocalResultRows, checkRows,
-    actionsTestsSetup, actionsTestsTeardown } = require('./config');
+    actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
 const { sleepPromised } = require('../../src/helpers/apifyHelper');
 const shortid = require('shortid');
 const getDatasetItems = require('../../src/actions/getDatasetItems');
@@ -20,14 +20,6 @@ const createDatasetWithItems = async (rowCount) => {
         }
     }
     return dataset;
-};
-
-const getDatasetItemsRows = async (datasetId, opts = {}) => {
-    const apiResults = await apifyClient.datasets.getItems(Object.assign({
-        datasetId,
-        format: 'csv',
-    }, opts));
-    return apiResults.items.toString().split(/\r?\n/);
 };
 
 describe('Get dataset items', () => {

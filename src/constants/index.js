@@ -30,4 +30,5 @@ exports.ACTIONS = {
 exports.ACTION_TYPES = {
     runExecution: 'runExecution',
     getDatasetItems: 'getDatasetItems',
+    runActor: 'runActor',
 };

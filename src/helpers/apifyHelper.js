@@ -14,7 +14,7 @@ const sleepPromised = ms => new Promise(resolve => setTimeout(resolve, ms));
 /**
  * Asynchronously waits until execution is finished
  */
-async function waitUntilFinished(executionId, crawlerClient, interval = DEFAULT_POOLING_INTERVAL) {
+async function waitUntilExecutionFinished(executionId, crawlerClient, interval = DEFAULT_POOLING_INTERVAL) {
     let running = true;
 
     while (running) {
@@ -25,6 +25,24 @@ async function waitUntilFinished(executionId, crawlerClient, interval = DEFAULT_
         }
         await sleepPromised(interval);
     }
+}
+
+/**
+ * Asynchronously waits until run is finished
+ */
+async function waitUntilRunFinished(runId, actId, actsClient, interval = DEFAULT_POOLING_INTERVAL) {
+    let running = true;
+    let actRun;
+
+    while (running) {
+        actRun = await actsClient.getRun({ actId, runId });
+        console.log(`Actor run ${actRun.status}`);
+        if (actRun.status !== 'RUNNING') {
+            running = false;
+        }
+        await sleepPromised(interval);
+    }
+    return actRun;
 }
 
 /**
@@ -102,9 +120,19 @@ async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, fi
     return paginationItemsOpts;
 }
 
+function printLargeStringToStdOut(largeString) {
+    // You can output in stdout only 64 000 bit in docker container (in plain nodejs process it works at all)
+    const maxChunkLength = 50000;
+    for (let i = 0; i < largeString.length; i += maxChunkLength) {
+        process.stdout.write(largeString.substring(i, i + maxChunkLength));
+    }
+}
+
 module.exports = {
     sleepPromised,
     saveItemsToFile,
     saveResultsToFile,
-    waitUntilFinished,
+    waitUntilExecutionFinished,
+    waitUntilRunFinished,
+    printLargeStringToStdOut,
 };

@@ -1,3 +1,5 @@
+const { printLargeStringToStdOut } = require('../helpers/apifyHelper');
+
 /**
  * Outputs list of crawlers to stdout
  */
@@ -13,9 +15,5 @@ module.exports = async function listCrawlersAction(apifyClient) {
         });
     });
     const crawlersListOut = JSON.stringify(res);
-    // You can output in stdout only 64 000 bit in docker container (in plain nodejs process it works at all)
-    const maxChunkLength = 50000;
-    for (let i = 0; i < crawlersListOut.length; i += maxChunkLength) {
-        process.stdout.write(crawlersListOut.substring(i, i + maxChunkLength));
-    }
+    printLargeStringToStdOut(crawlersListOut);
 };
