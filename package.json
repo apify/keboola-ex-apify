@@ -34,7 +34,7 @@
     "sinon": "^5.0.7"
   },
   "dependencies": {
-    "apify-client": "^0.2.9",
+    "apify-client": "^0.2.10",
     "csv-parse": "^2.0.0",
     "fast-csv": "^2.3.0",
     "firebase": "^3.4.1",

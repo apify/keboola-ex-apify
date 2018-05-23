@@ -36,7 +36,7 @@ describe('Run action', () => {
                     for(var i=0;i<10000;i++) {
                         results.push({
                            i: i,
-                           value: Math.random() 
+                           value: Math.random()
                         });
                     }
                     return results;
@@ -112,23 +112,21 @@ describe('Run action', () => {
         expect(manifest).to.eql(expectedManifest);
     });
 
-    // TODO: Comments out this, when we have getExecutionDetails with executionId
-    // it('Run crawler with input file', async () => {
-    //     const inputFileString = 'column,column2,column3\ntest,value,1\ntest2,value2,2\n';
-    //     saveInputFile(inputFileString);
-    //     sinon.spy(console, 'log');
-    //     await run(apifyClient, null, TEST_CRAWLER_ID);
-    //     const executionId = console.log.args[0][0].match(/ExecutionId:\s(\w+)/)[1];
-    //     console.log.restore();
-    //
-    //     const localCsvRows = await getLocalResultRows();
-    //     const apiRows = await getExecutionResultRows(executionId, { skipHeaderRow: 1 });
-    //
-    //     checkRows(localCsvRows, apiRows);
-    //     // Check input files in customData of execution
-    //     const crawlerSettings = await apifyClient.crawlers.getExecutionDetails({ crawlerId: TEST_CRAWLER_ID, executionId });
-    //     console.log(crawlerSettings);
-    //     const kvsFile = await apifyClient.keyValueStores.getRecord(Object.assign(crawlerSettings.customData));
-    //     expect(kvsFile.body.toString()).to.eql(inputFileString);
-    // });
+    it('Run crawler with input file', async () => {
+        const inputFileString = 'column,column2,column3\ntest,value,1\ntest2,value2,2\n';
+        saveInputFile(inputFileString);
+        sinon.spy(console, 'log');
+        await run(apifyClient, null, TEST_CRAWLER_ID);
+        const executionId = console.log.args[0][0].match(/ExecutionId:\s(\w+)/)[1];
+        console.log.restore();
+
+        const localCsvRows = await getLocalResultRows();
+        const apiRows = await getExecutionResultRows(executionId);
+
+        checkRows(localCsvRows, apiRows);
+        // Check input files in customData of execution
+        const crawlerSettings = await apifyClient.crawlers.getCrawlerSettings({ crawlerId: TEST_CRAWLER_ID, executionId });
+        const kvsFile = await apifyClient.keyValueStores.getRecord(Object.assign(crawlerSettings.customData));
+        expect(kvsFile.body.toString()).to.eql(inputFileString);
+    });
 });

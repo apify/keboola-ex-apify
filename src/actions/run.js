@@ -141,10 +141,17 @@ module.exports = async function runAction(apifyClient, executionId, crawlerId, c
                 body: inputFile,
                 contentType: 'text/csv',
             });
-            if (crawlerExecution.settings.customData && typeof crawlerExecution.settings.customData === 'object') {
+            if (crawlerExecution.settings && crawlerExecution.settings.customData && typeof crawlerExecution.settings.customData === 'object') {
                 Object.assign(crawlerExecution.settings.customData, { storeId, key });
-            } else {
+            } else if (crawlerExecution.settings) {
                 crawlerExecution.settings.customData = { storeId, key };
+            } else {
+                crawlerExecution.settings = {
+                    customData: {
+                        storeId,
+                        key,
+                    },
+                };
             }
         }
         const execution = await crawlerClient.startExecution(crawlerExecution);
