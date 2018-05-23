@@ -21,9 +21,9 @@ module.exports = async function runActor(apifyClient, actId, input, memory, buil
     const { acts } = apifyClient;
     let runId = state.runId;
 
-    // If no run ID stats new run
+    // If no run ID, starts new one
     if (!runId) {
-        // Crawler run options
+        // Actor run options
         const opts = { actId };
         if (input) {
             Object.assign(opts, {
