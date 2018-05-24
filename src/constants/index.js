@@ -1,6 +1,3 @@
-// Apify constants
-exports.APIFY_API_BASE_URL = 'https://api.apify.com/v1';
-
 // Default constants of the application.
 exports.CONFIG_FILE = 'config.json';
 exports.DEFAULT_EXTRACTOR_TIMEOUT = 55 * 60 * 1000;
