@@ -23,7 +23,7 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
 
     if (!dataset) throw new Error(`Error: Apify dataset with ${maybeDatasetId} name or id doesn't exist.`);
 
-    const datasetId = dataset.id || dataset._id;
+    const datasetId = dataset.id || dataset._id; // TODO: Use only id, when we fix _id for test user
     const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
     const getItemsOpts = {
         datasetId,
