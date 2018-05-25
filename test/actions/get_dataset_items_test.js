@@ -1,12 +1,11 @@
 const { apifyClient, getLocalResultRows, checkRows,
     actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
 const { delayPromise } = require('apify-shared/utilities');
-const shortid = require('shortid');
-shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+const { randomHostLikeString } = require('../../src/helpers/apify_helper');
 const getDatasetItems = require('../../src/actions/get_dataset_items');
 
 const createDatasetWithItems = async (rowCount) => {
-    const dataset = await apifyClient.datasets.getOrCreateDataset({ datasetName: shortid.generate() });
+    const dataset = await apifyClient.datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
     const datasetId = dataset.id || dataset._id;
     let rows = [];
     for (let i = 0; i < rowCount; i++) {

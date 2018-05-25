@@ -134,6 +134,8 @@ async function findDatasetByName(apifyDatasets, maybeDatasetName) {
     }
 }
 
+const randomHostLikeString = () => `${Math.random().toString(36).substring(2)}-${Date.now().toString(36).substring(2)}`;
+
 module.exports = {
     saveItemsToFile,
     saveResultsToFile,
@@ -141,4 +143,5 @@ module.exports = {
     waitUntilRunFinished,
     printLargeStringToStdOut,
     findDatasetByName,
+    randomHostLikeString,
 };

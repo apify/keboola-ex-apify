@@ -47,7 +47,6 @@
     "nconf": "^0.8.4",
     "request": "^2.81.0",
     "rimraf": "^2.6.2",
-    "shortid": "^2.2.8",
     "strip-eof": "^1.0.0",
     "underscore": "^1.8.3"
   }

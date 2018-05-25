@@ -1,5 +1,4 @@
 const path = require('path');
-const shortid = require('shortid');
 
 const apifyHelper = require('../helpers/apify_helper');
 const {
@@ -134,7 +133,7 @@ module.exports = async function runAction(apifyClient, executionId, crawlerId, c
             const keyValueStoresClient = apifyClient.keyValueStores;
             const store = await keyValueStoresClient.getOrCreateStore({ storeName: NAME_OF_KEBOOLA_INPUTS_STORE });
             const storeId = store.id;
-            const key = shortid.generate();
+            const key = apifyHelper.randomHostLikeString();
             await keyValueStoresClient.putRecord({
                 storeId,
                 key,
