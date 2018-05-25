@@ -68,7 +68,7 @@ Follow instruction on https://developers.keboola.com/extend/component/deployment
 ## Deploy
 
 Deploy process was build regarding keboola developer portals recommendations.
-https://developers.keboola.com/extend/component/deployment/https://developers.keboola.com/extend/component/deployment/tag
+https://developers.keboola.com/extend/component/deployment/
 
 1. Commit last version to github and create tag.
 
