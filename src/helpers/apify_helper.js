@@ -121,11 +121,24 @@ function printLargeStringToStdOut(largeString) {
     }
 }
 
+async function findDatasetByName(apifyDatasets, maybeDatasetName) {
+    let datasetsPage;
+    let offset = 0;
+    const limit = 1000;
+    while (true) {
+        datasetsPage = await apifyDatasets.listDatasets({ limit, offset });
+        const datasetByName = datasetsPage.items.find(maybeDataset => maybeDataset.name === maybeDatasetName);
+        if (datasetByName) return datasetByName;
+        if (datasetsPage.count === 0) return;
+        offset += limit;
+    }
+}
+
 module.exports = {
-    delayPromise: delayPromise,
     saveItemsToFile,
     saveResultsToFile,
     waitUntilExecutionFinished,
     waitUntilRunFinished,
     printLargeStringToStdOut,
+    findDatasetByName,
 };

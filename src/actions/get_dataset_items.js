@@ -16,8 +16,8 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
     let dataset = await apifyDatasets.getDataset({ datasetId: maybeDatasetId });
     if (!dataset) {
         // Try to find by name
-        const datasets = await apifyDatasets.listDatasets({ limit: 99999 });
-        const datasetByName = datasets.items.find(maybeDataset => maybeDataset.name === maybeDatasetId);
+        // TODO: Fix when we can get dataset by name
+        const datasetByName = await apifyHelper.findDatasetByName(apifyDatasets, maybeDatasetId);
         if (datasetByName) dataset = await apifyDatasets.getDataset({ datasetId: datasetByName.id });
     }
 
