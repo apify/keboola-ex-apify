@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "apify-client": "^0.2.10",
+    "apify-shared": "0.0.34",
     "csv-parse": "^2.0.0",
     "fast-csv": "^2.3.0",
     "firebase": "^3.4.1",

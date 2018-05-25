@@ -1,10 +1,4 @@
-const parse = require('csv-parse/lib/index');
+const parseCsv = require('csv-parse/lib/index');
+const { promisify } = require('util');
 
-module.exports = function parseCsvPromised(input, opts) {
-    return new Promise((resolve, reject) => {
-        parse(input, opts, (err, output) => {
-            if (err) reject(err);
-            resolve(output);
-        });
-    });
-};
+module.exports = promisify(parseCsv);

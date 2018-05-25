@@ -1,15 +1,8 @@
 const fs = require('fs');
+const { delayPromise } = require('apify-shared/utilities');
 
 const WAIT_BETWEEN_REQUESTS = 100; // Time in ms to wait between request, to avoid rate limiting
 const DEFAULT_POOLING_INTERVAL = 2000; // ms
-
-/**
- * Sleep for ms with promised
- * usage:
- * await sleepPromised(3000);
- * @param ms
- */
-const sleepPromised = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * Asynchronously waits until execution is finished
@@ -23,7 +16,7 @@ async function waitUntilExecutionFinished(executionId, crawlerClient, interval =
         if (executionState.status !== 'RUNNING') {
             running = false;
         }
-        await sleepPromised(interval);
+        await delayPromise(interval);
     }
 }
 
@@ -40,7 +33,7 @@ async function waitUntilRunFinished(runId, actId, actsClient, interval = DEFAULT
         if (actRun.status !== 'RUNNING') {
             running = false;
         }
-        await sleepPromised(interval);
+        await delayPromise(interval);
     }
     return actRun;
 }
@@ -77,7 +70,7 @@ async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit,
 
         if (fileResultsCount >= fileLimit) break;
 
-        await sleepPromised(WAIT_BETWEEN_REQUESTS);
+        await delayPromise(WAIT_BETWEEN_REQUESTS);
     }
     fileWriteStream.end();
     return executionResultsOpts;
@@ -114,7 +107,7 @@ async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, fi
 
         if (fileItemsCount >= fileLimit) break;
 
-        await sleepPromised(WAIT_BETWEEN_REQUESTS);
+        await delayPromise(WAIT_BETWEEN_REQUESTS);
     }
     fileWriteStream.end();
     return paginationItemsOpts;
@@ -129,7 +122,7 @@ function printLargeStringToStdOut(largeString) {
 }
 
 module.exports = {
-    sleepPromised,
+    delayPromise: delayPromise,
     saveItemsToFile,
     saveResultsToFile,
     waitUntilExecutionFinished,

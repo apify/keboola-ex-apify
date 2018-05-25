@@ -163,7 +163,7 @@ module.exports = async function runAction(apifyClient, executionId, crawlerId, c
         setTimeout(async () => {
             console.log('Extractor timeouts. Saving the state');
             const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
-            await saveJson({ executionId }, stateOutFile);
+            await saveJson(stateOutFile, { executionId });
             console.log('State saved. Exiting.');
             process.exit(0);
         }, timeout);

@@ -43,7 +43,7 @@ module.exports = async function runActor(apifyClient, actId, input, memory, buil
         setTimeout(async () => {
             console.log('Extractor timeouts. Saving the state');
             const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
-            await saveJson({ runId }, stateOutFile);
+            await saveJson(stateOutFile, { runId });
             console.log('State saved. Exiting.');
             process.exit(0);
         }, timeout);

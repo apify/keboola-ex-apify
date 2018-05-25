@@ -1,6 +1,6 @@
 const { apifyClient, getLocalResultRows, checkRows,
     actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
-const { sleepPromised } = require('../../src/helpers/apify_helper');
+const { delayPromise } = require('apify-shared/utilities');
 const shortid = require('shortid');
 const getDatasetItems = require('../../src/actions/get_dataset_items');
 
@@ -50,7 +50,7 @@ describe('Get dataset items', () => {
 
     it('Works for 100K+ items', async () => {
         const dataset = await createDatasetWithItems(111000);
-        await sleepPromised(30000);
+        await delayPromise(30000);
 
         await getDatasetItems(apifyClient, dataset.id);
 
