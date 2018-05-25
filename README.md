@@ -44,15 +44,11 @@ Before run, you need to have one of configuration in `path_to_data_folder` folde
 
 ### Run in Docker
 
-`cd keboola-ex-apify-docker`
-
 `docker build --tag=test-ex .`
 
 `docker run --volume=path_to_data_folder:/data/ test-ex`
 
 ### Run without docker
-
-`cd keboola-ex-apify`
 
 `npm run dev`
 
