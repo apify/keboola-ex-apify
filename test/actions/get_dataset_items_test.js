@@ -2,6 +2,7 @@ const { apifyClient, getLocalResultRows, checkRows,
     actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
 const { delayPromise } = require('apify-shared/utilities');
 const shortid = require('shortid');
+shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
 const getDatasetItems = require('../../src/actions/get_dataset_items');
 
 const createDatasetWithItems = async (rowCount) => {
