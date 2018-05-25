@@ -2,14 +2,14 @@
 const { DATA_DIR } = require('./constants');
 const ApifyClient = require('apify-client');
 const path = require('path');
-const getConfig = require('./helpers/configHelper');
-const { parseConfiguration } = require('./helpers/keboolaHelper');
+const getConfig = require('./helpers/config_helper');
+const { parseConfiguration } = require('./helpers/keboola_helper');
 const { CONFIG_FILE, ACTIONS, ACTION_TYPES } = require('./constants');
 
 const runAction = require('./actions/run');
-const listCrawlersAction = require('./actions/listCrawlers');
-const getDatasetItems = require('./actions/getDatasetItems');
-const runActorAction = require('./actions/runActor');
+const listCrawlersAction = require('./actions/list_crawlers');
+const getDatasetItems = require('./actions/get_dataset_items');
+const runActorAction = require('./actions/run_actor');
 
 
 /**

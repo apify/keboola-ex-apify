@@ -6,7 +6,7 @@ const { promisify } = require('util');
 const rimraf = require('rimraf');
 const path = require('path');
 const stripEof = require('strip-eof');
-const { createFolderPromised } = require('../../src/helpers/fsHelper');
+const { createFolderPromised } = require('../../src/helpers/fs_helper');
 
 
 if (!process.env.APIFY_TEST_USER_ID || !process.env.APIFY_TEST_TOKEN) {

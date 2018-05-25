@@ -1,7 +1,7 @@
 const { apifyClient } = require('./config');
 const { expect } = require('chai');
 const sinon = require('sinon');
-const listActorsAction = require('../../src/actions/listActors');
+const listActorsAction = require('../../src/actions/list_actors');
 
 describe('List Actors action', () => {
     beforeEach(() => {

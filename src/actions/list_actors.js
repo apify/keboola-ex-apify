@@ -1,4 +1,4 @@
-const { printLargeStringToStdOut } = require('../helpers/apifyHelper');
+const { printLargeStringToStdOut } = require('../helpers/apify_helper');
 
 /**
  * Outputs list of actors to stdout

@@ -1,8 +1,8 @@
 const { expect } = require('chai');
 const path = require('path');
 const { ACTIONS, ACTION_TYPES } = require('../src/constants');
-const { parseConfiguration } = require('../src/helpers/keboolaHelper');
-const getConfig = require('../src/helpers/configHelper');
+const { parseConfiguration } = require('../src/helpers/keboola_helper');
+const getConfig = require('../src/helpers/config_helper');
 
 describe('Keboola Heplers', () => {
     describe('parseConfiguration()', () => {

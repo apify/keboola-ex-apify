@@ -1,7 +1,7 @@
 const path = require('path');
 const shortid = require('shortid');
 
-const apifyHelper = require('../helpers/apifyHelper');
+const apifyHelper = require('../helpers/apify_helper');
 const {
     loadJson,
     saveJson,
@@ -10,7 +10,7 @@ const {
     fileStatPromied,
     readDirPromised,
     readFilePromised,
-} = require('../helpers/fsHelper');
+} = require('../helpers/fs_helper');
 const {
     DEFAULT_EXTRACTOR_TIMEOUT,
     DEFAULT_TABLES_OUT_DIR,
@@ -20,7 +20,7 @@ const {
     DATA_DIR,
     RESULTS_FILE_NAME,
 } = require('../constants');
-const parseCsvPromised = require('../helpers/csvHelpers');
+const parseCsvPromised = require('../helpers/csv_helpers');
 
 
 const RESULTS_FILE_LIMIT = 50000;

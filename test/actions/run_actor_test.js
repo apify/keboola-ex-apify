@@ -1,7 +1,7 @@
 const { apifyClient, getLocalResultRows, checkRows,
     actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
 const sinon = require('sinon');
-const runActorAction = require('../../src/actions/runActor');
+const runActorAction = require('../../src/actions/run_actor');
 
 const TEST_ACTOR_ID = 'g4kx2tPptErWMFCra';
 

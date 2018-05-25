@@ -1,8 +1,8 @@
 const { apifyClient, getLocalResultRows, checkRows,
     actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
-const { sleepPromised } = require('../../src/helpers/apifyHelper');
+const { sleepPromised } = require('../../src/helpers/apify_helper');
 const shortid = require('shortid');
-const getDatasetItems = require('../../src/actions/getDatasetItems');
+const getDatasetItems = require('../../src/actions/get_dataset_items');
 
 const createDatasetWithItems = async (rowCount) => {
     const dataset = await apifyClient.datasets.getOrCreateDataset({ datasetName: shortid.generate() });

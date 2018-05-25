@@ -1,7 +1,7 @@
 const { apifyClient } = require('./config');
 const { expect } = require('chai');
 const sinon = require('sinon');
-const listCrawlers = require('../../src/actions/listCrawlers');
+const listCrawlers = require('../../src/actions/list_crawlers');
 
 describe('List Crawlers action', () => {
     beforeEach(() => {

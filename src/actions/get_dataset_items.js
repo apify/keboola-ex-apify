@@ -1,7 +1,7 @@
-const apifyHelper = require('../helpers/apifyHelper');
+const apifyHelper = require('../helpers/apify_helper');
 const path = require('path');
-const parseCsvPromised = require('../helpers/csvHelpers');
-const { createFilePromised, createFolderPromised } = require('../helpers/fsHelper');
+const parseCsvPromised = require('../helpers/csv_helpers');
+const { createFilePromised, createFolderPromised } = require('../helpers/fs_helper');
 const { DEFAULT_TABLES_OUT_DIR, DATA_DIR, DATASET_FILE_NAME } = require('../constants');
 
 const RESULTS_FILE_LIMIT = 50000;

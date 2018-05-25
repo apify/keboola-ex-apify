@@ -1,8 +1,8 @@
-const apifyHelper = require('../helpers/apifyHelper');
+const apifyHelper = require('../helpers/apify_helper');
 const path = require('path');
-const { loadJson, saveJson } = require('../helpers/fsHelper');
+const { loadJson, saveJson } = require('../helpers/fs_helper');
 const { STATE_IN_FILE, STATE_OUT_FILE, DATA_DIR, DEFAULT_EXTRACTOR_TIMEOUT } = require('../constants');
-const getDatasetItems = require('../actions/getDatasetItems');
+const getDatasetItems = require('./get_dataset_items');
 
 /**
  * This action starts actor and wait util finish.
