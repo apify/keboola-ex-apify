@@ -22,6 +22,7 @@ exports.EVENT_END = 'end';
 exports.ACTIONS = {
     run: 'run',
     listCrawlers: 'listCrawlers',
+    listActors: 'listActors',
 };
 
 exports.ACTION_TYPES = {

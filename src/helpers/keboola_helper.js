@@ -1,88 +1,58 @@
 const { ACTIONS, ACTION_TYPES } = require('../constants');
 
+function parseConfig(configObject) {
+    const config = {
+        action: configObject.get('action') || ACTIONS.run,
+        userId: configObject.get('parameters:userId'),
+        token: configObject.get('parameters:#token'),
+        datasetId: configObject.get('parameters:datasetId'),
+        actId: configObject.get('parameters:actId'),
+        input: configObject.get('parameters:input'),
+        memory: configObject.get('parameters:memory'),
+        build: configObject.get('parameters:build'),
+        executionId: configObject.get('parameters:executionId'),
+        crawlerId: configObject.get('parameters:crawlerId'),
+        crawlerSettings: configObject.get('parameters:crawlerSettings') || {},
+        timeout: configObject.get('parameters:timeout'),
+    };
+    if (config.action === ACTIONS.run) {
+        config.actionType = configObject.get('parameters:actionType') || ACTION_TYPES.runExecution;
+    }
+    return config;
+}
 
 /**
  * Checks whether the input configuration is valid.
  * If so, the particular object with relevant parameters is returned.
- * If not, rejected promise is returned.
+ * If not, throw error.
  */
-function parseConfiguration(configObject) {
-    return new Promise((resolve, reject) => {
-        const action = configObject.get('action') || ACTIONS.run;
-        const userId = configObject.get('parameters:userId');
-        const token = configObject.get('parameters:#token');
-        if (action === 'listCrawlers') {
-            if (!userId) reject('Parameter userId is not defined!');
-            if (!token) reject('Parameter token is not defined!');
-            resolve({
-                action,
-                userId,
-                token,
-            });
-        } else if (action === ACTIONS.run) {
-            // Action run means that is run asynchronous and resuls'll seve to data.out
-            const actionType = configObject.get('parameters:actionType') || ACTION_TYPES.runExecution;
-            if (actionType === ACTION_TYPES.getDatasetItems) {
-                if (!userId) reject('Parameter userId is not defined!');
-                if (!token) reject('Parameter token is not defined!');
-                const datasetId = configObject.get('parameters:datasetId');
-                if (!datasetId) reject('Parameter datasetId is not defined!');
-
-                resolve({
-                    action,
-                    userId,
-                    token,
-                    datasetId,
-                    actionType,
-                });
-            } else if (actionType === ACTION_TYPES.runActor) {
-                if (!userId) reject('Parameter userId is not defined!');
-                if (!token) reject('Parameter token is not defined!');
-
-                const actId = configObject.get('parameters:actId');
-                if (!actId) reject('Parameter actId is not defined!');
-
-                const input = configObject.get('parameters:input');
-                const memory = configObject.get('parameters:memory');
-                const build = configObject.get('parameters:build');
-
-                resolve({
-                    action,
-                    actionType,
-                    userId,
-                    token,
-                    actId,
-                    input,
-                    memory,
-                    build,
-                });
-            } else {
-                // This is default action type for gets results from specific execution or
-                // strarts execution and gets results after finished
-                const executionId = configObject.get('parameters:executionId');
-                const crawlerId = configObject.get('parameters:crawlerId');
-                if (!executionId && !userId) reject('Parameter userId is not defined!');
-                if (!executionId && !token) reject('Parameter token is not defined!');
-                if (!executionId && !crawlerId) reject('Parameter crawlerId and executionId is not defined!');
-
-                const crawlerSettings = configObject.get('parameters:crawlerSettings') || {};
-                const timeout = configObject.get('parameters:timeout');
-
-                resolve({
-                    action,
-                    userId,
-                    token,
-                    crawlerId,
-                    crawlerSettings,
-                    timeout,
-                    executionId,
-                    actionType,
-                });
-            }
+function parseConfigurationOrThrow(configObject) {
+    const config = parseConfig(configObject);
+    if (config.action === ACTIONS.listCrawlers || config.action === ACTIONS.listActors) {
+        // These actions don't need any other parameters
+        if (!config.userId) throw new Error('Parameter userId is not defined!');
+        if (!config.token) throw new Error('Parameter token is not defined!');
+    } else if (config.action === ACTIONS.run) {
+        if (config.actionType === ACTION_TYPES.getDatasetItems ||
+            config.actionType === ACTION_TYPES.runActor) {
+            if (!config.userId) throw new Error('Parameter userId is not defined!');
+            if (!config.token) throw new Error('Parameter token is not defined!');
         }
-    });
+        if (config.actionType === ACTION_TYPES.getDatasetItems) {
+            if (!config.datasetId) throw new Error('Parameter datasetId is not defined!');
+        } else if (config.actionType === ACTION_TYPES.runActor) {
+            if (!config.actId) throw new Error('Parameter actId is not defined!');
+        } else {
+            if (!config.executionId && !config.userId) throw new Error('Parameter userId is not defined!');
+            if (!config.executionId && !config.token) throw new Error('Parameter token is not defined!');
+            if (!config.executionId && !config.crawlerId) throw new Error('Parameter crawlerId and executionId is not defined!');
+        }
+    } else {
+        throw new Error('Unknown action!');
+    }
+    return config;
 }
 
 module.exports = {
-    parseConfiguration,
+    parseConfigurationOrThrow,
 };

@@ -3,11 +3,12 @@ const { DATA_DIR } = require('./constants');
 const ApifyClient = require('apify-client');
 const path = require('path');
 const getConfig = require('./helpers/config_helper');
-const { parseConfiguration } = require('./helpers/keboola_helper');
+const { parseConfigurationOrThrow } = require('./helpers/keboola_helper');
 const { CONFIG_FILE, ACTIONS, ACTION_TYPES } = require('./constants');
 
 const runAction = require('./actions/run');
 const listCrawlersAction = require('./actions/list_crawlers');
+const listActoreAction = require('./actions/list_actors');
 const getDatasetItems = require('./actions/get_dataset_items');
 const runActorAction = require('./actions/run_actor');
 
@@ -17,6 +18,7 @@ const runActorAction = require('./actions/run_actor');
  */
 (async () => {
     try {
+        const config = parseConfigurationOrThrow(getConfig(path.join(DATA_DIR, CONFIG_FILE)));
         const {
             action,
             userId,
@@ -31,7 +33,7 @@ const runActorAction = require('./actions/run_actor');
             input,
             memory,
             build,
-        } = await parseConfiguration(getConfig(path.join(DATA_DIR, CONFIG_FILE)));
+        } = config;
 
         const apifyClient = new ApifyClient({ userId, token });
 
@@ -47,6 +49,9 @@ const runActorAction = require('./actions/run_actor');
                 break;
             case ACTIONS.listCrawlers:
                 await listCrawlersAction(apifyClient);
+                break;
+            case ACTIONS.listActors:
+                await listActoreAction(apifyClient);
                 break;
             default:
                 throw new Error(`Error: Unknown Action ${action}`);
