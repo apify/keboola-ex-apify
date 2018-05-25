@@ -3,10 +3,12 @@ language: bash
 services:
   - docker
 
+
 before_script:
   - export APP_IMAGE=keboola-component
   - docker build . --tag=$APP_IMAGE
   - docker run -e APIFY_TEST_USER_ID -e APIFY_TEST_TOKEN $APP_IMAGE npm test # Run tests on build container
+  - chmod +x deploy.sh
 
 after_success:
   - docker images
