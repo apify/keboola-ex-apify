@@ -8,7 +8,7 @@ const { CONFIG_FILE, ACTIONS, ACTION_TYPES } = require('./constants');
 
 const runAction = require('./actions/run');
 const listCrawlersAction = require('./actions/list_crawlers');
-const listActoreAction = require('./actions/list_actors');
+const listActorsAction = require('./actions/list_actors');
 const getDatasetItems = require('./actions/get_dataset_items');
 const runActorAction = require('./actions/run_actor');
 
@@ -19,6 +19,7 @@ const runActorAction = require('./actions/run_actor');
 (async () => {
     try {
         const config = parseConfigurationOrThrow(getConfig(path.join(DATA_DIR, CONFIG_FILE)));
+        console.log(config);
         const {
             action,
             userId,
@@ -51,7 +52,7 @@ const runActorAction = require('./actions/run_actor');
                 await listCrawlersAction(apifyClient);
                 break;
             case ACTIONS.listActors:
-                await listActoreAction(apifyClient);
+                await listActorsAction(apifyClient);
                 break;
             default:
                 throw new Error(`Error: Unknown Action ${action}`);
