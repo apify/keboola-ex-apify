@@ -28,7 +28,6 @@ function parseConfig(configObject) {
  */
 function parseConfigurationOrThrow(configObject) {
     const config = parseConfig(configObject);
-    console.log(config)
     if (config.action === ACTIONS.listCrawlers || config.action === ACTIONS.listActors) {
         // These actions don't need any other parameters
         if (!config.userId) throw new Error('Parameter userId is not defined!');
