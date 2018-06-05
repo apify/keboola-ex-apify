@@ -19,7 +19,6 @@ const runActorAction = require('./actions/run_actor');
 (async () => {
     try {
         const config = parseConfigurationOrThrow(getConfig(path.join(DATA_DIR, CONFIG_FILE)));
-        console.log(config);
         const {
             action,
             userId,
