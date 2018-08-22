@@ -1,8 +1,10 @@
 const apifyHelper = require('../helpers/apify_helper');
 const path = require('path');
 const { loadJson, saveJson } = require('../helpers/fs_helper');
-const { STATE_IN_FILE, STATE_OUT_FILE, DATA_DIR, DEFAULT_EXTRACTOR_TIMEOUT } = require('../constants');
+const { STATE_IN_FILE, STATE_OUT_FILE, DATA_DIR,
+    DEFAULT_EXTRACTOR_TIMEOUT, NAME_OF_KEBOOLA_INPUTS_STORE } = require('../constants');
 const getDatasetItems = require('./get_dataset_items');
+const { getInputFile } = require('../helpers/keboola_helper');
 
 /**
  * This action starts actor and wait util finish.
@@ -25,6 +27,25 @@ module.exports = async function runActor(apifyClient, actId, input, memory, buil
     if (!runId) {
         // Actor run options
         const opts = { actId };
+        const inputFile = await getInputFile();
+        if (inputFile) {
+            const keyValueStoresClient = apifyClient.keyValueStores;
+            const store = await keyValueStoresClient.getOrCreateStore({ storeName: NAME_OF_KEBOOLA_INPUTS_STORE });
+            const storeId = store.id;
+            const key = apifyHelper.randomHostLikeString();
+            await keyValueStoresClient.putRecord({
+                storeId,
+                key,
+                body: inputFile,
+                contentType: 'text/csv',
+            });
+            const inputTableRecord = { storeId, key };
+            if (input) {
+                Object.assign(input, { inputTableRecord });
+            } else {
+                input = { inputTableRecord };
+            }
+        }
         if (input) {
             Object.assign(opts, {
                 body: JSON.stringify(input),

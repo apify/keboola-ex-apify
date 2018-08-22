@@ -26,7 +26,10 @@ exports.ACTIONS = {
 };
 
 exports.ACTION_TYPES = {
-    runExecution: 'runExecution',
+    runExecution: 'runExecution', // This should be runCrawler like other variables name
     getDatasetItems: 'getDatasetItems',
     runActor: 'runActor',
 };
+
+exports.NAME_OF_KEBOOLA_INPUTS_STORE = 'KEBOOLA-INPUTS'; // Name of Apify keyvalue store for Keboola inputs files
+

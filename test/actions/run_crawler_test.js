@@ -3,7 +3,7 @@ const { apifyClient, getLocalResultRows, getManifest,
     saveInputFile } = require('./config');
 const { expect } = require('chai');
 const sinon = require('sinon');
-const run = require('../../src/actions/run');
+const runCrawlerAction = require('../../src/actions/run_crawler');
 
 const TEST_CRAWLER_ID = 'KEBOOLA_EX_TEST';
 
@@ -19,14 +19,14 @@ const getExecutionResultRows = async (executionId, opts) => {
     return apiResults.items.split(/\r?\n/);
 };
 
-describe('Run action', () => {
+describe('Run Crawler action', () => {
     // setup
     beforeEach(actionsTestsSetup);
 
     // teardown
     afterEach(actionsTestsTeardown);
 
-    it('Run with finished executionId', async () => {
+    it('Run crawler with finished executionId', async () => {
         const testExecution = await apifyClient.crawlers.startExecution({
             crawlerId: TEST_CRAWLER_ID,
             wait: 60,
@@ -47,7 +47,7 @@ describe('Run action', () => {
             },
         });
         const executionId = testExecution._id;
-        await run(apifyClient, executionId);
+        await runCrawlerAction(apifyClient, executionId);
 
         const localCsvRows = await getLocalResultRows();
         const apiRows = await getExecutionResultRows(executionId);
@@ -55,9 +55,9 @@ describe('Run action', () => {
         checkRows(localCsvRows, apiRows);
     });
 
-    it('Run with crawlerId', async () => {
+    it('Run crawler with crawlerId', async () => {
         sinon.spy(console, 'log');
-        await run(apifyClient, null, TEST_CRAWLER_ID);
+        await runCrawlerAction(apifyClient, null, TEST_CRAWLER_ID);
         const executionId = console.log.args[0][0].match(/ExecutionId:\s(\w+)/)[1];
         console.log.restore();
 
@@ -68,7 +68,7 @@ describe('Run action', () => {
     });
 
 
-    it('Run with finished crawlerId and crawlerSettings, which returns 100K+ results', async () => {
+    it('Run crawler with finished crawlerId and crawlerSettings, which returns 100K+ results', async () => {
         const crawlerSettings = {
             customData: {
                 test: 'data',
@@ -95,7 +95,7 @@ describe('Run action', () => {
             }`,
         };
         sinon.spy(console, 'log');
-        await run(apifyClient, null, TEST_CRAWLER_ID, crawlerSettings);
+        await runCrawlerAction(apifyClient, null, TEST_CRAWLER_ID, crawlerSettings);
         const executionId = console.log.args[0][0].match(/ExecutionId:\s(\w+)/)[1];
         console.log.restore();
 
@@ -116,7 +116,7 @@ describe('Run action', () => {
         const inputFileString = 'column,column2,column3\ntest,value,1\ntest2,value2,2\n';
         saveInputFile(inputFileString);
         sinon.spy(console, 'log');
-        await run(apifyClient, null, TEST_CRAWLER_ID);
+        await runCrawlerAction(apifyClient, null, TEST_CRAWLER_ID);
         const executionId = console.log.args[0][0].match(/ExecutionId:\s(\w+)/)[1];
         console.log.restore();
 

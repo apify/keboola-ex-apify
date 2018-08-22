@@ -1,4 +1,10 @@
-const { ACTIONS, ACTION_TYPES } = require('../constants');
+const path = require('path');
+const { ACTIONS, ACTION_TYPES, DATA_DIR, DEFAULT_TABLES_IN_DIR } = require('../constants');
+const {
+    fileStatPromied,
+    readDirPromised,
+    readFilePromised,
+} = require('./fs_helper');
 
 function parseConfig(configObject) {
     const config = {
@@ -53,6 +59,27 @@ function parseConfigurationOrThrow(configObject) {
     return config;
 }
 
+/**
+ * Get files from default table in directory as Buffer
+ * @return {Promise<Buffer>||Promise<null>}
+ */
+const getInputFile = async () => {
+    const tablesInDirPath = path.join(DATA_DIR, DEFAULT_TABLES_IN_DIR);
+    try {
+        await fileStatPromied(tablesInDirPath);
+    } catch (e) {
+        // Folder doesn't exist, input file wasn't pass
+        return null;
+    }
+
+    const files = await readDirPromised(tablesInDirPath);
+    if (files.length) {
+        const fileBuffer = await readFilePromised(path.join(tablesInDirPath, files[0]));
+        return fileBuffer;
+    }
+};
+
 module.exports = {
     parseConfigurationOrThrow,
+    getInputFile,
 };
