@@ -6,7 +6,7 @@ const getConfig = require('./helpers/config_helper');
 const { parseConfigurationOrThrow } = require('./helpers/keboola_helper');
 const { CONFIG_FILE, ACTIONS, ACTION_TYPES } = require('./constants');
 
-const runAction = require('./actions/run');
+const runCrawlerAction = require('./actions/run_crawler');
 const listCrawlersAction = require('./actions/list_crawlers');
 const listActorsAction = require('./actions/list_actors');
 const getDatasetItems = require('./actions/get_dataset_items');
@@ -44,7 +44,7 @@ const runActorAction = require('./actions/run_actor');
                 } else if (actionType === ACTION_TYPES.runActor) {
                     await runActorAction(apifyClient, actId, input, memory, build);
                 } else {
-                    await runAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout);
+                    await runCrawlerAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout);
                 }
                 break;
             case ACTIONS.listCrawlers:

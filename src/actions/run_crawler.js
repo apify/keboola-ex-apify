@@ -6,25 +6,22 @@ const {
     saveJson,
     createFilePromised,
     createFolderPromised,
-    fileStatPromied,
-    readDirPromised,
-    readFilePromised,
 } = require('../helpers/fs_helper');
 const {
     DEFAULT_EXTRACTOR_TIMEOUT,
     DEFAULT_TABLES_OUT_DIR,
     STATE_IN_FILE,
     STATE_OUT_FILE,
-    DEFAULT_TABLES_IN_DIR,
     DATA_DIR,
     RESULTS_FILE_NAME,
+    NAME_OF_KEBOOLA_INPUTS_STORE,
 } = require('../constants');
 const parseCsvPromised = require('../helpers/csv_helpers');
+const { getInputFile } = require('../helpers/keboola_helper');
 
 
 const RESULTS_FILE_LIMIT = 50000;
 const DEFAULT_PAGINATION_LIMIT = 1000;
-const NAME_OF_KEBOOLA_INPUTS_STORE = 'KEBOOLA-INPUTS'; // Name of Apify keyvalue store for Keboola inputs files
 
 const getAndSaveResults = async (executionId, crawlerClient) => {
     const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
@@ -84,33 +81,13 @@ const getAndSaveResults = async (executionId, crawlerClient) => {
 };
 
 /**
- * Get filer from default table in directory as Buffer
- * @return {Promise<Buffer>||Promise<null>}
- */
-const getInputFile = async () => {
-    const tablesInDirPath = path.join(DATA_DIR, DEFAULT_TABLES_IN_DIR);
-    try {
-        await fileStatPromied(tablesInDirPath);
-    } catch (e) {
-        // Folder doesn't exist, input file wasn't pass
-        return null;
-    }
-
-    const files = await readDirPromised(tablesInDirPath);
-    if (files.length) {
-        const fileBuffer = await readFilePromised(path.join(tablesInDirPath, files[0]));
-        return fileBuffer;
-    }
-};
-
-/**
  * Either gets executionId from state file, or creates a new execution or get execution as @param executionId
  * Then it waits for the execution to finish. When the execution is finished, it fetches
  * the results and saves them into relevant file Execution can be timouted. In such case
  * executionId is saved into state file. This state file will be present next time extractor is run
  * with the same configuration
  */
-module.exports = async function runAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout = DEFAULT_EXTRACTOR_TIMEOUT) {
+module.exports = async function runCrawlerAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout = DEFAULT_EXTRACTOR_TIMEOUT) {
     const stateInFile = path.join(DATA_DIR, STATE_IN_FILE);
     const state = await loadJson(stateInFile);
     const crawlerClient = apifyClient.crawlers;
