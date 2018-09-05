@@ -42,7 +42,7 @@ const runActorAction = require('./actions/run_actor');
                 if (actionType === ACTION_TYPES.getDatasetItems) {
                     await getDatasetItems(apifyClient, datasetId);
                 } else if (actionType === ACTION_TYPES.runActor) {
-                    await runActorAction(apifyClient, actId, input, memory, build);
+                    await runActorAction(apifyClient, actId, input, memory, build, timeout);
                 } else {
                     await runCrawlerAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout);
                 }

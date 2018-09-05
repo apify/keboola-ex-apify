@@ -37,7 +37,7 @@ describe('Run Actor', () => {
         const inputFileString = 'column,column2,column3\ntest,value,1\ntest2,value2,2\n';
         saveInputFile(inputFileString);
         sinon.spy(console, 'log');
-        await runActorAction(apifyClient, TEST_ACTOR_ID);
+        await runActorAction(apifyClient, TEST_ACTOR_ID, {});
         const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
         console.log.restore();
 
