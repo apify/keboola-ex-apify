@@ -53,7 +53,9 @@ async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit,
     while (true) {
         console.log(`Saving ${executionResultsOpts.offset} - ${executionResultsOpts.offset + executionResultsOpts.limit} pages with results ...`);
 
-        executionResultsOpts.skipHeaderRow = (!skipHeaderRow && executionResultsOpts.offset === 0) ? '' : 1;
+        if (skipHeaderRow && executionResultsOpts.offset === 0) {
+            executionResultsOpts.skipHeaderRow = true;
+        }
 
         const executionResults = await crawlerClient.getExecutionResults(executionResultsOpts);
         const resultCount = parseInt(executionResults.count, 10);
@@ -91,7 +93,9 @@ async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, fi
     while (true) {
         console.log(`Saving ${paginationItemsOpts.offset} - ${paginationItemsOpts.offset + paginationItemsOpts.limit} items ...`);
 
-        paginationItemsOpts.skipHeaderRow = (!skipHeaderRow && paginationItemsOpts.offset === 0) ? 0 : 1;
+        if (skipHeaderRow && paginationItemsOpts.offset === 0) {
+            paginationItemsOpts.skipHeaderRow = true;
+        }
 
         const itemsPagination = await apifyDatasets.getItems(paginationItemsOpts);
         const itemsCount = parseInt(itemsPagination.count, 10);

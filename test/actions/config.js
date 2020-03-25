@@ -44,7 +44,7 @@ const getManifest = () => {
 const checkRows = (localCsvRows, apiRows) => {
     expect(localCsvRows.length).to.eql(apiRows.length);
     localCsvRows.forEach((localRow, i) => {
-        expect(localRow).to.eql(apiRows[i].trim());
+        expect(localRow.trim()).to.eql(apiRows[i].trim());
     });
 };
 

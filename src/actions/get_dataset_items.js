@@ -28,6 +28,7 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
     const getItemsOpts = {
         datasetId,
         format: 'csv',
+        clean: true,
     };
     const sampleItems = await apifyDatasets.getItems(Object.assign(getItemsOpts, { limit: 10 }));
     const parsedCsv = await parseCsvPromised(sampleItems.items);
