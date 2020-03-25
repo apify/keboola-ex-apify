@@ -67,6 +67,7 @@ describe('Get dataset items', () => {
 
     it('Returns just clean items', async () => {
         const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
+        const datasetId = dataset.id || dataset._id;
         const items = [
             { i: '0', foo: 'bar', myTest: 'Hello!' },
             { i: '1', foo: 'bar', myTest: 'Hello!', '#debug': 'BlaBla', '#error': 'Error' },
@@ -74,17 +75,17 @@ describe('Get dataset items', () => {
             { i: '3', foo: 'bar', '#debug': 'BlaBla' },
             { i: '4', '#error': 'Error', aa: 'bb' },
         ];
-        await datasets.putItems({ datasetId: dataset.id, data: items });
+        await datasets.putItems({ datasetId, data: items });
 
-        await getDatasetItems(apifyClient, dataset.id);
+        await getDatasetItems(apifyClient, datasetId);
 
         await delayPromise(1000);
 
         const localCsvRows = await getLocalResultRows(true);
-        const apiRows = await getDatasetItemsRows(dataset.id, { clean: true });
+        const apiRows = await getDatasetItemsRows(datasetId, { clean: true });
 
         checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId: dataset.id });
+        await datasets.deleteDataset({ datasetId });
     });
 
     // Teardown test
