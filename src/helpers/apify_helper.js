@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { delayPromise } = require('apify-shared/utilities');
+const { ACT_JOB_TERMINAL_STATUSES } = require('apify-shared/consts');
 
 const WAIT_BETWEEN_REQUESTS = 100; // Time in ms to wait between request, to avoid rate limiting
 const DEFAULT_POOLING_INTERVAL = 2000; // ms
@@ -30,7 +31,7 @@ async function waitUntilRunFinished(runId, actId, actsClient, interval = DEFAULT
     while (running) {
         actRun = await actsClient.getRun({ actId, runId });
         console.log(`Actor run ${actRun.status}`);
-        if (actRun.status !== 'RUNNING') {
+        if (ACT_JOB_TERMINAL_STATUSES.includes(actRun.status)) {
             running = false;
         }
         await delayPromise(interval);
