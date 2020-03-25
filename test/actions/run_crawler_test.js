@@ -1,8 +1,8 @@
+const { expect } = require('chai');
+const sinon = require('sinon');
 const { apifyClient, getLocalResultRows, getManifest,
     checkRows, actionsTestsSetup, actionsTestsTeardown,
     saveInputFile } = require('./config');
-const { expect } = require('chai');
-const sinon = require('sinon');
 const runCrawlerAction = require('../../src/actions/run_crawler');
 
 const TEST_CRAWLER_ID = 'KEBOOLA_EX_TEST';

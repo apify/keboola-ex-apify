@@ -1,5 +1,5 @@
-const apifyHelper = require('../helpers/apify_helper');
 const path = require('path');
+const apifyHelper = require('../helpers/apify_helper');
 const parseCsvPromised = require('../helpers/csv_helpers');
 const { createFilePromised, createFolderPromised } = require('../helpers/fs_helper');
 const { DEFAULT_TABLES_OUT_DIR, DATA_DIR, DATASET_FILE_NAME } = require('../constants');
