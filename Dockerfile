@@ -1,4 +1,4 @@
-FROM node:chakracore-10
+FROM node:12
 
 MAINTAINER Apify <info@apify.com>
 
