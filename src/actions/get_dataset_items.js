@@ -58,7 +58,7 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
 
             if (dataset.itemCount <= paginationItemsOpts.offset) break;
 
-            paginationItemsOpts = await apifyHelper.saveItemsToFile(apifyDatasets,
+            paginationItemsOpts = await apifyHelper.saveItemsToFile(datasetId,
                 paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, true);
             fileCounter += 1;
         }
@@ -68,7 +68,7 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
         // save result to one file
         const resultFile = path.join(tableOutDir, DATASET_FILE_NAME);
         await createFilePromised(resultFile, '');
-        await apifyHelper.saveItemsToFile(apifyDatasets, paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, false);
+        await apifyHelper.saveItemsToFile(datasetId, paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, false);
     }
     console.log(`Items from dataset ${datasetId} were saved!`);
 };
