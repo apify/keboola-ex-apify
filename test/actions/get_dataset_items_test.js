@@ -57,18 +57,18 @@ describe('Get dataset items', () => {
         await datasets.deleteDataset({ datasetId: dataset.id })
     });
 
-    it('Works for 100K+ items', async () => {
-        const dataset = await createDatasetWithItems(111000);
-        await delayPromise(30000);
-
-        await getDatasetItems(apifyClient, dataset.id);
-
-        const localCsvRows = await getLocalResultRows(true);
-        const apiRows = await getDatasetItemsRows(dataset.id, { skipHeaderRow: true });
-
-        checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId: dataset.id })
-    });
+    // it('Works for 100K+ items', async () => {
+    //     const dataset = await createDatasetWithItems(111000);
+    //     await delayPromise(30000);
+    //
+    //     await getDatasetItems(apifyClient, dataset.id);
+    //
+    //     const localCsvRows = await getLocalResultRows(true);
+    //     const apiRows = await getDatasetItemsRows(dataset.id, { skipHeaderRow: true });
+    //
+    //     checkRows(localCsvRows, apiRows);
+    //     await datasets.deleteDataset({ datasetId: dataset.id })
+    // });
 
     it('Returns just clean items', async () => {
         const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
