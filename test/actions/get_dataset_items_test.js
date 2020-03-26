@@ -9,6 +9,7 @@ const { datasets } = apifyClient;
 const createDatasetWithItems = async (rowCount) => {
     const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
     const datasetId = dataset.id || dataset._id;
+    const batchSize = 10000;
     console.log(`Dataset created ${datasetId}`);
     let rows = [];
     for (let i = 0; i < rowCount; i++) {
@@ -17,9 +18,11 @@ const createDatasetWithItems = async (rowCount) => {
             value: Math.random(),
         });
         // Put items to datasets bigger by chunks
-        if (rows.length === 5000 || i + 1 === rowCount) {
+        if (rows.length === batchSize || i + 1 === rowCount) {
+            console.time(`Inserting ${batchSize} to dataset ${datasetId}`);
             await datasets.putItems({ datasetId, data: rows });
             rows = [];
+            console.timeEnd(`Inserting ${batchSize} to dataset ${datasetId}`);
         }
         await delayPromise(100);
     }
