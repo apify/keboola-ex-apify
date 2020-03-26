@@ -1,5 +1,11 @@
 const fs = require('fs');
+const got = require('got');
+const { promisify } = require('util');
+const stream = require('stream');
 const { delayPromise } = require('apify-shared/utilities');
+const { ACT_JOB_TERMINAL_STATUSES } = require('apify-shared/consts');
+
+const pipeline = promisify(stream.pipeline);
 
 const WAIT_BETWEEN_REQUESTS = 100; // Time in ms to wait between request, to avoid rate limiting
 const DEFAULT_POOLING_INTERVAL = 2000; // ms
@@ -30,7 +36,7 @@ async function waitUntilRunFinished(runId, actId, actsClient, interval = DEFAULT
     while (running) {
         actRun = await actsClient.getRun({ actId, runId });
         console.log(`Actor run ${actRun.status}`);
-        if (actRun.status !== 'RUNNING') {
+        if (ACT_JOB_TERMINAL_STATUSES.includes(actRun.status)) {
             running = false;
         }
         await delayPromise(interval);
@@ -53,7 +59,7 @@ async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit,
     while (true) {
         console.log(`Saving ${executionResultsOpts.offset} - ${executionResultsOpts.offset + executionResultsOpts.limit} pages with results ...`);
 
-        executionResultsOpts.skipHeaderRow = (!skipHeaderRow && executionResultsOpts.offset === 0) ? '' : 1;
+        executionResultsOpts.skipHeaderRow = !(!skipHeaderRow && executionResultsOpts.offset === 0);
 
         const executionResults = await crawlerClient.getExecutionResults(executionResultsOpts);
         const resultCount = parseInt(executionResults.count, 10);
@@ -85,31 +91,21 @@ async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit,
  * @param skipHeaderRow
  * @return {}
  */
-async function saveItemsToFile(apifyDatasets, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
-    let fileItemsCount = 0;
+async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
+    paginationItemsOpts.limit = paginationItemsOpts.offset + fileLimit;
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
-    while (true) {
-        console.log(`Saving ${paginationItemsOpts.offset} - ${paginationItemsOpts.offset + paginationItemsOpts.limit} items ...`);
+    const datasetItemsUrl = `https://api.apify.com/v2/datasets/${datasetId}/items`;
+    const datasetItemsStream = got.stream(datasetItemsUrl, {
+        searchParams: { ...paginationItemsOpts, skipHeaderRow: skipHeaderRow ? '1' : '0' },
+    });
 
-        paginationItemsOpts.skipHeaderRow = (!skipHeaderRow && paginationItemsOpts.offset === 0) ? 0 : 1;
+    console.log(`Saving ${paginationItemsOpts.offset} - ${paginationItemsOpts.offset + paginationItemsOpts.limit} items ...`);
 
-        const itemsPagination = await apifyDatasets.getItems(paginationItemsOpts);
-        const itemsCount = parseInt(itemsPagination.count, 10);
+    await pipeline(
+        datasetItemsStream,
+        fileWriteStream,
+    );
 
-        if (itemsCount === 0) break;
-
-        // NOTE: clean spaces around string and add newline, without this we get malformed csv
-        fileWriteStream.write(itemsPagination.items);
-
-        fileItemsCount += itemsCount;
-
-        paginationItemsOpts.offset += paginationItemsOpts.limit;
-
-        if (fileItemsCount >= fileLimit) break;
-
-        await delayPromise(WAIT_BETWEEN_REQUESTS);
-    }
-    fileWriteStream.end();
     return paginationItemsOpts;
 }
 

@@ -39,8 +39,8 @@ function parseConfigurationOrThrow(configObject) {
         if (!config.userId) throw new Error('Parameter userId is not defined!');
         if (!config.token) throw new Error('Parameter token is not defined!');
     } else if (config.action === ACTIONS.run) {
-        if (config.actionType === ACTION_TYPES.getDatasetItems ||
-            config.actionType === ACTION_TYPES.runActor) {
+        if (config.actionType === ACTION_TYPES.getDatasetItems
+            || config.actionType === ACTION_TYPES.runActor) {
             if (!config.userId) throw new Error('Parameter userId is not defined!');
             if (!config.token) throw new Error('Parameter token is not defined!');
         }

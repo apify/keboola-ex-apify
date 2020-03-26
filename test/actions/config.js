@@ -1,11 +1,11 @@
 const ApifyClient = require('apify-client');
 const fs = require('fs');
 const { expect } = require('chai');
-const { RESULTS_FILE_NAME, DATASET_FILE_NAME, DEFAULT_TABLES_OUT_DIR } = require('../../src/constants');
 const { promisify } = require('util');
 const rimraf = require('rimraf');
 const path = require('path');
 const stripEof = require('strip-eof');
+const { RESULTS_FILE_NAME, DATASET_FILE_NAME, DEFAULT_TABLES_OUT_DIR } = require('../../src/constants');
 const { createFolderPromised } = require('../../src/helpers/fs_helper');
 
 
@@ -28,9 +28,9 @@ const getLocalResultRows = async (dataset) => {
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const localCsv = fs.readFileSync(path.join(resultsPath, file));
-            rows = (i + 1 !== files.length) ?
-                rows.concat(stripEof(localCsv.toString()).split(/\r?\n/)) :
-                rows.concat(localCsv.toString().split(/\r?\n/));
+            rows = (i + 1 !== files.length)
+                ? rows.concat(stripEof(localCsv.toString()).split(/\r?\n/))
+                : rows.concat(localCsv.toString().split(/\r?\n/));
         }
     }
     return rows;
@@ -42,9 +42,11 @@ const getManifest = () => {
 };
 
 const checkRows = (localCsvRows, apiRows) => {
+    console.log(localCsvRows);
+    console.log(apiRows);
     expect(localCsvRows.length).to.eql(apiRows.length);
     localCsvRows.forEach((localRow, i) => {
-        expect(localRow).to.eql(apiRows[i].trim());
+        expect(localRow.trim()).to.eql(apiRows[i].trim());
     });
 };
 

@@ -1,5 +1,5 @@
-const apifyHelper = require('../helpers/apify_helper');
 const path = require('path');
+const apifyHelper = require('../helpers/apify_helper');
 const { loadJson, saveJson } = require('../helpers/fs_helper');
 const { STATE_IN_FILE, STATE_OUT_FILE, DATA_DIR,
     DEFAULT_EXTRACTOR_TIMEOUT, NAME_OF_KEBOOLA_INPUTS_STORE } = require('../constants');
@@ -21,7 +21,7 @@ module.exports = async function runActor(apifyClient, actId, input, memory, buil
     const stateInFile = path.join(DATA_DIR, STATE_IN_FILE);
     const state = await loadJson(stateInFile);
     const { acts } = apifyClient;
-    let runId = state.runId;
+    let { runId } = state;
 
     // If no run ID, starts new one
     if (!runId) {

@@ -97,9 +97,9 @@ module.exports = async function runCrawlerAction(apifyClient, executionId, crawl
         console.log(`Execution ${executionId} was passed.`);
         await getAndSaveResults(executionId, crawlerClient);
         return;
-    } else if (state.executionId) {
+    } if (state.executionId) {
         // executionId was found in state file. Let's use it
-        executionId = state.executionId;
+        ({ executionId } = state);
         console.log(`ExecutionId loaded from state file. ExecutionId: ${executionId}`);
     } else {
         // there is no executionId in state file. Start the crawler

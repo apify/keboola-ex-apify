@@ -1,7 +1,7 @@
-const { apifyClient, getLocalResultRows, checkRows, saveInputFile,
-    actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
 const sinon = require('sinon');
 const { expect } = require('chai');
+const { apifyClient, getLocalResultRows, checkRows, saveInputFile,
+    actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
 const runActorAction = require('../../src/actions/run_actor');
 
 const TEST_ACTOR_ID = 'g4kx2tPptErWMFCra';
