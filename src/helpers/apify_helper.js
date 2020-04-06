@@ -92,7 +92,7 @@ async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit,
  * @return {}
  */
 async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
-    paginationItemsOpts.limit = paginationItemsOpts.offset + fileLimit;
+    paginationItemsOpts.limit = fileLimit;
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     const datasetItemsUrl = `https://api.apify.com/v2/datasets/${datasetId}/items`;
     const datasetItemsStream = got.stream(datasetItemsUrl, {
@@ -105,6 +105,8 @@ async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, 
         datasetItemsStream,
         fileWriteStream,
     );
+
+    paginationItemsOpts.offset += paginationItemsOpts.limit;
 
     return paginationItemsOpts;
 }
