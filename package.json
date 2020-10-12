@@ -19,7 +19,7 @@
     "Apify",
     "Extractor"
   ],
-  "author": "Apify <info@apify.com>",
+  "author": "Apify <support@apify.com>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/apifytech/keboola-ex-apify/issues"
