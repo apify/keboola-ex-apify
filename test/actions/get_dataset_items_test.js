@@ -42,7 +42,7 @@ describe('Get dataset items', () => {
         const apiRows = await getDatasetItemsRows(dataset.id);
 
         checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId: dataset.id })
+        await datasets.deleteDataset({ datasetId: dataset.id });
     });
 
     it('Works with dataset name', async () => {
@@ -54,7 +54,7 @@ describe('Get dataset items', () => {
         const apiRows = await getDatasetItemsRows(dataset.id);
 
         checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId: dataset.id })
+        await datasets.deleteDataset({ datasetId: dataset.id });
     });
 
     it('Works for 100K+ items', async () => {
@@ -95,6 +95,31 @@ describe('Get dataset items', () => {
 
         const localCsvRows = await getLocalResultRows(true);
         const apiRows = await getDatasetItemsRows(datasetId, { clean: true });
+
+        checkRows(localCsvRows, apiRows);
+        await datasets.deleteDataset({ datasetId });
+    });
+
+    it('Returns columns from fields options', async () => {
+        const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
+        const datasetId = dataset.id || dataset._id;
+        const fields = ['line', 'col1', 'col4'];
+        const items = [
+            { line: '1', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
+            { line: '2', col1: 'test', col2: 'test2' },
+            { line: '3', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
+            { line: '4', col3: 'test3', col4: 'test4' },
+            { line: '5', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
+            { line: '6', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
+        ];
+        await datasets.putItems({ datasetId, data: items });
+
+        await getDatasetItems(apifyClient, datasetId, { fields: fields.join(',') });
+
+        await delayPromise(1000);
+
+        const localCsvRows = await getLocalResultRows(true);
+        const apiRows = await getDatasetItemsRows(datasetId, { clean: true, fields });
 
         checkRows(localCsvRows, apiRows);
         await datasets.deleteDataset({ datasetId });

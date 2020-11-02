@@ -20,6 +20,7 @@ function parseConfig(configObject) {
         crawlerId: configObject.get('parameters:crawlerId'),
         crawlerSettings: configObject.get('parameters:crawlerSettings') || {},
         timeout: configObject.get('parameters:timeout'),
+        fields: configObject.get('parameters:fields'),
     };
     if (config.action === ACTIONS.run) {
         config.actionType = configObject.get('parameters:actionType') || ACTION_TYPES.runExecution;

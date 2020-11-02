@@ -93,8 +93,13 @@ async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit,
  */
 async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
     paginationItemsOpts.limit = fileLimit;
+    // NOTE: We need to stream data from API here and this functionality is not provided by Apify client yet.
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     const datasetItemsUrl = `https://api.apify.com/v2/datasets/${datasetId}/items`;
+    const { fields } = paginationItemsOpts;
+    if (fields) {
+        paginationItemsOpts.fields = fields.join(',');
+    }
     const datasetItemsStream = got.stream(datasetItemsUrl, {
         searchParams: { ...paginationItemsOpts, skipHeaderRow: skipHeaderRow ? '1' : '0' },
     });

@@ -10,14 +10,14 @@ const { getInputFile } = require('../helpers/keboola_helper');
  * This action starts actor and wait util finish.
  * Then get data from default dataset of actor to out files.
  * @param apifyClient
- * @param actId
+ * @param actorId
  * @param input
  * @param memory
  * @param build
  * @param timeout
  * @return {Promise<void>}
  */
-module.exports = async function runActor(apifyClient, actId, input, memory, build, timeout = DEFAULT_EXTRACTOR_TIMEOUT) {
+module.exports = async function runActor({ apifyClient, actorId, input, memory, build, timeout = DEFAULT_EXTRACTOR_TIMEOUT, fields }) {
     const stateInFile = path.join(DATA_DIR, STATE_IN_FILE);
     const state = await loadJson(stateInFile);
     const { acts } = apifyClient;
@@ -26,7 +26,7 @@ module.exports = async function runActor(apifyClient, actId, input, memory, buil
     // If no run ID, starts new one
     if (!runId) {
         // Actor run options
-        const opts = { actId };
+        const opts = { actId: actorId };
         const inputFile = await getInputFile();
         if (inputFile) {
             const keyValueStoresClient = apifyClient.keyValueStores;
@@ -70,8 +70,8 @@ module.exports = async function runActor(apifyClient, actId, input, memory, buil
         }, timeout);
     }
 
-    const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, actId, acts);
+    const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, actorId, acts);
     if (!defaultDatasetId) throw new Error('Actor run pushs no results to default dataset!');
-    console.log(`Actor run ${actId} finished.`);
-    await getDatasetItems(apifyClient, defaultDatasetId);
+    console.log(`Actor run ${actorId} finished.`);
+    await getDatasetItems(apifyClient, defaultDatasetId, { fields });
 };
