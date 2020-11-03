@@ -3,7 +3,7 @@ const { printLargeStringToStdOut } = require('../helpers/apify_helper');
 /**
  * Outputs list of actors to stdout
  */
-module.exports = async function listCrawlersAction(apifyClient) {
+module.exports = async function listActorsAction(apifyClient) {
     const actors = await apifyClient.acts.listActs({ limit: 100000 });
     const actorsList = [];
     actors.items.forEach((actor) => {

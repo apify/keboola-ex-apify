@@ -6,8 +6,6 @@ const getConfig = require('./helpers/config_helper');
 const { parseConfigurationOrThrow } = require('./helpers/keboola_helper');
 const { CONFIG_FILE, ACTIONS, ACTION_TYPES } = require('./constants');
 
-const runCrawlerAction = require('./actions/run_crawler');
-const listCrawlersAction = require('./actions/list_crawlers');
 const listActorsAction = require('./actions/list_actors');
 const getDatasetItems = require('./actions/get_dataset_items');
 const runActorAction = require('./actions/run_actor');
@@ -44,11 +42,8 @@ const runActorAction = require('./actions/run_actor');
                 } else if (actionType === ACTION_TYPES.runActor) {
                     await runActorAction(apifyClient, actId, input, memory, build, timeout);
                 } else {
-                    await runCrawlerAction(apifyClient, executionId, crawlerId, crawlerSettings, timeout);
+                    throw new Error(`Error: Unknown Action type ${actionType}`);
                 }
-                break;
-            case ACTIONS.listCrawlers:
-                await listCrawlersAction(apifyClient);
                 break;
             case ACTIONS.listActors:
                 await listActorsAction(apifyClient);

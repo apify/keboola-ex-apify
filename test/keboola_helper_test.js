@@ -27,7 +27,7 @@ describe('Keboola Heplers', () => {
             expect(config.token).to.equal('myToken');
             expect(config.crawlerId).to.equal('Example_Hacker_News');
             expect(config.action).to.equal(ACTIONS.run);
-            expect(config.actionType).to.equal(ACTION_TYPES.runExecution);
+            expect(config.actionType).to.equal(ACTION_TYPES.runActor);
         });
 
         it('parse crawler list configuration', async () => {

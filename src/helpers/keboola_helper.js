@@ -22,7 +22,7 @@ function parseConfig(configObject) {
         timeout: configObject.get('parameters:timeout'),
     };
     if (config.action === ACTIONS.run) {
-        config.actionType = configObject.get('parameters:actionType') || ACTION_TYPES.runExecution;
+        config.actionType = configObject.get('parameters:actionType') || ACTION_TYPES.runActor;
     }
     return config;
 }

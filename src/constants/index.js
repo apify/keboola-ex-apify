@@ -26,7 +26,6 @@ exports.ACTIONS = {
 };
 
 exports.ACTION_TYPES = {
-    runExecution: 'runExecution', // This should be runCrawler like other variables name
     getDatasetItems: 'getDatasetItems',
     runActor: 'runActor',
 };
