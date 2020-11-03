@@ -61,18 +61,20 @@ describe('Get dataset items', () => {
         const datasetName = '100K-plus';
         const expectedItemCount = 111000;
         let dataset = await datasets.getOrCreateDataset({ datasetName });
+        let datasetId = dataset.id || dataset._id;
 
         // NOTE: We want to save push data operations so we reuse dataset if it is possible.
         if (dataset.itemCount !== expectedItemCount) {
-            await datasets.deleteDataset({ datasetId: dataset.id });
+            await datasets.deleteDataset({ datasetId });
             dataset = await createDatasetWithItems(111000, datasetName);
+            datasetId = dataset.id || dataset._id;
         }
         await delayPromise(3000);
 
-        await getDatasetItems(apifyClient, dataset.id);
+        await getDatasetItems(apifyClient, datasetId);
 
         const localCsvRows = await getLocalResultRows(true);
-        const apiRows = await getDatasetItemsRows(dataset.id, { skipHeaderRow: true });
+        const apiRows = await getDatasetItemsRows(datasetId, { skipHeaderRow: true });
 
         checkRows(localCsvRows, apiRows);
     });
