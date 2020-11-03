@@ -13,7 +13,7 @@ const DEFAULT_PAGINATION_LIMIT = 5000;
  */
 module.exports = async function getDatasetItems(apifyClient, maybeDatasetId, datasetOptions = {}) {
     const apifyDatasets = await apifyClient.datasets;
-    let { fields } = datasetOptions;
+    const { fields } = datasetOptions;
     let dataset = await apifyDatasets.getDataset({ datasetId: maybeDatasetId });
     if (!dataset) {
         // Try to find by name
@@ -24,20 +24,17 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId, dat
 
     if (!dataset) throw new Error(`Error: Apify dataset with ${maybeDatasetId} name or id doesn't exist.`);
 
-    if (fields) {
-        fields = typeof fields === 'string' ? fields.split(',') : fields;
-    } else {
-        fields = null;
-    }
-
     const datasetId = dataset.id || dataset._id; // TODO: Use only id, when we fix _id for test user
     const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
     const getItemsOpts = {
         datasetId,
         format: 'csv',
         clean: true,
-        fields,
     };
+
+    if (fields) {
+        getItemsOpts.fields = typeof fields === 'string' ? fields.split(',') : fields;
+    }
 
     const sampleItems = await apifyDatasets.getItems(Object.assign(getItemsOpts, { limit: 10 }));
     const parsedCsv = await parseCsvPromised(sampleItems.items);
