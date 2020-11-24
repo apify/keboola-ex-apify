@@ -42,7 +42,7 @@ async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, 
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     const datasetItemsUrl = `https://api.apify.com/v2/datasets/${datasetId}/items`;
     const { fields } = paginationItemsOpts;
-    const searchParams = { paginationItemsOpts, skipHeaderRow: skipHeaderRow ? '1' : '0' };
+    const searchParams = { ...paginationItemsOpts, skipHeaderRow: skipHeaderRow ? '1' : '0' };
     if (fields) {
         searchParams.fields = fields.join(',');
     }
