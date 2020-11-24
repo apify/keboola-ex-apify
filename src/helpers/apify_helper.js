@@ -42,11 +42,12 @@ async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, 
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     const datasetItemsUrl = `https://api.apify.com/v2/datasets/${datasetId}/items`;
     const { fields } = paginationItemsOpts;
+    const searchParams = { paginationItemsOpts, skipHeaderRow: skipHeaderRow ? '1' : '0' };
     if (fields) {
-        paginationItemsOpts.fields = fields.join(',');
+        searchParams.fields = fields.join(',');
     }
     const datasetItemsStream = got.stream(datasetItemsUrl, {
-        searchParams: { ...paginationItemsOpts, skipHeaderRow: skipHeaderRow ? '1' : '0' },
+        searchParams,
     });
 
     console.log(`Saving ${paginationItemsOpts.offset} - ${paginationItemsOpts.offset + paginationItemsOpts.limit} items ...`);
