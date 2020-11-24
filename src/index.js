@@ -28,9 +28,11 @@ const runActorAction = require('./actions/run_actor');
             datasetId,
             actionType,
             actId,
+            actorId,
             input,
             memory,
             build,
+            fields,
         } = config;
 
         const apifyClient = new ApifyClient({ userId, token });
@@ -38,9 +40,9 @@ const runActorAction = require('./actions/run_actor');
         switch (action) {
             case ACTIONS.run:
                 if (actionType === ACTION_TYPES.getDatasetItems) {
-                    await getDatasetItems(apifyClient, datasetId);
+                    await getDatasetItems(apifyClient, datasetId, { fields });
                 } else if (actionType === ACTION_TYPES.runActor) {
-                    await runActorAction(apifyClient, actId, input, memory, build, timeout);
+                    await runActorAction({ apifyClient, actorId: actId || actorId, input, memory, build, timeout, fields });
                 } else {
                     throw new Error(`Error: Unknown Action type ${actionType}`);
                 }

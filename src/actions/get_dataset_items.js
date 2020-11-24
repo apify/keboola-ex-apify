@@ -11,8 +11,9 @@ const DEFAULT_PAGINATION_LIMIT = 5000;
 /**
  * Outputs all data from Apify datasets to data/out
  */
-module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
+module.exports = async function getDatasetItems(apifyClient, maybeDatasetId, datasetOptions = {}) {
     const apifyDatasets = await apifyClient.datasets;
+    const { fields } = datasetOptions;
     let dataset = await apifyDatasets.getDataset({ datasetId: maybeDatasetId });
     if (!dataset) {
         // Try to find by name
@@ -30,6 +31,11 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId) {
         format: 'csv',
         clean: true,
     };
+
+    if (fields) {
+        getItemsOpts.fields = typeof fields === 'string' ? fields.split(',') : fields;
+    }
+
     const sampleItems = await apifyDatasets.getItems(Object.assign(getItemsOpts, { limit: 10 }));
     const parsedCsv = await parseCsvPromised(sampleItems.items);
     const headerRowColumns = parsedCsv[0];
