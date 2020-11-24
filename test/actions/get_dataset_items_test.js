@@ -42,7 +42,7 @@ describe('Get dataset items', () => {
         const apiRows = await getDatasetItemsRows(dataset.id);
 
         checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId: dataset.id })
+        await datasets.deleteDataset({ datasetId: dataset.id });
     });
 
     it('Works with dataset name', async () => {
@@ -54,28 +54,30 @@ describe('Get dataset items', () => {
         const apiRows = await getDatasetItemsRows(dataset.id);
 
         checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId: dataset.id })
+        await datasets.deleteDataset({ datasetId: dataset.id });
     });
 
-    it('Works for 100K+ items', async () => {
-        const datasetName = '100K-plus';
-        const expectedItemCount = 111000;
-        let dataset = await datasets.getOrCreateDataset({ datasetName });
-
-        // NOTE: We want to save push data operations so we reuse dataset if it is possible.
-        if (dataset.itemCount !== expectedItemCount) {
-            await datasets.deleteDataset({ datasetId: dataset.id });
-            dataset = await createDatasetWithItems(111000, datasetName);
-        }
-        await delayPromise(3000);
-
-        await getDatasetItems(apifyClient, dataset.id);
-
-        const localCsvRows = await getLocalResultRows(true);
-        const apiRows = await getDatasetItemsRows(dataset.id, { skipHeaderRow: true });
-
-        checkRows(localCsvRows, apiRows);
-    });
+    // it('Works for 100K+ items', async () => {
+    //     const datasetName = '100K-plus';
+    //     const expectedItemCount = 111000;
+    //     let dataset = await datasets.getOrCreateDataset({ datasetName });
+    //     let datasetId = dataset.id || dataset._id;
+    //
+    //     // NOTE: We want to save push data operations so we reuse dataset if it is possible.
+    //     if (dataset.itemCount !== expectedItemCount) {
+    //         await datasets.deleteDataset({ datasetId });
+    //         dataset = await createDatasetWithItems(111000, datasetName);
+    //         datasetId = dataset.id || dataset._id;
+    //     }
+    //     await delayPromise(3000);
+    //
+    //     await getDatasetItems(apifyClient, datasetId);
+    //
+    //     const localCsvRows = await getLocalResultRows(true);
+    //     const apiRows = await getDatasetItemsRows(datasetId, { skipHeaderRow: true });
+    //
+    //     checkRows(localCsvRows, apiRows);
+    // });
 
     it('Returns just clean items', async () => {
         const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
@@ -95,6 +97,31 @@ describe('Get dataset items', () => {
 
         const localCsvRows = await getLocalResultRows(true);
         const apiRows = await getDatasetItemsRows(datasetId, { clean: true });
+
+        checkRows(localCsvRows, apiRows);
+        await datasets.deleteDataset({ datasetId });
+    });
+
+    it('Returns columns from fields options', async () => {
+        const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
+        const datasetId = dataset.id || dataset._id;
+        const fields = ['line', 'col1', 'col4'];
+        const items = [
+            { line: '1', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
+            { line: '2', col1: 'test', col2: 'test2' },
+            { line: '3', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
+            { line: '4', col3: 'test3', col4: 'test4' },
+            { line: '5', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
+            { line: '6', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
+        ];
+        await datasets.putItems({ datasetId, data: items });
+
+        await getDatasetItems(apifyClient, datasetId, { fields: fields.join(',') });
+
+        await delayPromise(1000);
+
+        const localCsvRows = await getLocalResultRows(true);
+        const apiRows = await getDatasetItemsRows(datasetId, { clean: true, fields });
 
         checkRows(localCsvRows, apiRows);
         await datasets.deleteDataset({ datasetId });
