@@ -16,7 +16,7 @@ describe('Keboola Heplers', () => {
         });
 
         it('parse actors list configuration', async () => {
-            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'crawlers-list.json')));
+            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'actor-list.json')));
             expect(config.userId).to.equal('myUserId');
             expect(config.token).to.equal('myToken');
             expect(config.action).to.equal(ACTIONS.listActors);
