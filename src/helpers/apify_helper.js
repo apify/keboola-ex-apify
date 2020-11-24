@@ -7,24 +7,7 @@ const { ACT_JOB_TERMINAL_STATUSES } = require('apify-shared/consts');
 
 const pipeline = promisify(stream.pipeline);
 
-const WAIT_BETWEEN_REQUESTS = 100; // Time in ms to wait between request, to avoid rate limiting
 const DEFAULT_POOLING_INTERVAL = 2000; // ms
-
-/**
- * Asynchronously waits until execution is finished
- */
-async function waitUntilExecutionFinished(executionId, crawlerClient, interval = DEFAULT_POOLING_INTERVAL) {
-    let running = true;
-
-    while (running) {
-        const executionState = await crawlerClient.getExecutionDetails({ executionId });
-        console.log(`Execution ${executionState.status}`);
-        if (executionState.status !== 'RUNNING') {
-            running = false;
-        }
-        await delayPromise(interval);
-    }
-}
 
 /**
  * Asynchronously waits until run is finished
@@ -42,44 +25,6 @@ async function waitUntilRunFinished(runId, actId, actsClient, interval = DEFAULT
         await delayPromise(interval);
     }
     return actRun;
-}
-
-/**
- * Appends csv result from crawler execution to file using pagination.
- * @param crawlerClient
- * @param executionResultsOpts
- * @param fileLimit
- * @param file
- * @param skipHeaderRow
- * @return {}
- */
-async function saveResultsToFile(crawlerClient, executionResultsOpts, fileLimit, file, skipHeaderRow) {
-    let fileResultsCount = 0;
-    const fileWriteStream = fs.createWriteStream(file, { encoding: 'UTF-8', flags: 'a' });
-    while (true) {
-        console.log(`Saving ${executionResultsOpts.offset} - ${executionResultsOpts.offset + executionResultsOpts.limit} pages with results ...`);
-
-        executionResultsOpts.skipHeaderRow = !(!skipHeaderRow && executionResultsOpts.offset === 0);
-
-        const executionResults = await crawlerClient.getExecutionResults(executionResultsOpts);
-        const resultCount = parseInt(executionResults.count, 10);
-
-        if (resultCount === 0) break;
-
-        // NOTE: clean spaces around string and add newline, without this we get malformed csv
-        fileWriteStream.write(executionResults.items.trim());
-        fileWriteStream.write('\n');
-
-        fileResultsCount += resultCount;
-
-        executionResultsOpts.offset += executionResultsOpts.limit;
-
-        if (fileResultsCount >= fileLimit) break;
-
-        await delayPromise(WAIT_BETWEEN_REQUESTS);
-    }
-    fileWriteStream.end();
-    return executionResultsOpts;
 }
 
 /**
@@ -136,8 +81,6 @@ const randomHostLikeString = () => `${Math.random().toString(36).substring(2)}-$
 
 module.exports = {
     saveItemsToFile,
-    saveResultsToFile,
-    waitUntilExecutionFinished,
     waitUntilRunFinished,
     printLargeStringToStdOut,
     findDatasetByName,
