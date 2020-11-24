@@ -1,5 +1,5 @@
 {
-  "action": "listCrawlers",
+  "action": "listActors",
   "parameters": {
     "userId": "myUserId",
     "#token": "myToken"

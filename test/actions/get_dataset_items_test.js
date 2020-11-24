@@ -57,27 +57,27 @@ describe('Get dataset items', () => {
         await datasets.deleteDataset({ datasetId: dataset.id });
     });
 
-    it('Works for 100K+ items', async () => {
-        const datasetName = '100K-plus';
-        const expectedItemCount = 111000;
-        let dataset = await datasets.getOrCreateDataset({ datasetName });
-        let datasetId = dataset.id || dataset._id;
-
-        // NOTE: We want to save push data operations so we reuse dataset if it is possible.
-        if (dataset.itemCount !== expectedItemCount) {
-            await datasets.deleteDataset({ datasetId });
-            dataset = await createDatasetWithItems(111000, datasetName);
-            datasetId = dataset.id || dataset._id;
-        }
-        await delayPromise(3000);
-
-        await getDatasetItems(apifyClient, datasetId);
-
-        const localCsvRows = await getLocalResultRows(true);
-        const apiRows = await getDatasetItemsRows(datasetId, { skipHeaderRow: true });
-
-        checkRows(localCsvRows, apiRows);
-    });
+    // it('Works for 100K+ items', async () => {
+    //     const datasetName = '100K-plus';
+    //     const expectedItemCount = 111000;
+    //     let dataset = await datasets.getOrCreateDataset({ datasetName });
+    //     let datasetId = dataset.id || dataset._id;
+    //
+    //     // NOTE: We want to save push data operations so we reuse dataset if it is possible.
+    //     if (dataset.itemCount !== expectedItemCount) {
+    //         await datasets.deleteDataset({ datasetId });
+    //         dataset = await createDatasetWithItems(111000, datasetName);
+    //         datasetId = dataset.id || dataset._id;
+    //     }
+    //     await delayPromise(3000);
+    //
+    //     await getDatasetItems(apifyClient, datasetId);
+    //
+    //     const localCsvRows = await getLocalResultRows(true);
+    //     const apiRows = await getDatasetItemsRows(datasetId, { skipHeaderRow: true });
+    //
+    //     checkRows(localCsvRows, apiRows);
+    // });
 
     it('Returns just clean items', async () => {
         const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });

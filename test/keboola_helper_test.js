@@ -15,26 +15,11 @@ describe('Keboola Heplers', () => {
             throw new Error('Error not thrown');
         });
 
-        it('parse exectuionId configuration', async () => {
-            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'executionId.json')));
-            expect(config.executionId).to.equal('testExecutionId');
-            expect(config.action).to.equal(ACTIONS.run);
-        });
-
-        it('parse crawlerId configuration', async () => {
-            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'crawlerId.json')));
-            expect(config.userId).to.equal('myUserId');
-            expect(config.token).to.equal('myToken');
-            expect(config.crawlerId).to.equal('Example_Hacker_News');
-            expect(config.action).to.equal(ACTIONS.run);
-            expect(config.actionType).to.equal(ACTION_TYPES.runActor);
-        });
-
-        it('parse crawler list configuration', async () => {
+        it('parse actors list configuration', async () => {
             const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'crawlers-list.json')));
             expect(config.userId).to.equal('myUserId');
             expect(config.token).to.equal('myToken');
-            expect(config.action).to.equal(ACTIONS.listCrawlers);
+            expect(config.action).to.equal(ACTIONS.listActors);
         });
 
         it('parse dataset configuration', async () => {
