@@ -42,7 +42,7 @@
     "install": "^0.8.1",
     "is-there": "^4.4.4",
     "jsonfile": "^2.4.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "nconf": "^0.8.4",
     "request": "^2.88.2",
