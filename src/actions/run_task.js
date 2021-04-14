@@ -1,8 +1,8 @@
 const path = require('path');
 const apifyHelper = require('../helpers/apify_helper');
-const { loadJson, saveJson } = require('../helpers/fs_helper');
-const { STATE_IN_FILE, STATE_OUT_FILE, DATA_DIR,
-    DEFAULT_EXTRACTOR_TIMEOUT, NAME_OF_KEBOOLA_INPUTS_STORE } = require('../constants');
+const { loadJson } = require('../helpers/fs_helper');
+const { STATE_IN_FILE, DATA_DIR,
+    DEFAULT_EXTRACTOR_TIMEOUT } = require('../constants');
 const getDatasetItems = require('./get_dataset_items');
 const { getInputFile } = require('../helpers/keboola_helper');
 
@@ -17,16 +17,17 @@ const { getInputFile } = require('../helpers/keboola_helper');
  * @param timeout
  * @return {Promise<void>}
  */
-module.exports = async function runActor({ apifyClient, actorId, input, memory, build, timeout = DEFAULT_EXTRACTOR_TIMEOUT, fields }) {
+module.exports = async function runActorTask({ apifyClient, actorTaskId, input, memory, build, timeout = DEFAULT_EXTRACTOR_TIMEOUT, fields }) {
     const stateInFile = path.join(DATA_DIR, STATE_IN_FILE);
     const state = await loadJson(stateInFile);
-    const { acts } = apifyClient;
-    let { runId } = state;
+    const { tasks } = apifyClient;
+    let { runId, actorId } = state;
 
     // If no run ID, starts new one
+    let taskRun;
     if (!runId) {
         // Actor run options
-        let opts = { actId: actorId };
+        let opts = { taskId: actorTaskId };
         if (memory) opts.memory = parseInt(memory, 10);
         if (build) opts.build = build;
 
@@ -36,22 +37,17 @@ module.exports = async function runActor({ apifyClient, actorId, input, memory, 
             if (input) input = { ...input, inputTableRecord };
             else input = { inputTableRecord };
         }
-        if (input) {
-            opts = {
-                ...opts,
-                body: JSON.stringify(input),
-                contentType: 'application/json; charset=utf-8',
-            };
-        }
+        if (input) opts = { ...opts, input };
 
-        const actRun = await acts.runAct(opts);
-        runId = actRun.id || actRun._id;
-        console.log(`Actor run started with runId: ${runId}`);
+        taskRun = await tasks.runTask(opts);
+        runId = taskRun.id || taskRun._id;
+        actorId = taskRun.actId;
+        console.log(`Task run started with runId: ${runId}`);
     }
 
     if (timeout) apifyHelper.setRunTimeout(timeout, runId, actorId);
-    const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, actorId, acts);
-    if (!defaultDatasetId) throw new Error('Actor run pushs no results to default dataset!');
-    console.log(`Actor run ${actorId} finished.`);
+    const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, actorId, apifyClient);
+    if (!defaultDatasetId) throw new Error('There in not dataset items for this run!');
+    console.log(`Task run ${actorTaskId} finished.`);
     await getDatasetItems(apifyClient, defaultDatasetId, { fields });
 };
