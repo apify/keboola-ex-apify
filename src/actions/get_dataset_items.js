@@ -7,7 +7,6 @@ const { DEFAULT_TABLES_OUT_DIR, DATA_DIR, DATASET_FILE_NAME } = require('../cons
 const RESULTS_FILE_LIMIT = 50000;
 const DEFAULT_PAGINATION_LIMIT = 5000;
 
-
 /**
  * Outputs all data from Apify datasets to data/out
  */

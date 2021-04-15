@@ -47,7 +47,7 @@ module.exports = async function runActorTask({ apifyClient, actorTaskId, input, 
 
     if (timeout) apifyHelper.setRunTimeout(timeout, runId, actorId);
     const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, actorId, apifyClient);
-    if (!defaultDatasetId) throw new Error('There in not dataset items for this run!');
+    if (!defaultDatasetId) throw new Error('There is no dataset for this run!');
     console.log(`Task run ${actorTaskId} finished.`);
     await getDatasetItems(apifyClient, defaultDatasetId, { fields });
 };

@@ -48,7 +48,6 @@ function createFolderPromised(dir) {
     });
 }
 
-
 /**
  * Check file/folder stats
  */

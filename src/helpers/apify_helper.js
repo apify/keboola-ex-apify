@@ -24,7 +24,7 @@ async function waitUntilRunFinished(runId, actId, apifyClient, interval = DEFAUL
 
     while (running) {
         actRun = await apifyClient.acts.getRun({ actId, runId });
-        console.log(`Actor run ${actRun.status}`);
+        console.log('The run is still running...');
         if (ACT_JOB_TERMINAL_STATUSES.includes(actRun.status)) {
             running = false;
         }

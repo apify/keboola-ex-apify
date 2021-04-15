@@ -1,8 +1,8 @@
 const path = require('path');
 const apifyHelper = require('../helpers/apify_helper');
-const { loadJson, saveJson } = require('../helpers/fs_helper');
-const { STATE_IN_FILE, STATE_OUT_FILE, DATA_DIR,
-    DEFAULT_EXTRACTOR_TIMEOUT, NAME_OF_KEBOOLA_INPUTS_STORE } = require('../constants');
+const { loadJson } = require('../helpers/fs_helper');
+const { STATE_IN_FILE, DATA_DIR,
+    DEFAULT_EXTRACTOR_TIMEOUT } = require('../constants');
 const getDatasetItems = require('./get_dataset_items');
 const { getInputFile } = require('../helpers/keboola_helper');
 
@@ -50,8 +50,8 @@ module.exports = async function runActor({ apifyClient, actorId, input, memory, 
     }
 
     if (timeout) apifyHelper.setRunTimeout(timeout, runId, actorId);
-    const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, actorId, acts);
-    if (!defaultDatasetId) throw new Error('Actor run pushs no results to default dataset!');
+    const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, actorId, apifyClient);
+    if (!defaultDatasetId) throw new Error('There is no dataset for this run!');
     console.log(`Actor run ${actorId} finished.`);
     await getDatasetItems(apifyClient, defaultDatasetId, { fields });
 };
