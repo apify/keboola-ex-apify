@@ -7,8 +7,10 @@ const getDatasetItems = require('./get_dataset_items');
 const { getInputFile } = require('../helpers/keboola_helper');
 
 /**
- * This action starts actor and wait util finish.
+ * This action starts actor task and wait until finish.
  * Then get data from default dataset of actor to out files.
+ * If there is file with data on input, the data will be uploaded into key-value store
+ * and the store record will be pass on into task run input.
  * @param apifyClient
  * @param actorId
  * @param input
@@ -32,6 +34,8 @@ module.exports = async function runActorTask({ apifyClient, actorTaskId, input, 
         if (build) opts.build = build;
 
         const inputFile = await getInputFile();
+        // If there is file with data on input, the data will be uploaded into key-value store
+        // and the store record will be pass on into task run input.
         if (inputFile) {
             const inputTableRecord = await apifyHelper.uploadInputTable(apifyClient, inputFile);
             if (input) input = { ...input, inputTableRecord };

@@ -13,12 +13,12 @@ const {
 
 const pipeline = promisify(stream.pipeline);
 
-const DEFAULT_POOLING_INTERVAL = 5000; // ms
+const DEFAULT_POOLING_INTERVAL_MILLIS = 5000;
 
 /**
  * Asynchronously waits until run is finished
  */
-async function waitUntilRunFinished(runId, actId, apifyClient, interval = DEFAULT_POOLING_INTERVAL) {
+async function waitUntilRunFinished(runId, actId, apifyClient, interval = DEFAULT_POOLING_INTERVAL_MILLIS) {
     let running = true;
     let actRun;
 
