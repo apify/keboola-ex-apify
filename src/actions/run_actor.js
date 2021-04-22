@@ -31,6 +31,8 @@ module.exports = async function runActor({ apifyClient, actorId, input, memory, 
         if (build) opts.build = build;
 
         const inputFile = await getInputFile();
+        // If there is file with data on input, the data will be uploaded into key-value store
+        // and the store record will be pass on into actor run input.
         if (inputFile) {
             const inputTableRecord = await apifyHelper.uploadInputTable(apifyClient, inputFile);
             if (input) input = { ...input, inputTableRecord };
