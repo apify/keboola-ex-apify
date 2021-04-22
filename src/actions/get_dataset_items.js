@@ -7,7 +7,6 @@ const { DEFAULT_TABLES_OUT_DIR, DATA_DIR, DATASET_FILE_NAME } = require('../cons
 const RESULTS_FILE_LIMIT = 50000;
 const DEFAULT_PAGINATION_LIMIT = 5000;
 
-
 /**
  * Outputs all data from Apify datasets to data/out
  */
@@ -24,7 +23,7 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId, dat
 
     if (!dataset) throw new Error(`Error: Apify dataset with ${maybeDatasetId} name or id doesn't exist.`);
 
-    const datasetId = dataset.id || dataset._id; // TODO: Use only id, when we fix _id for test user
+    const datasetId = dataset.id;
     const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
     const getItemsOpts = {
         datasetId,

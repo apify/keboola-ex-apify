@@ -4,21 +4,27 @@ const { promisify } = require('util');
 const stream = require('stream');
 const { delayPromise } = require('apify-shared/utilities');
 const { ACT_JOB_TERMINAL_STATUSES } = require('apify-shared/consts');
+const path = require('path');
+const { saveJson } = require('./fs_helper');
+const {
+    STATE_OUT_FILE, DATA_DIR,
+    NAME_OF_KEBOOLA_INPUTS_STORE,
+} = require('../constants');
 
 const pipeline = promisify(stream.pipeline);
 
-const DEFAULT_POOLING_INTERVAL = 2000; // ms
+const DEFAULT_POOLING_INTERVAL_MILLIS = 5000;
 
 /**
  * Asynchronously waits until run is finished
  */
-async function waitUntilRunFinished(runId, actId, actsClient, interval = DEFAULT_POOLING_INTERVAL) {
+async function waitUntilRunFinished(runId, actId, apifyClient, interval = DEFAULT_POOLING_INTERVAL_MILLIS) {
     let running = true;
     let actRun;
 
     while (running) {
-        actRun = await actsClient.getRun({ actId, runId });
-        console.log(`Actor run ${actRun.status}`);
+        actRun = await apifyClient.acts.getRun({ actId, runId });
+        console.log('The run is still running...');
         if (ACT_JOB_TERMINAL_STATUSES.includes(actRun.status)) {
             running = false;
         }
@@ -76,7 +82,7 @@ async function findDatasetByName(apifyDatasets, maybeDatasetName) {
     const limit = 1000;
     while (true) {
         datasetsPage = await apifyDatasets.listDatasets({ limit, offset });
-        const datasetByName = datasetsPage.items.find(maybeDataset => maybeDataset.name === maybeDatasetName);
+        const datasetByName = datasetsPage.items.find((maybeDataset) => maybeDataset.name === maybeDatasetName);
         if (datasetByName) return datasetByName;
         if (datasetsPage.count === 0) return;
         offset += limit;
@@ -85,10 +91,36 @@ async function findDatasetByName(apifyDatasets, maybeDatasetName) {
 
 const randomHostLikeString = () => `${Math.random().toString(36).substring(2)}-${Date.now().toString(36).substring(2)}`;
 
+const uploadInputTable = async (apifyClient, inputFile) => {
+    const { keyValueStores } = apifyClient;
+    const store = await keyValueStores.getOrCreateStore({ storeName: NAME_OF_KEBOOLA_INPUTS_STORE });
+    const storeId = store.id;
+    const key = randomHostLikeString();
+    await keyValueStores.putRecord({
+        storeId,
+        key,
+        body: inputFile,
+        contentType: 'text/csv',
+    });
+    return { storeId, key };
+};
+
+const setRunTimeout = (timeout, runId, actorId) => {
+    setTimeout(async () => {
+        console.log('Extractor timeouts. Saving the state');
+        const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
+        await saveJson(stateOutFile, { runId, actorId });
+        console.log('State saved. Exiting.');
+        process.exit(0);
+    }, timeout);
+};
+
 module.exports = {
     saveItemsToFile,
     waitUntilRunFinished,
     printLargeStringToStdOut,
     findDatasetByName,
     randomHostLikeString,
+    uploadInputTable,
+    setRunTimeout,
 };
