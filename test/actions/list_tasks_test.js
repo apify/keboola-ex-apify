@@ -17,7 +17,7 @@ describe('List tasks action', () => {
 
         expect(actorsInStdOut.length).to.eql(tasks.items.length);
         tasks.items.forEach((task, i) => {
-            const taskId = task.id || task._id;
+            const taskId = task.id;
             expect(taskId).to.eql(actorsInStdOut[i].id);
         });
     });

@@ -8,7 +8,7 @@ const { datasets } = apifyClient;
 
 const createDatasetWithItems = async (rowCount, datasetName) => {
     const dataset = await datasets.getOrCreateDataset({ datasetName: datasetName || randomHostLikeString() });
-    const datasetId = dataset.id || dataset._id;
+    const datasetId = dataset.id;
     const batchSize = 10000;
     console.log(`Dataset created ${datasetId}`);
     let rows = [];
@@ -61,13 +61,13 @@ describe('Get dataset items', () => {
     //     const datasetName = '100K-plus';
     //     const expectedItemCount = 111000;
     //     let dataset = await datasets.getOrCreateDataset({ datasetName });
-    //     let datasetId = dataset.id || dataset._id;
+    //     let datasetId = dataset.id;
     //
     //     // NOTE: We want to save push data operations so we reuse dataset if it is possible.
     //     if (dataset.itemCount !== expectedItemCount) {
     //         await datasets.deleteDataset({ datasetId });
     //         dataset = await createDatasetWithItems(111000, datasetName);
-    //         datasetId = dataset.id || dataset._id;
+    //         datasetId = dataset.id;
     //     }
     //     await delayPromise(3000);
     //
@@ -81,7 +81,7 @@ describe('Get dataset items', () => {
 
     it('Returns just clean items', async () => {
         const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
-        const datasetId = dataset.id || dataset._id;
+        const datasetId = dataset.id;
         const items = [
             { i: '0', foo: 'bar', myTest: 'Hello!' },
             { i: '1', foo: 'bar', myTest: 'Hello!', '#debug': 'BlaBla', '#error': 'Error' },
@@ -104,7 +104,7 @@ describe('Get dataset items', () => {
 
     it('Returns columns from fields options', async () => {
         const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
-        const datasetId = dataset.id || dataset._id;
+        const datasetId = dataset.id;
         const fields = ['line', 'col1', 'col4'];
         const items = [
             { line: '1', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
