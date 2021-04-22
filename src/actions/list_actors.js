@@ -7,7 +7,7 @@ module.exports = async function listActorsAction(apifyClient) {
     const actors = await apifyClient.acts.listActs({ limit: 100000 });
     const actorsList = [];
     actors.items.forEach((actor) => {
-        const actorId = actor.id || actor._id;
+        const actorId = actor.id;
         const actorName = (actor.username) ? `${actor.username}/${actor.name}` : actor.name;
         const settingsLink = `https://my.apify.com/acts/${actorId}`;
         actorsList.push({

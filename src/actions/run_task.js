@@ -44,7 +44,7 @@ module.exports = async function runActorTask({ apifyClient, actorTaskId, input, 
         if (input) opts = { ...opts, input };
 
         taskRun = await tasks.runTask(opts);
-        runId = taskRun.id || taskRun._id;
+        runId = taskRun.id;
         actorId = taskRun.actId;
         console.log(`Task run started with runId: ${runId}`);
     }

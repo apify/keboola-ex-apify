@@ -7,7 +7,7 @@ module.exports = async function listActorsAction(apifyClient) {
     const tasks = await apifyClient.tasks.listTasks({ limit: 100000 });
     const taskList = [];
     tasks.items.forEach((task) => {
-        const actorTaskId = task.id || task._id;
+        const actorTaskId = task.id;
         const taskName = (task.username) ? `${task.username}/${task.name}` : task.name;
         const settingsLink = `https://my.apify.com/tasks/${actorTaskId}`;
         taskList.push({

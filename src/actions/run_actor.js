@@ -45,7 +45,7 @@ module.exports = async function runActor({ apifyClient, actorId, input, memory, 
         }
 
         const actRun = await acts.runAct(opts);
-        runId = actRun.id || actRun._id;
+        runId = actRun.id;
         console.log(`Actor run started with runId: ${runId}`);
     }
 
