@@ -20,9 +20,6 @@ const { getInputFile } = require('../helpers/keboola_helper');
  * @return {Promise<void>}
  */
 module.exports = async function runActorTask({ apifyClient, actorTaskId, input, memory, build, timeout = DEFAULT_EXTRACTOR_TIMEOUT, fields }) {
-    console.log('Input is:');
-    console.log(input);
-    console.log(`Type of input is ${typeof input}`);
     const stateInFile = path.join(DATA_DIR, STATE_IN_FILE);
     const state = await loadJson(stateInFile);
     const { tasks } = apifyClient;
