@@ -8,7 +8,6 @@ const stripEof = require('strip-eof');
 const { RESULTS_FILE_NAME, DATASET_FILE_NAME, DEFAULT_TABLES_OUT_DIR } = require('../../src/constants');
 const { createFolderPromised } = require('../../src/helpers/fs_helper');
 
-
 if (!process.env.APIFY_TEST_USER_ID || !process.env.APIFY_TEST_TOKEN) {
     throw new Error('Missing APIFY_TEST_USER_ID or APIFY_TEST_TOKEN environment variable for tests!');
 }
@@ -78,10 +77,9 @@ const saveInputFile = async (content) => {
 };
 
 const getDatasetItemsRows = async (datasetId, opts = {}) => {
-    const apiResults = await apifyClient.datasets.getItems(Object.assign({
-        datasetId,
+    const apiResults = await apifyClient.datasets.getItems({ datasetId,
         format: 'csv',
-    }, opts));
+        ...opts });
     return apiResults.items.toString().split(/\r?\n/);
 };
 

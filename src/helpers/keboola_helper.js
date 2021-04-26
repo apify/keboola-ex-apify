@@ -64,6 +64,13 @@ function parseConfigurationOrThrow(configObject) {
     } else {
         throw new Error('Unknown action!');
     }
+
+    // BugFix: The empty object({}) on input was parsed by Keboola into empty array([]) (PHP stuff -> json_decode($configuration, true))
+    // It is known issue in Keboola, but we need to handle this properly. Otherwise input validation failed.
+    if (config.input && Array.isArray(config.input) && config.input.length === 0) {
+        config.input = {};
+    }
+
     return config;
 }
 
