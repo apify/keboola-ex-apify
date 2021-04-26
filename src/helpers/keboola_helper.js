@@ -64,6 +64,8 @@ function parseConfigurationOrThrow(configObject) {
     } else {
         throw new Error('Unknown action!');
     }
+    console.log('Parsed config:');
+    console.dir(config);
     return config;
 }
 
