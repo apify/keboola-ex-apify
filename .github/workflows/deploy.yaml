@@ -24,8 +24,8 @@ jobs:
       - name: Build image
         run: docker build -t ${{ env.IMAGE_NAME }} .
 
-      - name: Run Tests
-        run: docker run -e APIFY_TEST_USER_ID -e APIFY_TEST_TOKEN ${{ env.IMAGE_NAME }} npm test
+#      - name: Run Tests
+#        run: docker run -e APIFY_TEST_USER_ID -e APIFY_TEST_TOKEN ${{ env.IMAGE_NAME }} npm test
 
       - name: Push image
         uses: odinuv/action-push-to-ecr@master
