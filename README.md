@@ -74,3 +74,5 @@ https://developers.keboola.com/extend/component/deployment/
 
 2. Tags with proper version like `x.y.z` goes to public version on production extractor! Other tags like `x.y.z-beta` goes to private version and you can test it on top of Keboola platform.
 
+## Resources
+* [Keboola API blueprint](https://kebooladocker.docs.apiary.io/#reference/actions/run-custom-component-action/process-action)
