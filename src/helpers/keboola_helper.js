@@ -13,6 +13,7 @@ function parseConfig(configObject) {
         token: configObject.get('parameters:#token'),
         datasetId: configObject.get('parameters:datasetId'),
         actId: configObject.get('parameters:actId'),
+        actorTaskId: configObject.get('parameters:actorTaskId'),
         input: configObject.get('parameters:input'),
         memory: configObject.get('parameters:memory'),
         build: configObject.get('parameters:build'),
@@ -39,6 +40,10 @@ function parseConfigurationOrThrow(configObject) {
         // These actions don't need any other parameters
         if (!config.userId) throw new Error('Parameter userId is not defined!');
         if (!config.token) throw new Error('Parameter token is not defined!');
+    } else if (config.action === ACTIONS.listTasks) {
+        // These actions don't need any other parameters
+        if (!config.userId) throw new Error('Parameter userId is not defined!');
+        if (!config.token) throw new Error('Parameter token is not defined!');
     } else if (config.action === ACTIONS.run) {
         if (config.actionType === ACTION_TYPES.getDatasetItems
             || config.actionType === ACTION_TYPES.runActor) {
@@ -49,6 +54,8 @@ function parseConfigurationOrThrow(configObject) {
             if (!config.datasetId) throw new Error('Parameter datasetId is not defined!');
         } else if (config.actionType === ACTION_TYPES.runActor) {
             if (!config.actId) throw new Error('Parameter actId is not defined!');
+        } else if (config.actionType === ACTION_TYPES.runTask) {
+            if (!config.actorTaskId) throw new Error('Parameter actorTaskId is not defined!');
         } else {
             if (!config.executionId && !config.userId) throw new Error('Parameter userId is not defined!');
             if (!config.executionId && !config.token) throw new Error('Parameter token is not defined!');
