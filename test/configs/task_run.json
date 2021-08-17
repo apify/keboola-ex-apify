@@ -1,0 +1,14 @@
+{
+  "action": "run",
+  "parameters": {
+    "actionType": "runTask",
+    "userId": "myUserId",
+    "#token": "myToken",
+    "actorTaskId": "my-user-name/task",
+    "input": {
+      "pages": 1
+    },
+    "memory": "512",
+    "build": "latest"
+  }
+}

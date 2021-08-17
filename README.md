@@ -1,78 +1,66 @@
 # Apify Keboola Extractor
 
-Apify extractor for Keboola Connection
-
-## Test
-
-### Sample configuration
-
-Before run, you need to have one of configuration in `path_to_data_folder` folder.
-
-#### To run a crawler
-
-```
-{
-  "parameters": {
-    "userId": "Apify user ID",
-    "#token": "Apify API token"
-    "crawlerId": "H8Xo8nhNDHJkmEfJG",
-    "crawlerSettings": {}
-  }
-}
-```
-
-#### To get results from existing execution
-
-```
-{
-  "parameters": {
-    "executionId": "Execution Id"
-  }
-}
-```
-
-#### To list crawlers:
-```
-{
-  "action": "listCrawlers",
-  "parameters": {
-    "userId": "Apify user ID",
-    "#token": "Apify API token"
-  }
-}
-```
-
-### Run in Docker
-
-`docker build --tag=test-ex .`
-
-`docker run --volume=path_to_data_folder:/data/ test-ex`
-
-### Run without docker
-
-`npm run dev`
-
-### Run docker image on top of Keboola platform
-Follow instruction on https://developers.keboola.com/extend/component/deployment/#test-live-configurations.
-
-### Run tests in node js app
-
-`DATA_DIR=path_to_data_folder APIFY_TEST_USER_ID=testUserIs APIFY_TEST_TOKEN=testUserToken npm run test`
-
-### Run test in build docker container
-
-`docker build --tag=test-ex .`
-
-`docker run -e DATA_DIR=path_to_data_folder -e APIFY_TEST_USER_ID=testUserIs -e APIFY_TEST_TOKEN=testUserToken test-ex npm test`
-
-## Deploy
-
-Deploy process was build regarding keboola developer portals recommendations.
-https://developers.keboola.com/extend/component/deployment/
-
-1. Commit last version to github and create tag.
-
-2. Tags with proper version like `x.y.z` goes to public version on production extractor! Other tags like `x.y.z-beta` goes to private version and you can test it on top of Keboola platform.
+You can use it to connect data from [Apify platform](https://apify.com/) into [Keboola platform](https://www.keboola.com/).
 
 ## Resources
+
+* [Apify documentation](https://docs.apify.com/tutorials/integrations#get-started)
+* [Getting started tutorial](https://help.apify.com/en/articles/2003234-keboola-integration)
+* [Apify component](https://components.keboola.com/components/apify.apify) page on Keboola developer platform
+* [Keboola documentation for developers](https://developers.keboola.com/overview/)
 * [Keboola API blueprint](https://kebooladocker.docs.apiary.io/#reference/actions/run-custom-component-action/process-action)
+
+----------
+
+## Local Development
+
+If you are interested in adding a new feature or fixing a bug in the integration, feel free to open a pull request.
+
+Before you started developing this integration, you will need your Apify API token and user ID.
+You can find the token and ID [on the Integrations page of your Apify account](https://my.apify.com/account#/integrations).
+
+### Run Configuration
+
+The run of integration depends on configuration. You can specify which action you want to run and its parameters in the configuration file `config.json`.
+On the Keboola platform, will be this config generated for each run based on user input.
+The base configuration looks:
+```json
+{
+  "action": "run",
+  "parameters": {
+    "actionType": "runActor",
+    "userId": "myUserId",
+    "#token": "myToken",
+    "actId": "my-user-name/actor",
+    "input": {
+      "pages": 1
+    },
+    "memory": "512",
+    "build": "latest"
+  }
+}
+```
+With this configuration, you will run the actor with specific options.
+There is [folder](./test/configs) with all possible examples of configuration.
+
+
+### Run Action locally
+
+1. Install dependencies `npm i`
+2. Create empty data dir for input and output of action `mkdir -p ./.temp/data`
+3. In data dir create `config.json` file and fill with an action you want to run `cp ./test/configs/actor_run.json ./.temp/data/config.json`
+4. Run the action using `npm run dev`
+
+## Tests
+
+There are integrations tests, which check each action if it works with the Apify platform as expected.
+You can run these tests with your Apify token and user ID. You can find the token and ID [on the Integrations page of your Apify account](https://my.apify.com/account#/integrations).
+
+1. Install dependencies `npm i`
+2. Run integration tests
+   `DATA_DIR=./data APIFY_TEST_USER_ID=<user ID> APIFY_TEST_TOKEN=<apify toke> npm run test`
+
+## Release & Deploy
+
+Only Apify team members can deploy new versions, and there is a [document in Notion on how to do it](https://www.notion.so/apify/Keboola-integration-77a4b5e28e1541f3919980a16053b1b2).
+

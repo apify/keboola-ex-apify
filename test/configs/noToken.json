@@ -1,8 +1,0 @@
-{
-  "action": "run",
-  "parameters": {
-    "userId": "myUserId",
-    "crawlerId": "Example_Hacker_News",
-    "crawlerSettings": {}
-  }
-}
