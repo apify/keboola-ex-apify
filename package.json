@@ -30,19 +30,19 @@
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "eslint": "^7.32.0",
-    "mocha": "^8.4.0",
-    "sinon": "^10.0.0"
+    "mocha": "^9.0.3",
+    "sinon": "^11.1.2"
   },
   "dependencies": {
     "apify-client": "^0.6.0",
     "apify-shared": "^0.7.6",
-    "csv-parse": "^2.5.0",
-    "got": "^10.7.0",
+    "csv-parse": "^4.16.0",
+    "got": "^11.8.2",
     "is-there": "^4.5.1",
-    "jsonfile": "^2.4.0",
-    "nconf": "^0.8.4",
-    "rimraf": "^2.7.1",
-    "strip-eof": "^1.0.0",
+    "jsonfile": "^6.1.0",
+    "nconf": "^0.11.3",
+    "rimraf": "^3.0.2",
+    "strip-eof": "^2.0.0",
     "underscore": "^1.13.1"
   }
 }
