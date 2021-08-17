@@ -36,7 +36,7 @@
   "dependencies": {
     "apify-client": "^0.6.0",
     "apify-shared": "^0.7.6",
-    "csv-parse": "^4.16.0",
+    "csv-parse": "^2.5.0",
     "got": "^11.8.2",
     "is-there": "^4.5.1",
     "jsonfile": "^6.1.0",
