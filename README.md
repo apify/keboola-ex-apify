@@ -4,11 +4,10 @@ You can use it to connect data from [Apify platform](https://apify.com/) into [K
 
 ## Resources
 
-* [Apify documentation](https://docs.apify.com/tutorials/integrations#get-started)
-* [Getting started tutorial](https://help.apify.com/en/articles/2003234-keboola-integration)
-* [Apify component](https://components.keboola.com/components/apify.apify) page on Keboola developer platform
+* [Apify/Keboola integration tutorial](https://help.apify.com/en/articles/2003234-keboola-integration)
+* [Apify component on Keboola](https://components.keboola.com/components/apify.apify) page on Keboola developer platform
 * [Keboola documentation for developers](https://developers.keboola.com/overview/)
-* [Keboola API blueprint](https://kebooladocker.docs.apiary.io/#reference/actions/run-custom-component-action/process-action)
+* [Keboole API reference](https://kebooladocker.docs.apiary.io/#reference/actions/run-custom-component-action/process-action)
 
 ----------
 
@@ -16,14 +15,14 @@ You can use it to connect data from [Apify platform](https://apify.com/) into [K
 
 If you are interested in adding a new feature or fixing a bug in the integration, feel free to open a pull request.
 
-Before you started developing this integration, you will need your Apify API token and user ID.
-You can find the token and ID [on the Integrations page of your Apify account](https://my.apify.com/account#/integrations).
+Before you start developing this integration, you will need your Apify API token and user ID.
+You can find the token and user ID [on the Integrations page of your Apify account](https://my.apify.com/account#/integrations).
 
 ### Run Configuration
 
 The run of integration depends on configuration. You can specify which action you want to run and its parameters in the configuration file `config.json`.
-On the Keboola platform, will be this config generated for each run based on user input.
-The base configuration looks:
+On the Keboola platform, this config will be generated for each run based on user input.
+Base configuration:
 ```json
 {
   "action": "run",
@@ -41,7 +40,7 @@ The base configuration looks:
 }
 ```
 With this configuration, you will run the actor with specific options.
-There is [folder](./test/configs) with all possible examples of configuration.
+[This folder](./test/configs) contains all possible examples of configuration.
 
 
 ### Run Action locally
@@ -54,7 +53,7 @@ There is [folder](./test/configs) with all possible examples of configuration.
 ## Tests
 
 There are integrations tests, which check each action if it works with the Apify platform as expected.
-You can run these tests with your Apify token and user ID. You can find the token and ID [on the Integrations page of your Apify account](https://my.apify.com/account#/integrations).
+You can run these tests with your Apify token and user ID. You can find the token and user ID [on the Integrations page of your Apify account](https://my.apify.com/account#/integrations).
 
 1. Install dependencies `npm i`
 2. Run integration tests
