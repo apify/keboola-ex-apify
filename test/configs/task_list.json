@@ -1,0 +1,7 @@
+{
+  "action": "listTasks",
+  "parameters": {
+    "userId": "myUserId",
+    "#token": "myToken"
+  }
+}

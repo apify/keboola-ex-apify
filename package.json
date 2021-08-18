@@ -5,7 +5,7 @@
   "main": "./src/index.js",
   "scripts": {
     "start": "DATA_DIR=/data node ./src/index.js",
-    "dev": "rm -rf ./.temp/data/out/tables/** && DATA_DIR=./.temp/data node ./src/index.js",
+    "dev": "rm -rf ./.temp/data/out/tables/** && mkdir -p ./.temp/data/{in,out}/tables && DATA_DIR=./.temp/data node ./src/index.js",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
     "test": "DATA_DIR=./test/test_data mocha --timeout 2400000 --recursive --exit"

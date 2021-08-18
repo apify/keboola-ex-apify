@@ -8,7 +8,7 @@ describe('Keboola Heplers', () => {
     describe('parseConfigurationOrThrow()', () => {
         it('parse actor should throw error', async () => {
             try {
-                await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'noToken.json')));
+                await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'no_token.json')));
             } catch (err) {
                 return;
             }
@@ -16,14 +16,14 @@ describe('Keboola Heplers', () => {
         });
 
         it('parse actors list configuration', async () => {
-            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'actor-list.json')));
+            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'actor_list.json')));
             expect(config.userId).to.equal('myUserId');
             expect(config.token).to.equal('myToken');
             expect(config.action).to.equal(ACTIONS.listActors);
         });
 
         it('parse dataset configuration', async () => {
-            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'dataset.json')));
+            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'get_dataset_items.json')));
             expect(config.userId).to.equal('myUserId');
             expect(config.token).to.equal('myToken');
             expect(config.datasetId).to.equal('test-dataset');
@@ -32,7 +32,7 @@ describe('Keboola Heplers', () => {
         });
 
         it('parse actor run configuration', async () => {
-            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'actorRun.json')));
+            const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'actor_run.json')));
             expect(config.userId).to.equal('myUserId');
             expect(config.token).to.equal('myToken');
             expect(config.actId).to.equal('my-user-name/actor');
