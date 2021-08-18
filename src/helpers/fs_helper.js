@@ -3,27 +3,18 @@ const jsonfile = require('jsonfile');
 const { promisify } = require('util');
 
 /**
- * Saves Object as JSON into fileName
- */
-const saveJson = promisify(jsonfile.writeFile);
-
-/**
  * Loads Object in JSON format from fileName
  */
-function loadJson(fileName) {
-    return new Promise((resolve) => {
-        if (!fs.existsSync(fileName)) {
-            resolve({});
-        } else {
-            jsonfile.readFile(fileName, {}, (error, obj) => {
-                if (error) {
-                    resolve({});
-                } else {
-                    resolve(obj);
-                }
-            });
-        }
-    });
+async function loadJson(fileName) {
+    if (!fs.existsSync(fileName)) {
+        return {};
+    }
+    try {
+        const obj = await jsonfile.readFile(fileName, {});
+        return obj;
+    } catch (err) {
+        return {};
+    }
 }
 
 /**
@@ -64,7 +55,7 @@ const readDirPromised = promisify(fs.readdir);
 const readFilePromised = promisify(fs.readFile);
 
 module.exports = {
-    saveJson,
+    saveJson: jsonfile.writeFile,
     loadJson,
     createFilePromised,
     appendFilePromised,
