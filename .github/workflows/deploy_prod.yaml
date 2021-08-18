@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy production
 
 on:
   push:
@@ -38,7 +38,7 @@ jobs:
           push_latest: true
           source_image: ${{ env.IMAGE_NAME }}
 
-      - name: Deploy to production
+      - name: Deploy
         uses: keboola/action-set-tag-developer-portal@master
         with:
           vendor: ${{ env.KBC_VENDOR }}
