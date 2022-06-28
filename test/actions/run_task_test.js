@@ -45,7 +45,6 @@ describe('Run Actor', () => {
                     versionNumber: '0.0',
                     envVars: [],
                     sourceType: 'SOURCE_FILES',
-                    baseDockerImage: 'apify/actor-node',
                     buildTag: 'latest',
                     sourceFiles: [
                         {
