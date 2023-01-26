@@ -3,3 +3,4 @@ node_modules
 .temp
 local_test.sh
 .DS_Store
+.vscore
