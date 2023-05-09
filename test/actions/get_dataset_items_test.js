@@ -1,4 +1,4 @@
-const { delayPromise } = require('apify-shared/utilities');
+const { delayPromise } = require('@apify/utilities');
 const { apifyClient, getLocalResultRows, checkRows,
     actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
 const { randomHostLikeString } = require('../../src/helpers/apify_helper');

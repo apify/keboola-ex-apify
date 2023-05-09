@@ -36,7 +36,7 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId, dat
     }
 
     const sampleItems = await apifyDatasets.getItems(Object.assign(getItemsOpts, { limit: 10 }));
-    // HOTFIX: Enlarge max_limit_on_data_read to be able handle large fields
+    // HOTFIX: Enlarge max_record_size to be able handle large fields
     const parsedCsv = await parseCsvPromised(sampleItems.items, { max_record_size: 128000 * 5 });
     const headerRowColumns = parsedCsv[0];
 
@@ -64,8 +64,13 @@ module.exports = async function getDatasetItems(apifyClient, maybeDatasetId, dat
 
             if (dataset.itemCount <= paginationItemsOpts.offset) break;
 
-            paginationItemsOpts = await apifyHelper.saveItemsToFile(datasetId,
-                paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, true);
+            paginationItemsOpts = await apifyHelper.saveItemsToFile(
+                datasetId,
+                paginationItemsOpts,
+                RESULTS_FILE_LIMIT,
+                resultFile,
+                true,
+            );
             fileCounter += 1;
         }
 
