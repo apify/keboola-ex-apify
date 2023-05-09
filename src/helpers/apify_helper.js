@@ -2,8 +2,8 @@ const fs = require('fs');
 const got = require('got');
 const { promisify } = require('util');
 const stream = require('stream');
-const { delayPromise } = require('apify-shared/utilities');
-const { ACT_JOB_TERMINAL_STATUSES } = require('apify-shared/consts');
+const { delayPromise } = require('@apify/utilities');
+const { ACTOR_JOB_TERMINAL_STATUSES } = require('@apify/consts');
 const path = require('path');
 const { saveJson } = require('./fs_helper');
 const {
@@ -25,7 +25,7 @@ async function waitUntilRunFinished(runId, actId, apifyClient, interval = DEFAUL
     while (running) {
         actRun = await apifyClient.acts.getRun({ actId, runId });
         console.log('The run is still running...');
-        if (ACT_JOB_TERMINAL_STATUSES.includes(actRun.status)) {
+        if (ACTOR_JOB_TERMINAL_STATUSES.includes(actRun.status)) {
             running = false;
         }
         await delayPromise(interval);

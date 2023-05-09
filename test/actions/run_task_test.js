@@ -112,7 +112,7 @@ describe('Run Actor', () => {
                 test: Math.random(),
             };
         });
-        const task = await apifyClient.tasks.createTask({ task: { actId: actorId, name: generatedName(), input: { items: [] } } });
+        const task = await apifyClient.tasks.createTask({ task: { actId: actorId, name: generatedName(), input: { items: [{}] } } });
         sinon.spy(console, 'log');
         await runTaskAction({ apifyClient, actorTaskId: task.id, input: { items } });
         const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
@@ -127,7 +127,7 @@ describe('Run Actor', () => {
     });
 
     it('throw error if didn\'t match input schema', async () => {
-        const task = await apifyClient.tasks.createTask({ task: { actId: actorId, name: generatedName(), input: { items: [] } } });
-        await expect(runTaskAction({ apifyClient, actorTaskId: task.id, input: { items: null } })).be.rejectedWith('Input');
+        const task = await apifyClient.tasks.createTask({ task: { actId: actorId, name: generatedName(), input: { items: [{}] } } });
+        await expect(runTaskAction({ apifyClient, actorTaskId: task.id, input: { items: 'string but must be array' } })).be.rejectedWith('Input');
     });
 });
