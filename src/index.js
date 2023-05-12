@@ -1,6 +1,6 @@
 /* eslint-disable */
 const { DATA_DIR } = require('./constants');
-const ApifyClient = require('apify-client');
+const { ApifyClient } = require('apify-client');
 const path = require('path');
 const getConfig = require('./helpers/config_helper');
 const { parseConfigurationOrThrow } = require('./helpers/keboola_helper');
@@ -21,7 +21,6 @@ const runTaskAction = require('./actions/run_task');
         const config = parseConfigurationOrThrow(getConfig(path.join(DATA_DIR, CONFIG_FILE)));
         const {
             action,
-            userId,
             token,
             timeout,
             datasetId,
@@ -35,7 +34,7 @@ const runTaskAction = require('./actions/run_task');
             fields,
         } = config;
 
-        const apifyClient = new ApifyClient({ userId, token });
+        const apifyClient = new ApifyClient({ token });
 
         switch (action) {
             case ACTIONS.run:

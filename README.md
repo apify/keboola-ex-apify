@@ -57,7 +57,7 @@ You can run these tests with your Apify token and user ID. You can find the toke
 
 1. Install dependencies `npm i`
 2. Run integration tests
-   `DATA_DIR=./data APIFY_TEST_USER_ID=<user ID> APIFY_TEST_TOKEN=<apify toke> npm run test`
+   `DATA_DIR=./data APIFY_TEST_TOKEN=<apify toke> npm run test`
 
 ## Release & Deploy
 

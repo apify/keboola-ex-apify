@@ -18,24 +18,24 @@ const DEFAULT_POOLING_INTERVAL_MILLIS = 5000;
 /**
  * Asynchronously waits until run is finished
  */
-async function waitUntilRunFinished(runId, actId, apifyClient, interval = DEFAULT_POOLING_INTERVAL_MILLIS) {
-    let running = true;
-    let actRun;
+async function waitUntilRunFinished(runId, apifyClient, interval = DEFAULT_POOLING_INTERVAL_MILLIS) {
+    let isRunning = true;
+    let run;
 
-    while (running) {
-        actRun = await apifyClient.acts.getRun({ actId, runId });
+    while (isRunning) {
+        run = await apifyClient.run(runId).get();
         console.log('The run is still running...');
-        if (ACTOR_JOB_TERMINAL_STATUSES.includes(actRun.status)) {
-            running = false;
+        if (ACTOR_JOB_TERMINAL_STATUSES.includes(run.status)) {
+            isRunning = false;
         }
         await delayPromise(interval);
     }
-    return actRun;
+    return run;
 }
 
 /**
  * Appends csv items from dataset to file using pagination.
- * @param apifyDatasets
+ * @param datasetId
  * @param paginationItemsOpts
  * @param fileLimit
  * @param file
@@ -48,7 +48,7 @@ async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, 
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     const datasetItemsUrl = `https://api.apify.com/v2/datasets/${datasetId}/items`;
     const { fields } = paginationItemsOpts;
-    const searchParams = { ...paginationItemsOpts, skipHeaderRow: skipHeaderRow ? '1' : '0' };
+    const searchParams = { ...paginationItemsOpts, format: 'csv', skipHeaderRow: skipHeaderRow ? '1' : '0' };
     if (fields) {
         searchParams.fields = fields.join(',');
     }
@@ -76,30 +76,15 @@ function printLargeStringToStdOut(largeString) {
     }
 }
 
-async function findDatasetByName(apifyDatasets, maybeDatasetName) {
-    let datasetsPage;
-    let offset = 0;
-    const limit = 1000;
-    while (true) {
-        datasetsPage = await apifyDatasets.listDatasets({ limit, offset });
-        const datasetByName = datasetsPage.items.find((maybeDataset) => maybeDataset.name === maybeDatasetName);
-        if (datasetByName) return datasetByName;
-        if (datasetsPage.count === 0) return;
-        offset += limit;
-    }
-}
-
 const randomHostLikeString = () => `${Math.random().toString(36).substring(2)}-${Date.now().toString(36).substring(2)}`;
 
 const uploadInputTable = async (apifyClient, inputFile) => {
-    const { keyValueStores } = apifyClient;
-    const store = await keyValueStores.getOrCreateStore({ storeName: NAME_OF_KEBOOLA_INPUTS_STORE });
+    const store = await apifyClient.keyValueStores().getOrCreate(NAME_OF_KEBOOLA_INPUTS_STORE);
     const storeId = store.id;
     const key = randomHostLikeString();
-    await keyValueStores.putRecord({
-        storeId,
+    await apifyClient.keyValueStore(storeId).setRecord({
         key,
-        body: inputFile,
+        value: inputFile,
         contentType: 'text/csv',
     });
     return { storeId, key };
@@ -119,7 +104,6 @@ module.exports = {
     saveItemsToFile,
     waitUntilRunFinished,
     printLargeStringToStdOut,
-    findDatasetByName,
     randomHostLikeString,
     uploadInputTable,
     setRunTimeout,

@@ -15,20 +15,20 @@ const { getInputFile } = require('../helpers/keboola_helper');
  * @param memory
  * @param build
  * @param timeout
+ * @param fields
  * @return {Promise<void>}
  */
 module.exports = async function runActor({ apifyClient, actorId, input, memory, build, timeout = DEFAULT_EXTRACTOR_TIMEOUT, fields }) {
     const stateInFile = path.join(DATA_DIR, STATE_IN_FILE);
     const state = await loadJson(stateInFile);
-    const { acts } = apifyClient;
     let { runId } = state;
 
     // If no run ID, starts new one
     if (!runId) {
         // Actor run options
-        let opts = { actId: actorId };
-        if (memory) opts.memory = parseInt(memory, 10);
-        if (build) opts.build = build;
+        const runOptions = {};
+        if (memory) runOptions.memory = parseInt(memory, 10);
+        if (build) runOptions.build = build;
 
         const inputFile = await getInputFile();
         // If there is file with data on input, the data will be uploaded into key-value store
@@ -38,21 +38,16 @@ module.exports = async function runActor({ apifyClient, actorId, input, memory, 
             if (input) input = { ...input, inputTableRecord };
             else input = { inputTableRecord };
         }
-        if (input) {
-            opts = {
-                ...opts,
-                body: JSON.stringify(input),
-                contentType: 'application/json; charset=utf-8',
-            };
-        }
 
-        const actRun = await acts.runAct(opts);
-        runId = actRun.id;
+        const actorRun = input
+            ? await apifyClient.actor(actorId).call(input, { ...runOptions, contentType: 'application/json; charset=utf-8' })
+            : await apifyClient.actor(actorId).call(runOptions);
+        runId = actorRun.id;
         console.log(`Actor run started with runId: ${runId}`);
     }
 
     if (timeout) apifyHelper.setRunTimeout(timeout, runId, actorId);
-    const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, actorId, apifyClient);
+    const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, apifyClient);
     if (!defaultDatasetId) throw new Error('There is no dataset for this run!');
     console.log(`Actor run ${actorId} finished.`);
     await getDatasetItems(apifyClient, defaultDatasetId, { fields });

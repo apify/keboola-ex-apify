@@ -23,35 +23,35 @@ describe('Run Actor', () => {
         const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
         console.log.restore();
 
-        const { defaultDatasetId, defaultKeyValueStoreId } = await apifyClient.acts.getRun({ runId, actId: TEST_ACTOR_ID });
+        const { defaultDatasetId, defaultKeyValueStoreId } = await apifyClient.run(runId).get();
 
         const localCsvRows = await getLocalResultRows(true);
         const apiRows = await getDatasetItemsRows(defaultDatasetId);
 
-        const runInput = await apifyClient.keyValueStores.getRecord({ storeId: defaultKeyValueStoreId, key: 'INPUT' });
+        const runInput = await apifyClient.keyValueStore(defaultKeyValueStoreId).getRecord('INPUT');
 
         checkRows(localCsvRows, apiRows);
-        expect(actorInput).to.eql(runInput.body);
+        expect(actorInput).to.eql(runInput.value);
     });
 
     it('Run actor with input file', async () => {
         const inputFileString = 'column,column2,column3\ntest,value,1\ntest2,value2,2\n';
-        saveInputFile(inputFileString);
+        await saveInputFile(inputFileString);
         sinon.spy(console, 'log');
         await runActorAction({ apifyClient, actorId: TEST_ACTOR_ID, input: {} });
         const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
         console.log.restore();
 
-        const { defaultDatasetId, defaultKeyValueStoreId } = await apifyClient.acts.getRun({ runId, actId: TEST_ACTOR_ID });
+        const { defaultDatasetId, defaultKeyValueStoreId } = await apifyClient.run(runId).get();
 
         const localCsvRows = await getLocalResultRows(true);
         const apiRows = await getDatasetItemsRows(defaultDatasetId);
 
         checkRows(localCsvRows, apiRows);
         // Check input files in customData of execution
-        const runInput = await apifyClient.keyValueStores.getRecord({ storeId: defaultKeyValueStoreId, key: 'INPUT' });
-        const kvsFile = await apifyClient.keyValueStores.getRecord(runInput.body.inputTableRecord);
-        expect(kvsFile.body.toString()).to.eql(inputFileString);
+        const runInput = await apifyClient.keyValueStore(defaultKeyValueStoreId).getRecord('INPUT');
+        const kvsFile = await apifyClient.keyValueStore(runInput.value.inputTableRecord.storeId).getRecord(runInput.value.inputTableRecord.key);
+        expect(kvsFile.value.toString()).to.eql(inputFileString);
     });
 
     it('Run actor and return dataset with fields', async () => {
@@ -64,15 +64,15 @@ describe('Run Actor', () => {
         const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
         console.log.restore();
 
-        const { defaultDatasetId, defaultKeyValueStoreId } = await apifyClient.acts.getRun({ runId, actId: TEST_ACTOR_ID });
+        const { defaultDatasetId, defaultKeyValueStoreId } = await apifyClient.run(runId).get();
 
         const localCsvRows = await getLocalResultRows(true);
         const apiRows = await getDatasetItemsRows(defaultDatasetId, { fields });
 
-        const runInput = await apifyClient.keyValueStores.getRecord({ storeId: defaultKeyValueStoreId, key: 'INPUT' });
+        const runInput = await apifyClient.keyValueStore(defaultKeyValueStoreId).getRecord('INPUT');
 
         checkRows(localCsvRows, apiRows);
-        expect(actorInput).to.eql(runInput.body);
+        expect(actorInput).to.eql(runInput.value);
     });
 
     // Teardown test
