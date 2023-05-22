@@ -8,12 +8,12 @@ describe('List tasks action', () => {
         sinon.spy(process.stdout, 'write');
     });
     it('should returns tasks list to stdout', async () => {
-        const tasks = await apifyClient.tasks.listTasks({ limit: 100000 });
+        const tasks = await apifyClient.tasks().list({ limit: 100000 });
 
         await listTasksAction(apifyClient);
 
         const callsArguments = process.stdout.write.args;
-        const actorsInStdOut = JSON.parse(callsArguments.map(call => call[0]).join(''));
+        const actorsInStdOut = JSON.parse(callsArguments.map((call) => call[0]).join(''));
 
         expect(actorsInStdOut.length).to.eql(tasks.items.length);
         tasks.items.forEach((task, i) => {

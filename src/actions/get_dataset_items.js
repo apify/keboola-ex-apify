@@ -1,6 +1,8 @@
 const path = require('path');
+const { DownloadItemsFormat } = require('apify-client');
+
+const { parse } = require('csv-parse/sync');
 const apifyHelper = require('../helpers/apify_helper');
-const parseCsvPromised = require('../helpers/csv_helpers');
 const { createFilePromised, createFolderPromised } = require('../helpers/fs_helper');
 const { DEFAULT_TABLES_OUT_DIR, DATA_DIR, DATASET_FILE_NAME } = require('../constants');
 
@@ -10,42 +12,37 @@ const DEFAULT_PAGINATION_LIMIT = 5000;
 /**
  * Outputs all data from Apify datasets to data/out
  */
-module.exports = async function getDatasetItems(apifyClient, maybeDatasetId, datasetOptions = {}) {
-    const apifyDatasets = await apifyClient.datasets;
+module.exports = async function getDatasetItems(apifyClient, datasetIdOrName, datasetOptions = {}) {
     const { fields } = datasetOptions;
-    let dataset = await apifyDatasets.getDataset({ datasetId: maybeDatasetId });
+    let dataset = await apifyClient.dataset(datasetIdOrName).get();
     if (!dataset) {
-        // Try to find by name
-        // TODO: Fix when we can get dataset by name
-        const datasetByName = await apifyHelper.findDatasetByName(apifyDatasets, maybeDatasetId);
-        if (datasetByName) dataset = await apifyDatasets.getDataset({ datasetId: datasetByName.id });
+        // Try to find dataset by name
+        const user = await apifyClient.user().get();
+        dataset = await apifyClient.dataset(`${user.id}~${datasetIdOrName}`).get();
     }
 
-    if (!dataset) throw new Error(`Error: Apify dataset with ${maybeDatasetId} name or id doesn't exist.`);
+    if (!dataset) throw new Error(`Error: There is no dataset with ${datasetIdOrName} name or ID.`);
 
     const datasetId = dataset.id;
     const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
-    const getItemsOpts = {
-        datasetId,
-        format: 'csv',
-        clean: true,
-    };
+    const getItemsOpts = { clean: true };
 
     if (fields) {
         getItemsOpts.fields = typeof fields === 'string' ? fields.split(',') : fields;
     }
 
-    const sampleItems = await apifyDatasets.getItems(Object.assign(getItemsOpts, { limit: 10 }));
+    const sampleItems = await apifyClient.dataset(datasetId).downloadItems(DownloadItemsFormat.CSV, { ...getItemsOpts, limit: 10 });
     // HOTFIX: Enlarge max_record_size to be able handle large fields
-    const parsedCsv = await parseCsvPromised(sampleItems.items, { max_record_size: 128000 * 5 });
+    const parsedCsv = parse(sampleItems.items, { max_record_size: 128000 * 5 });
     const headerRowColumns = parsedCsv[0];
 
     console.log(`Start saving ${dataset.itemCount} results from datasetId ${datasetId}`);
 
-    let paginationItemsOpts = Object.assign(getItemsOpts, {
+    let paginationItemsOpts = {
+        ...getItemsOpts,
         limit: DEFAULT_PAGINATION_LIMIT,
         offset: 0,
-    });
+    };
     if (dataset.itemCount > RESULTS_FILE_LIMIT) {
         // save results by chunks to sliced tables
         // fix empty header row column

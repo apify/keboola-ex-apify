@@ -9,7 +9,6 @@ const {
 function parseConfig(configObject) {
     const config = {
         action: configObject.get('action') || ACTIONS.run,
-        userId: configObject.get('parameters:userId'),
         token: configObject.get('parameters:#token'),
         datasetId: configObject.get('parameters:datasetId'),
         actId: configObject.get('parameters:actId'),
@@ -38,16 +37,13 @@ function parseConfigurationOrThrow(configObject) {
     const config = parseConfig(configObject);
     if (config.action === ACTIONS.listActors) {
         // These actions don't need any other parameters
-        if (!config.userId) throw new Error('Parameter userId is not defined!');
         if (!config.token) throw new Error('Parameter token is not defined!');
     } else if (config.action === ACTIONS.listTasks) {
         // These actions don't need any other parameters
-        if (!config.userId) throw new Error('Parameter userId is not defined!');
         if (!config.token) throw new Error('Parameter token is not defined!');
     } else if (config.action === ACTIONS.run) {
         if (config.actionType === ACTION_TYPES.getDatasetItems
             || config.actionType === ACTION_TYPES.runActor) {
-            if (!config.userId) throw new Error('Parameter userId is not defined!');
             if (!config.token) throw new Error('Parameter token is not defined!');
         }
         if (config.actionType === ACTION_TYPES.getDatasetItems) {
@@ -57,7 +53,6 @@ function parseConfigurationOrThrow(configObject) {
         } else if (config.actionType === ACTION_TYPES.runTask) {
             if (!config.actorTaskId) throw new Error('Parameter actorTaskId is not defined!');
         } else {
-            if (!config.executionId && !config.userId) throw new Error('Parameter userId is not defined!');
             if (!config.executionId && !config.token) throw new Error('Parameter token is not defined!');
             if (!config.executionId && !config.crawlerId) throw new Error('Parameter crawlerId and executionId is not defined!');
         }

@@ -17,14 +17,12 @@ describe('Keboola Heplers', () => {
 
         it('parse actors list configuration', async () => {
             const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'actor_list.json')));
-            expect(config.userId).to.equal('myUserId');
             expect(config.token).to.equal('myToken');
             expect(config.action).to.equal(ACTIONS.listActors);
         });
 
         it('parse dataset configuration', async () => {
             const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'get_dataset_items.json')));
-            expect(config.userId).to.equal('myUserId');
             expect(config.token).to.equal('myToken');
             expect(config.datasetId).to.equal('test-dataset');
             expect(config.action).to.equal(ACTIONS.run);
@@ -33,7 +31,6 @@ describe('Keboola Heplers', () => {
 
         it('parse actor run configuration', async () => {
             const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'actor_run.json')));
-            expect(config.userId).to.equal('myUserId');
             expect(config.token).to.equal('myToken');
             expect(config.actId).to.equal('my-user-name/actor');
             expect(config.input).to.deep.include({ pages: 1 });

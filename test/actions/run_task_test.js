@@ -1,5 +1,6 @@
 const sinon = require('sinon');
 const chaiAsPromised = require('chai-as-promised');
+const { ACTOR_SOURCE_TYPES } = require('@apify/consts');
 const chai = require('chai');
 const _ = require('underscore');
 const { apifyClient, getLocalResultRows, checkRows, saveInputFile,
@@ -13,7 +14,7 @@ const generatedName = () => {
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-describe('Run Actor', () => {
+describe('Run Task', () => {
     let actorId;
     before(async () => {
         // Create test actor
@@ -43,8 +44,7 @@ describe('Run Actor', () => {
             versions: [
                 {
                     versionNumber: '0.0',
-                    envVars: [],
-                    sourceType: 'SOURCE_FILES',
+                    sourceType: ACTOR_SOURCE_TYPES.SOURCE_FILES,
                     buildTag: 'latest',
                     sourceFiles: [
                         {
@@ -71,13 +71,13 @@ describe('Run Actor', () => {
                 },
             ],
         };
-        const actor = await apifyClient.acts.createAct({ act: actorConf });
+        const actor = await apifyClient.actors().create(actorConf);
         console.log(`Testing actor created ${actor.id}`);
-        await apifyClient.acts.buildAct({ actId: actor.id, version: '0.0', tag: 'latest', waitForFinish: 120 });
+        await apifyClient.actor(actor.id).build('0.0', { tag: 'latest', waitForFinish: 120 });
         actorId = actor.id;
     });
     after(async () => {
-        await apifyClient.acts.deleteAct({ actId: actorId });
+        await apifyClient.actor(actorId).delete();
     });
     // Setup test
     beforeEach(actionsTestsSetup);
@@ -91,13 +91,13 @@ describe('Run Actor', () => {
                 test: Math.random(),
             };
         });
-        const task = await apifyClient.tasks.createTask({ task: { actId: actorId, name: generatedName(), input: { items } } });
+        const task = await apifyClient.tasks().create({ actId: actorId, name: generatedName(), input: { items } });
         sinon.spy(console, 'log');
         await runTaskAction({ apifyClient, actorTaskId: task.id });
         const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
         console.log.restore();
 
-        const { defaultDatasetId } = await apifyClient.acts.getRun({ runId, actId: task.actId });
+        const { defaultDatasetId } = await apifyClient.run(runId).get();
 
         const localCsvRows = await getLocalResultRows(true);
         const apiRows = await getDatasetItemsRows(defaultDatasetId);
@@ -112,13 +112,13 @@ describe('Run Actor', () => {
                 test: Math.random(),
             };
         });
-        const task = await apifyClient.tasks.createTask({ task: { actId: actorId, name: generatedName(), input: { items: [{}] } } });
+        const task = await apifyClient.tasks().create({ actId: actorId, name: generatedName(), input: { items: [{}] } });
         sinon.spy(console, 'log');
         await runTaskAction({ apifyClient, actorTaskId: task.id, input: { items } });
         const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
         console.log.restore();
 
-        const { defaultDatasetId } = await apifyClient.acts.getRun({ runId, actId: task.actId });
+        const { defaultDatasetId } = await apifyClient.run(runId).get();
 
         const localCsvRows = await getLocalResultRows(true);
         const apiRows = await getDatasetItemsRows(defaultDatasetId);
@@ -127,7 +127,7 @@ describe('Run Actor', () => {
     });
 
     it('throw error if didn\'t match input schema', async () => {
-        const task = await apifyClient.tasks.createTask({ task: { actId: actorId, name: generatedName(), input: { items: [{}] } } });
+        const task = await apifyClient.tasks().create({ actId: actorId, name: generatedName(), input: { items: [{}] } });
         await expect(runTaskAction({ apifyClient, actorTaskId: task.id, input: { items: 'string but must be array' } })).be.rejectedWith('Input');
     });
 });

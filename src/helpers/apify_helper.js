@@ -2,8 +2,6 @@ const fs = require('fs');
 const got = require('got');
 const { promisify } = require('util');
 const stream = require('stream');
-const { delayPromise } = require('@apify/utilities');
-const { ACTOR_JOB_TERMINAL_STATUSES } = require('@apify/consts');
 const path = require('path');
 const { saveJson } = require('./fs_helper');
 const {
@@ -13,29 +11,38 @@ const {
 
 const pipeline = promisify(stream.pipeline);
 
-const DEFAULT_POOLING_INTERVAL_MILLIS = 5000;
+/**
+ * Stream logs into stdout, shallow errors
+ * @param apifyClient
+ * @param runId
+ * @returns {Promise<void>}
+ */
+const followRunLogs = async (apifyClient, runId) => {
+    const logStream = await apifyClient.run(runId).log().stream();
+    try {
+        console.log('=== Run logs starts ===');
+        for await (const logLine of logStream) {
+            process.stdout.write(logLine.toString());
+        }
+        console.log('=== Run logs ends ===');
+    } catch (err) {
+        console.log('Error occurred during log streaming, but it is not critical. The run is still running.');
+    }
+};
 
 /**
  * Asynchronously waits until run is finished
  */
-async function waitUntilRunFinished(runId, actId, apifyClient, interval = DEFAULT_POOLING_INTERVAL_MILLIS) {
-    let running = true;
-    let actRun;
+async function waitUntilRunFinished(runId, apifyClient, timeoutMillis) {
+    const runPromise = apifyClient.run(runId).waitForFinish({ waitSecs: timeoutMillis / 1000 });
+    const [run] = await Promise.all([runPromise, followRunLogs(apifyClient, runId)]);
 
-    while (running) {
-        actRun = await apifyClient.acts.getRun({ actId, runId });
-        console.log('The run is still running...');
-        if (ACTOR_JOB_TERMINAL_STATUSES.includes(actRun.status)) {
-            running = false;
-        }
-        await delayPromise(interval);
-    }
-    return actRun;
+    return run;
 }
 
 /**
  * Appends csv items from dataset to file using pagination.
- * @param apifyDatasets
+ * @param datasetId
  * @param paginationItemsOpts
  * @param fileLimit
  * @param file
@@ -48,7 +55,7 @@ async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, 
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     const datasetItemsUrl = `https://api.apify.com/v2/datasets/${datasetId}/items`;
     const { fields } = paginationItemsOpts;
-    const searchParams = { ...paginationItemsOpts, skipHeaderRow: skipHeaderRow ? '1' : '0' };
+    const searchParams = { ...paginationItemsOpts, format: 'csv', skipHeaderRow: skipHeaderRow ? '1' : '0' };
     if (fields) {
         searchParams.fields = fields.join(',');
     }
@@ -76,51 +83,33 @@ function printLargeStringToStdOut(largeString) {
     }
 }
 
-async function findDatasetByName(apifyDatasets, maybeDatasetName) {
-    let datasetsPage;
-    let offset = 0;
-    const limit = 1000;
-    while (true) {
-        datasetsPage = await apifyDatasets.listDatasets({ limit, offset });
-        const datasetByName = datasetsPage.items.find((maybeDataset) => maybeDataset.name === maybeDatasetName);
-        if (datasetByName) return datasetByName;
-        if (datasetsPage.count === 0) return;
-        offset += limit;
-    }
-}
-
 const randomHostLikeString = () => `${Math.random().toString(36).substring(2)}-${Date.now().toString(36).substring(2)}`;
 
 const uploadInputTable = async (apifyClient, inputFile) => {
-    const { keyValueStores } = apifyClient;
-    const store = await keyValueStores.getOrCreateStore({ storeName: NAME_OF_KEBOOLA_INPUTS_STORE });
+    const store = await apifyClient.keyValueStores().getOrCreate(NAME_OF_KEBOOLA_INPUTS_STORE);
     const storeId = store.id;
     const key = randomHostLikeString();
-    await keyValueStores.putRecord({
-        storeId,
+    await apifyClient.keyValueStore(storeId).setRecord({
         key,
-        body: inputFile,
+        value: inputFile,
         contentType: 'text/csv',
     });
     return { storeId, key };
 };
 
-const setRunTimeout = (timeout, runId, actorId) => {
-    setTimeout(async () => {
-        console.log('Extractor timeouts. Saving the state');
-        const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
-        await saveJson(stateOutFile, { runId, actorId });
-        console.log('State saved. Exiting.');
-        process.exit(0);
-    }, timeout);
+const timeoutsRun = async (runId, actorId) => {
+    console.log('Extractor timeouts. Saving the state, you can resume the run later.');
+    const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
+    await saveJson(stateOutFile, { runId, actorId });
+    console.log('State saved. Exiting.');
+    process.exit(0);
 };
 
 module.exports = {
     saveItemsToFile,
     waitUntilRunFinished,
     printLargeStringToStdOut,
-    findDatasetByName,
     randomHostLikeString,
     uploadInputTable,
-    setRunTimeout,
+    timeoutsRun,
 };

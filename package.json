@@ -36,8 +36,8 @@
   "dependencies": {
     "@apify/consts": "^2.14.0",
     "@apify/utilities": "^2.4.1",
-    "apify-client": "^0.6.0",
-    "csv-parse": "^3.2.0",
+    "apify-client": "^2.7.1",
+    "csv-parse": "^5.3.10",
     "got": "^11.8.2",
     "is-there": "^4.5.1",
     "jsonfile": "^6.1.0",

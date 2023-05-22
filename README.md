@@ -16,7 +16,7 @@ You can use it to connect data from [Apify platform](https://apify.com/) into [K
 If you are interested in adding a new feature or fixing a bug in the integration, feel free to open a pull request.
 
 Before you start developing this integration, you will need your Apify API token and user ID.
-You can find the token and user ID [on the Integrations page of your Apify account](https://my.apify.com/account#/integrations).
+You can find the token and user ID [on the Integrations page of your Apify account](https://console.apify.com/account#/integrations).
 
 ### Run Configuration
 
@@ -53,11 +53,11 @@ With this configuration, you will run the actor with specific options.
 ## Tests
 
 There are integrations tests, which check each action if it works with the Apify platform as expected.
-You can run these tests with your Apify token and user ID. You can find the token and user ID [on the Integrations page of your Apify account](https://my.apify.com/account#/integrations).
+You can run these tests with your Apify token and user ID. You can find the token and user ID [on the Integrations page of your Apify account](https://console.apify.com/account#/integrations).
 
 1. Install dependencies `npm i`
 2. Run integration tests
-   `DATA_DIR=./data APIFY_TEST_USER_ID=<user ID> APIFY_TEST_TOKEN=<apify toke> npm run test`
+   `DATA_DIR=./data APIFY_TEST_TOKEN=<apify toke> npm run test`
 
 ## Release & Deploy
 

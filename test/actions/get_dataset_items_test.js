@@ -7,7 +7,7 @@ const getDatasetItems = require('../../src/actions/get_dataset_items');
 const { datasets } = apifyClient;
 
 const createDatasetWithItems = async (rowCount, datasetName) => {
-    const dataset = await datasets.getOrCreateDataset({ datasetName: datasetName || randomHostLikeString() });
+    const dataset = await apifyClient.datasets().getOrCreate(datasetName || randomHostLikeString());
     const datasetId = dataset.id;
     const batchSize = 10000;
     console.log(`Dataset created ${datasetId}`);
@@ -20,7 +20,7 @@ const createDatasetWithItems = async (rowCount, datasetName) => {
         // Put items to datasets bigger by chunks
         if (rows.length === batchSize || i + 1 === rowCount) {
             console.time(`Inserting ${batchSize} to dataset ${datasetId}`);
-            await datasets.putItems({ datasetId, data: rows });
+            await apifyClient.dataset(dataset.id).pushItems(rows);
             rows = [];
             console.timeEnd(`Inserting ${batchSize} to dataset ${datasetId}`);
         }
@@ -42,7 +42,7 @@ describe('Get dataset items', () => {
         const apiRows = await getDatasetItemsRows(dataset.id);
 
         checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId: dataset.id });
+        await apifyClient.dataset(dataset.id).delete();
     });
 
     it('Works with dataset name', async () => {
@@ -54,7 +54,7 @@ describe('Get dataset items', () => {
         const apiRows = await getDatasetItemsRows(dataset.id);
 
         checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId: dataset.id });
+        await apifyClient.dataset(dataset.id).delete();
     });
 
     // it('Works for 100K+ items', async () => {
@@ -80,7 +80,7 @@ describe('Get dataset items', () => {
     // });
 
     it('Returns just clean items', async () => {
-        const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
+        const dataset = await apifyClient.datasets().getOrCreate(randomHostLikeString());
         const datasetId = dataset.id;
         const items = [
             { i: '0', foo: 'bar', myTest: 'Hello!' },
@@ -89,7 +89,7 @@ describe('Get dataset items', () => {
             { i: '3', foo: 'bar', '#debug': 'BlaBla' },
             { i: '4', '#error': 'Error', aa: 'bb' },
         ];
-        await datasets.putItems({ datasetId, data: items });
+        await apifyClient.dataset(datasetId).pushItems(items);
 
         await getDatasetItems(apifyClient, datasetId);
 
@@ -99,11 +99,11 @@ describe('Get dataset items', () => {
         const apiRows = await getDatasetItemsRows(datasetId, { clean: true });
 
         checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId });
+        await apifyClient.dataset(dataset.id).delete();
     });
 
     it('Returns columns from fields options', async () => {
-        const dataset = await datasets.getOrCreateDataset({ datasetName: randomHostLikeString() });
+        const dataset = await apifyClient.datasets().getOrCreate(randomHostLikeString());
         const datasetId = dataset.id;
         const fields = ['line', 'col1', 'col4'];
         const items = [
@@ -114,7 +114,7 @@ describe('Get dataset items', () => {
             { line: '5', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
             { line: '6', col1: 'test', col2: 'test2', col3: 'test3', col4: 'test4' },
         ];
-        await datasets.putItems({ datasetId, data: items });
+        await apifyClient.dataset(datasetId).pushItems(items);
 
         await getDatasetItems(apifyClient, datasetId, { fields: fields.join(',') });
 
@@ -124,7 +124,7 @@ describe('Get dataset items', () => {
         const apiRows = await getDatasetItemsRows(datasetId, { clean: true, fields });
 
         checkRows(localCsvRows, apiRows);
-        await datasets.deleteDataset({ datasetId });
+        await apifyClient.dataset(dataset.id).delete();
     });
 
     // Teardown test

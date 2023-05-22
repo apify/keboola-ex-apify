@@ -1,4 +1,4 @@
-const ApifyClient = require('apify-client');
+const { ApifyClient, DownloadItemsFormat } = require('apify-client');
 const fs = require('fs');
 const { expect } = require('chai');
 const { promisify } = require('util');
@@ -8,11 +8,11 @@ const stripEof = require('strip-eof');
 const { RESULTS_FILE_NAME, DATASET_FILE_NAME, DEFAULT_TABLES_OUT_DIR } = require('../../src/constants');
 const { createFolderPromised } = require('../../src/helpers/fs_helper');
 
-if (!process.env.APIFY_TEST_USER_ID || !process.env.APIFY_TEST_TOKEN) {
-    throw new Error('Missing APIFY_TEST_USER_ID or APIFY_TEST_TOKEN environment variable for tests!');
+if (!process.env.APIFY_TEST_TOKEN) {
+    throw new Error('Missing APIFY_TEST_TOKEN environment variable for tests!');
 }
 
-const apifyClient = new ApifyClient({ userId: process.env.APIFY_TEST_USER_ID, token: process.env.APIFY_TEST_TOKEN });
+const apifyClient = new ApifyClient({ token: process.env.APIFY_TEST_TOKEN });
 
 const getLocalResultRows = async (dataset) => {
     const fileName = (dataset) ? DATASET_FILE_NAME : RESULTS_FILE_NAME;
@@ -77,10 +77,8 @@ const saveInputFile = async (content) => {
 };
 
 const getDatasetItemsRows = async (datasetId, opts = {}) => {
-    const apiResults = await apifyClient.datasets.getItems({ datasetId,
-        format: 'csv',
-        ...opts });
-    return apiResults.items.toString().split(/\r?\n/);
+    const apiResults = await apifyClient.dataset(datasetId).downloadItems(DownloadItemsFormat.CSV, { ...opts });
+    return apiResults.toString().split(/\r?\n/);
 };
 
 module.exports = {
