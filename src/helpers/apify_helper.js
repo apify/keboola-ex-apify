@@ -11,31 +11,21 @@ const {
 
 const pipeline = promisify(stream.pipeline);
 
-/**
- * Stream logs into stdout, shallow errors
- * @param apifyClient
- * @param runId
- * @returns {Promise<void>}
- */
-const followRunLogs = async (apifyClient, runId) => {
-    const logStream = await apifyClient.run(runId).log().stream();
-    try {
-        console.log('=== Run logs starts ===');
-        for await (const logLine of logStream) {
-            process.stdout.write(logLine.toString());
-        }
-        console.log('=== Run logs ends ===');
-    } catch (err) {
-        console.log('Error occurred during log streaming, but it is not critical. The run is still running.');
-    }
+const RUN_LOG_INTERVAL_MILLIS = 5000;
+
+const periodicalRunLog = (runId, interval = RUN_LOG_INTERVAL_MILLIS) => {
+    return setInterval(() => {
+        console.log(`Run with ID "${runId}" is still running ...`);
+    }, interval);
 };
 
 /**
  * Asynchronously waits until run is finished
  */
 async function waitUntilRunFinished(runId, apifyClient, timeoutMillis) {
-    const runPromise = apifyClient.run(runId).waitForFinish({ waitSecs: timeoutMillis / 1000 });
-    const [run] = await Promise.all([runPromise, followRunLogs(apifyClient, runId)]);
+    const intervalRunLog = periodicalRunLog(runId);
+    const run = await apifyClient.run(runId).waitForFinish({ waitSecs: timeoutMillis / 1000 });
+    clearInterval(intervalRunLog);
 
     return run;
 }
