@@ -1,4 +1,5 @@
 const path = require('path');
+const { ACTOR_JOB_TERMINAL_STATUSES, ACTOR_JOB_STATUSES } = require('@apify/consts');
 const apifyHelper = require('../helpers/apify_helper');
 const { loadJson } = require('../helpers/fs_helper');
 const { STATE_IN_FILE, DATA_DIR,
@@ -40,15 +41,22 @@ module.exports = async function runActor({ apifyClient, actorId, input, memory, 
         }
 
         const actorRun = input
-            ? await apifyClient.actor(actorId).call(input, { ...runOptions, contentType: 'application/json; charset=utf-8' })
-            : await apifyClient.actor(actorId).call(runOptions);
+            ? await apifyClient.actor(actorId).start(input, { ...runOptions, contentType: 'application/json; charset=utf-8' })
+            : await apifyClient.actor(actorId).start(runOptions);
         runId = actorRun.id;
         console.log(`Actor run started with runId: ${runId}`);
     }
 
-    if (timeout) apifyHelper.setRunTimeout(timeout, runId, actorId);
-    const { defaultDatasetId } = await apifyHelper.waitUntilRunFinished(runId, apifyClient);
+    const { defaultDatasetId, status } = await apifyHelper.waitUntilRunFinished(runId, apifyClient, timeout);
+    if (!ACTOR_JOB_TERMINAL_STATUSES.includes(status)) {
+        await apifyHelper.timeoutsRun(runId, actorId);
+        return;
+    }
     if (!defaultDatasetId) throw new Error('There is no dataset for this run!');
-    console.log(`Actor run ${actorId} finished.`);
+    if (status === ACTOR_JOB_STATUSES.SUCCEEDED) {
+        console.log(`Actor run ${actorId} finished.`);
+    } else {
+        console.log(`Actor run finished with ${status.toLowerCase()} status!`);
+    }
     await getDatasetItems(apifyClient, defaultDatasetId, { fields });
 };

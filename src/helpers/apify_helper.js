@@ -2,8 +2,6 @@ const fs = require('fs');
 const got = require('got');
 const { promisify } = require('util');
 const stream = require('stream');
-const { delayPromise } = require('@apify/utilities');
-const { ACTOR_JOB_TERMINAL_STATUSES } = require('@apify/consts');
 const path = require('path');
 const { saveJson } = require('./fs_helper');
 const {
@@ -13,23 +11,32 @@ const {
 
 const pipeline = promisify(stream.pipeline);
 
-const DEFAULT_POOLING_INTERVAL_MILLIS = 5000;
+/**
+ * Stream logs into stdout, shallow errors
+ * @param apifyClient
+ * @param runId
+ * @returns {Promise<void>}
+ */
+const followRunLogs = async (apifyClient, runId) => {
+    const logStream = await apifyClient.run(runId).log().stream();
+    try {
+        console.log('=== Run logs starts ===');
+        for await (const logLine of logStream) {
+            process.stdout.write(logLine.toString());
+        }
+        console.log('=== Run logs ends ===');
+    } catch (err) {
+        console.log('Error occurred during log streaming, but it is not critical. The run is still running.');
+    }
+};
 
 /**
  * Asynchronously waits until run is finished
  */
-async function waitUntilRunFinished(runId, apifyClient, interval = DEFAULT_POOLING_INTERVAL_MILLIS) {
-    let isRunning = true;
-    let run;
+async function waitUntilRunFinished(runId, apifyClient, timeoutMillis) {
+    const runPromise = apifyClient.run(runId).waitForFinish({ waitSecs: timeoutMillis / 1000 });
+    const [run] = await Promise.all([runPromise, followRunLogs(apifyClient, runId)]);
 
-    while (isRunning) {
-        run = await apifyClient.run(runId).get();
-        console.log('The run is still running...');
-        if (ACTOR_JOB_TERMINAL_STATUSES.includes(run.status)) {
-            isRunning = false;
-        }
-        await delayPromise(interval);
-    }
     return run;
 }
 
@@ -90,14 +97,12 @@ const uploadInputTable = async (apifyClient, inputFile) => {
     return { storeId, key };
 };
 
-const setRunTimeout = (timeout, runId, actorId) => {
-    setTimeout(async () => {
-        console.log('Extractor timeouts. Saving the state');
-        const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
-        await saveJson(stateOutFile, { runId, actorId });
-        console.log('State saved. Exiting.');
-        process.exit(0);
-    }, timeout);
+const timeoutsRun = async (runId, actorId) => {
+    console.log('Extractor timeouts. Saving the state, you can resume the run later.');
+    const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
+    await saveJson(stateOutFile, { runId, actorId });
+    console.log('State saved. Exiting.');
+    process.exit(0);
 };
 
 module.exports = {
@@ -106,5 +111,5 @@ module.exports = {
     printLargeStringToStdOut,
     randomHostLikeString,
     uploadInputTable,
-    setRunTimeout,
+    timeoutsRun,
 };
