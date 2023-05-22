@@ -37,7 +37,7 @@ module.exports = async function getDatasetItems(apifyClient, datasetIdOrName, da
 
     const sampleItems = await apifyClient.dataset(datasetId).downloadItems(DownloadItemsFormat.CSV, { ...getItemsOpts, limit: 10 });
     // HOTFIX: Enlarge max_record_size to be able handle large fields
-    const parsedCsv = parse(sampleItems.items, { max_record_size: 128000 * 5 });
+    const parsedCsv = parse(sampleItems.toString().trim(), { max_record_size: 128000 * 5 });
     const headerRowColumns = parsedCsv[0];
 
     console.log(`Start saving ${dataset.itemCount} results from datasetId ${datasetId}`);
