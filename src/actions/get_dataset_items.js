@@ -22,7 +22,10 @@ module.exports = async function getDatasetItems(apifyClient, datasetIdOrName, da
     }
 
     if (!dataset) throw new Error(`Error: There is no dataset with ${datasetIdOrName} name or ID.`);
-    if (dataset.itemCount === 0) throw new Error(`Error: Dataset ${datasetIdOrName} is empty.`);
+
+    // Check if dataset is empty, we cannot check directly itemsCount on dataset as it is not updated immediately.
+    const testPagination = await apifyClient.dataset(dataset.id).listItems({ limit: 10 });
+    if (testPagination.count === 0) throw new Error(`Error: Dataset ${datasetIdOrName} is empty.`);
 
     const datasetId = dataset.id;
     const tableOutDir = path.join(DATA_DIR, DEFAULT_TABLES_OUT_DIR);
