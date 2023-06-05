@@ -8,4 +8,6 @@ COPY . .
 
 RUN npm install
 
+ENV NPM_CONFIG_UPDATE_NOTIFIER="false"
+
 CMD [ "npm", "start", "--silent" ]
