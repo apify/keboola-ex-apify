@@ -33,6 +33,7 @@ module.exports = async function runActorTask({ apifyClient, actorTaskId, input, 
         const runFromState = await apifyClient.actor(runId).get();
         if (!runFromState) {
             runId = null;
+            actorId = null;
             console.log(`Actor run ${runId} loaded from the state does not exist, running the new one.`);
         }
     }
