@@ -24,6 +24,15 @@ module.exports = async function runActor({ apifyClient, actorId, input, memory, 
     const state = await loadJson(stateInFile);
     let { runId } = state;
 
+    if (runId) {
+        // Check if actor run exists, it can be deleted meanwhile
+        const runFromState = await apifyClient.actor(runId).get();
+        if (!runFromState) {
+            runId = null;
+            console.log(`Actor run ${runId} loaded from the state does not exist, running the new one.`);
+        }
+    }
+
     // If no run ID, starts new one
     if (!runId) {
         // Actor run options
