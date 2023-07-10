@@ -1,10 +1,8 @@
 const { delayPromise } = require('@apify/utilities');
 const { apifyClient, getLocalResultRows, checkRows,
-    actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
+    actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('../src/config');
 const { randomHostLikeString } = require('../../src/helpers/apify_helper');
 const getDatasetItems = require('../../src/actions/get_dataset_items');
-
-const { datasets } = apifyClient;
 
 const createDatasetWithItems = async (rowCount, datasetName) => {
     const dataset = await apifyClient.datasets().getOrCreate(datasetName || randomHostLikeString());

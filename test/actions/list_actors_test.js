@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const { apifyClient } = require('./config');
+const { apifyClient } = require('../src/config');
 const listActorsAction = require('../../src/actions/list_actors');
 
 describe('List Actors action', () => {
