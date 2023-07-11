@@ -66,7 +66,7 @@ module.exports = async function runActorTask({ apifyClient, actorTaskId, input, 
     const { defaultDatasetId, status } = await apifyHelper.waitUntilRunFinished(runId, apifyClient, timeout);
     if (!ACTOR_JOB_TERMINAL_STATUSES.includes(status)) {
         await apifyHelper.timeoutsRun(runId, actorId);
-        throw new Error(`Actor run ${runId} did not finished!`);
+        throw new Error(`Actor run ${runId} did not finish in time!`);
     }
     if (!defaultDatasetId) throw new Error('There is no dataset for this run!');
     if (status === ACTOR_JOB_STATUSES.SUCCEEDED) {
