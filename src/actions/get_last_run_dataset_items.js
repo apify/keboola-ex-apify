@@ -29,7 +29,7 @@ const getActorLastRunDatasetItems = async (apifyClient, actorId, datasetOptions 
  * @param datasetOptions
  * @returns {Promise<void>}
  */
-const getTaskLastRunDatasetItems = async (apifyClient, taskId, datasetOptions) => {
+const getTaskLastRunDatasetItems = async (apifyClient, taskId, datasetOptions = {}) => {
     const taskClient = await apifyClient.task(taskId);
     if (!await taskClient.get()) {
         throw new Error(`Error: Task with id ${taskId} not found.`);
