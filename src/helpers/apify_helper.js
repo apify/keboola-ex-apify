@@ -91,11 +91,10 @@ const uploadInputTable = async (apifyClient, inputFile) => {
 };
 
 const timeoutsRun = async (runId, actorId) => {
-    console.log('Error: Extractor reached it\'s maximum running time. Saving the component state, you can resume the run.');
+    console.log('Warning: Extractor reached it\'s maximum running time. Saving the component state, you can resume the run.');
     const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
     await saveJson(stateOutFile, { runId, actorId });
-    console.log('State saved. Exiting.');
-    process.exit(0);
+    console.log('State saved.');
 };
 
 module.exports = {
