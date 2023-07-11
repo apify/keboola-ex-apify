@@ -1,0 +1,8 @@
+{
+  "action": "run",
+  "parameters": {
+    "actionType": "getTaskLastRunDatasetItems",
+    "#token": "myToken",
+    "actorTaskId": "apify/web-scraper"
+  }
+}

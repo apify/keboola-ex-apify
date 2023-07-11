@@ -68,7 +68,6 @@ const createAndBuildDummyActor = async () => {
     return actor;
 };
 
-
 const generateTaskName = () => {
     return `my-task-${Math.random().toString().replace('.', '')}`;
 };

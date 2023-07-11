@@ -1,6 +1,9 @@
 const chaiAsPromised = require('chai-as-promised');
 const chai = require('chai');
-const { actionsTestsSetup, actionsTestsTeardown, apifyClient,
+const {
+    actionsTestsSetup,
+    actionsTestsTeardown,
+    apifyClient,
     getLocalResultRows,
     getDatasetItemsRows,
     checkRows,
@@ -22,7 +25,7 @@ describe('Get Last Run Dataset Items Actions', () => {
         actorId = actor.id;
     });
     after(async () => {
-        // await apifyClient.actor(actorId).delete();
+        await apifyClient.actor(actorId).delete();
     });
 
     // Setup test
@@ -31,7 +34,7 @@ describe('Get Last Run Dataset Items Actions', () => {
     afterEach(actionsTestsTeardown);
 
     describe('Get Actor Last Run Dataset Items Actions', () => {
-        it('throws error it there is no run for actor', async () => {
+        it('throws error if there is no run for actor', async () => {
             await expect(getActorLastRunDatasetItems(apifyClient, actorId)).be.rejected;
         });
 
@@ -63,7 +66,7 @@ describe('Get Last Run Dataset Items Actions', () => {
             await apifyClient.task(taskId).delete();
         });
 
-        it('throws error it there is no run for task', async () => {
+        it('throws error if there is no run for task', async () => {
             await expect(getTaskLastRunDatasetItems(apifyClient, taskId)).be.rejected;
         });
 

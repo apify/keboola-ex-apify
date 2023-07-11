@@ -12,6 +12,7 @@ function parseConfig(configObject) {
         token: configObject.get('parameters:#token'),
         datasetId: configObject.get('parameters:datasetId'),
         actId: configObject.get('parameters:actId'),
+        actorId: configObject.get('parameters:actorId'),
         actorTaskId: configObject.get('parameters:actorTaskId'),
         input: configObject.get('parameters:input'),
         memory: configObject.get('parameters:memory'),
@@ -52,9 +53,11 @@ function parseConfigurationOrThrow(configObject) {
             if (!config.actId) throw new Error('Parameter actId is not defined!');
         } else if (config.actionType === ACTION_TYPES.runTask) {
             if (!config.actorTaskId) throw new Error('Parameter actorTaskId is not defined!');
-        } else {
-            if (!config.executionId && !config.token) throw new Error('Parameter token is not defined!');
-            if (!config.executionId && !config.crawlerId) throw new Error('Parameter crawlerId and executionId is not defined!');
+        } else if (config.actionType === ACTION_TYPES.getActorLastRunDatasetItems) {
+            // NOTE: Keboola UI can still use old parameter actId
+            if (!config.actorId && !config.actId) throw new Error('Parameter actorId is not defined!');
+        } else if (config.actionType === ACTION_TYPES.getTaskLastRunDatasetItems) {
+            if (!config.actorTaskId) throw new Error('Parameter actorTaskId is not defined!');
         }
     } else {
         throw new Error('Unknown action!');

@@ -57,7 +57,7 @@ const {
                         fields
                     });
                 } else if (actionType === ACTION_TYPES.getActorLastRunDatasetItems) {
-                    await getActorLastRunDatasetItems(apifyClient, actorId, { fields });
+                    await getActorLastRunDatasetItems(apifyClient, actId || actorId, { fields });
                 } else if (actionType === ACTION_TYPES.getTaskLastRunDatasetItems) {
                     await getTaskLastRunDatasetItems(apifyClient, actorTaskId, { fields });
                 } else {

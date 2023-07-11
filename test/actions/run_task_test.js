@@ -1,10 +1,15 @@
 const sinon = require('sinon');
 const chaiAsPromised = require('chai-as-promised');
-const { ACTOR_SOURCE_TYPES } = require('@apify/consts');
 const chai = require('chai');
 const _ = require('underscore');
-const { apifyClient, getLocalResultRows, checkRows, saveInputFile,
-    actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('../src/config');
+const {
+    apifyClient,
+    getLocalResultRows,
+    checkRows,
+    actionsTestsSetup,
+    actionsTestsTeardown,
+    getDatasetItemsRows,
+} = require('../src/config');
 const { createAndBuildDummyActor } = require('../src/helpers');
 const runTaskAction = require('../../src/actions/run_task');
 const { generateTaskName } = require('../src/helpers');

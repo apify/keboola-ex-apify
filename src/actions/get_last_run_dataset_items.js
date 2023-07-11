@@ -1,6 +1,13 @@
 const { ACTOR_JOB_STATUSES } = require('@apify/consts');
 const getDatasetItems = require('./get_dataset_items');
 
+/**
+ * Gets the last run of the actor and saves its dataset items to the output.
+ * @param apifyClient
+ * @param actorId
+ * @param datasetOptions
+ * @returns {Promise<void>}
+ */
 const getActorLastRunDatasetItems = async (apifyClient, actorId, datasetOptions = {}) => {
     const actorClient = await apifyClient.actor(actorId);
     if (!await actorClient.get()) {
@@ -15,6 +22,13 @@ const getActorLastRunDatasetItems = async (apifyClient, actorId, datasetOptions 
     await getDatasetItems(apifyClient, lastRun.defaultDatasetId, datasetOptions);
 };
 
+/**
+ * Gets the last run of the task and saves its dataset items to the output.
+ * @param apifyClient
+ * @param taskId
+ * @param datasetOptions
+ * @returns {Promise<void>}
+ */
 const getTaskLastRunDatasetItems = async (apifyClient, taskId, datasetOptions) => {
     const taskClient = await apifyClient.task(taskId);
     if (!await taskClient.get()) {
