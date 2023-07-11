@@ -5,8 +5,10 @@ const stream = require('stream');
 const path = require('path');
 const { saveJson } = require('./fs_helper');
 const {
-    STATE_OUT_FILE, DATA_DIR,
+    STATE_OUT_FILE,
+    DATA_DIR,
     NAME_OF_KEBOOLA_INPUTS_STORE,
+    TIME_TO_SAVE_STATE_MILLIS,
 } = require('../constants');
 
 const pipeline = promisify(stream.pipeline);
@@ -23,8 +25,9 @@ const periodicalRunLog = (runId, interval = RUN_LOG_INTERVAL_MILLIS) => {
  * Asynchronously waits until run is finished
  */
 async function waitUntilRunFinished(runId, apifyClient, timeoutMillis) {
+    const betterTimeoutMillis = timeoutMillis - TIME_TO_SAVE_STATE_MILLIS;
     const intervalRunLog = periodicalRunLog(runId);
-    const run = await apifyClient.run(runId).waitForFinish({ waitSecs: timeoutMillis / 1000 });
+    const run = await apifyClient.run(runId).waitForFinish({ waitSecs: betterTimeoutMillis / 1000 });
     clearInterval(intervalRunLog);
 
     return run;
@@ -88,7 +91,7 @@ const uploadInputTable = async (apifyClient, inputFile) => {
 };
 
 const timeoutsRun = async (runId, actorId) => {
-    console.log('Extractor timeouts. Saving the state, you can resume the run later.');
+    console.log('Error: Extractor reached it\'s maximum running time. Saving the component state, you can resume the run.');
     const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
     await saveJson(stateOutFile, { runId, actorId });
     console.log('State saved. Exiting.');

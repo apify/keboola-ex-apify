@@ -1,6 +1,7 @@
 // Default constants of the application.
 exports.CONFIG_FILE = 'config.json';
-exports.DEFAULT_EXTRACTOR_TIMEOUT = 55 * 60 * 1000;
+exports.DEFAULT_EXTRACTOR_TIMEOUT = 12 * 60 * 60 * 1000;
+exports.TIME_TO_SAVE_STATE_MILLIS = 30 * 1000;
 exports.DEFAULT_DATA_DIR = '/data';
 exports.DEFAULT_TABLES_IN_DIR = '/in/tables';
 exports.DEFAULT_TABLES_OUT_DIR = '/out/tables';
