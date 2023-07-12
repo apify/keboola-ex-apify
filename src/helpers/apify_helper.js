@@ -24,10 +24,9 @@ const periodicalRunLog = (runId, interval = RUN_LOG_INTERVAL_MILLIS) => {
 /**
  * Asynchronously waits until run is finished
  */
-async function waitUntilRunFinished(runId, apifyClient, timeoutMillis) {
-    const betterTimeoutMillis = timeoutMillis - TIME_TO_SAVE_STATE_MILLIS;
+async function waitUntilRunFinished(runId, apifyClient) {
     const intervalRunLog = periodicalRunLog(runId);
-    const run = await apifyClient.run(runId).waitForFinish({ waitSecs: betterTimeoutMillis / 1000 });
+    const run = await apifyClient.run(runId).waitForFinish();
     clearInterval(intervalRunLog);
 
     return run;
@@ -90,11 +89,14 @@ const uploadInputTable = async (apifyClient, inputFile) => {
     return { storeId, key };
 };
 
-const timeoutsRun = async (runId, actorId) => {
-    console.log('Warning: Extractor reached it\'s maximum running time. Saving the component state, you can resume the run.');
-    const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
-    await saveJson(stateOutFile, { runId, actorId });
-    console.log('State saved.');
+const saveStateBeforeTimeout = (runId, actorId, timeoutMillis) => {
+    const betterTimeoutMillis = timeoutMillis - TIME_TO_SAVE_STATE_MILLIS;
+    setTimeout(async () => {
+        console.log('Warning: Extractor almost reach it\'s maximum running time. Saving the component state, you can resume the run.');
+        const stateOutFile = path.join(DATA_DIR, STATE_OUT_FILE);
+        await saveJson(stateOutFile, { runId, actorId });
+        console.log('State saved.');
+    }, betterTimeoutMillis);
 };
 
 module.exports = {
@@ -103,5 +105,5 @@ module.exports = {
     printLargeStringToStdOut,
     randomHostLikeString,
     uploadInputTable,
-    timeoutsRun,
+    saveStateBeforeTimeout,
 };
