@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 const { apifyClient, getLocalResultRows, checkRows, saveInputFile,
-    actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('./config');
+    actionsTestsSetup, actionsTestsTeardown, getDatasetItemsRows } = require('../src/config');
 const runActorAction = require('../../src/actions/run_actor');
 
 // TODO: It not a good design that tests depend on an actor, fix this.

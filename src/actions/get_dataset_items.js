@@ -40,7 +40,7 @@ module.exports = async function getDatasetItems(apifyClient, datasetIdOrName, da
     const parsedCsv = parse(sampleItems.toString().trim(), { max_record_size: 128000 * 5 });
     const headerRowColumns = parsedCsv[0];
 
-    console.log(`Start saving ${dataset.itemCount} results from datasetId ${datasetId}`);
+    console.log(`Start saving ${dataset.itemCount} items from datasetId ${datasetId}`);
 
     let paginationItemsOpts = {
         ...getItemsOpts,

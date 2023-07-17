@@ -31,6 +31,8 @@ exports.ACTION_TYPES = {
     getDatasetItems: 'getDatasetItems',
     runActor: 'runActor',
     runTask: 'runTask',
+    getActorLastRunDatasetItems: 'getActorLastRunDatasetItems',
+    getTaskLastRunDatasetItems: 'getTaskLastRunDatasetItems',
 };
 
 exports.NAME_OF_KEBOOLA_INPUTS_STORE = 'KEBOOLA-INPUTS'; // Name of Apify keyvalue store for Keboola inputs files

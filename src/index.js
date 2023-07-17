@@ -11,6 +11,10 @@ const listTasksAction = require('./actions/list_tasks');
 const getDatasetItems = require('./actions/get_dataset_items');
 const runActorAction = require('./actions/run_actor');
 const runTaskAction = require('./actions/run_task');
+const {
+    getActorLastRunDatasetItems,
+    getTaskLastRunDatasetItems,
+} = require('./actions/get_last_run_dataset_items');
 
 
 /**
@@ -25,7 +29,6 @@ const runTaskAction = require('./actions/run_task');
             timeout,
             datasetId,
             actionType,
-            actId,
             actorId,
             actorTaskId,
             input,
@@ -41,9 +44,21 @@ const runTaskAction = require('./actions/run_task');
                 if (actionType === ACTION_TYPES.getDatasetItems) {
                     await getDatasetItems(apifyClient, datasetId, { fields });
                 } else if (actionType === ACTION_TYPES.runActor) {
-                    await runActorAction({ apifyClient, actorId: actId || actorId, input, memory, build, timeout, fields });
+                    await runActorAction({ apifyClient, actorId, input, memory, build, timeout, fields });
                 } else if (actionType === ACTION_TYPES.runTask) {
-                    await runTaskAction({ apifyClient, actorTaskId, input, memory, build, timeout, fields });
+                    await runTaskAction({
+                        apifyClient,
+                        actorTaskId,
+                        input,
+                        memory,
+                        build,
+                        timeout,
+                        fields
+                    });
+                } else if (actionType === ACTION_TYPES.getActorLastRunDatasetItems) {
+                    await getActorLastRunDatasetItems(apifyClient, actorId, { fields });
+                } else if (actionType === ACTION_TYPES.getTaskLastRunDatasetItems) {
+                    await getTaskLastRunDatasetItems(apifyClient, actorTaskId, { fields });
                 } else {
                     throw new Error(`Error: Unknown Action type ${actionType}`);
                 }

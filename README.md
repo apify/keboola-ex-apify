@@ -30,7 +30,7 @@ Base configuration:
     "actionType": "runActor",
     "userId": "myUserId",
     "#token": "myToken",
-    "actId": "my-user-name/actor",
+    "actorId": "my-user-name/actor",
     "input": {
       "pages": 1
     },
