@@ -29,7 +29,6 @@ const {
             timeout,
             datasetId,
             actionType,
-            actId,
             actorId,
             actorTaskId,
             input,
@@ -45,7 +44,7 @@ const {
                 if (actionType === ACTION_TYPES.getDatasetItems) {
                     await getDatasetItems(apifyClient, datasetId, { fields });
                 } else if (actionType === ACTION_TYPES.runActor) {
-                    await runActorAction({ apifyClient, actorId: actorId || actId, input, memory, build, timeout, fields });
+                    await runActorAction({ apifyClient, actorId, input, memory, build, timeout, fields });
                 } else if (actionType === ACTION_TYPES.runTask) {
                     await runTaskAction({
                         apifyClient,
@@ -57,7 +56,7 @@ const {
                         fields
                     });
                 } else if (actionType === ACTION_TYPES.getActorLastRunDatasetItems) {
-                    await getActorLastRunDatasetItems(apifyClient, actorId || actId, { fields });
+                    await getActorLastRunDatasetItems(apifyClient, actorId, { fields });
                 } else if (actionType === ACTION_TYPES.getTaskLastRunDatasetItems) {
                     await getTaskLastRunDatasetItems(apifyClient, actorTaskId, { fields });
                 } else {

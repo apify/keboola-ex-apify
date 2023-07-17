@@ -32,7 +32,7 @@ describe('Keboola Heplers', () => {
         it('parse actor run configuration', async () => {
             const config = await parseConfigurationOrThrow(getConfig(path.join(__dirname, 'configs', 'actor_run.json')));
             expect(config.token).to.equal('myToken');
-            expect(config.actId).to.equal('my-user-name/actor');
+            expect(config.actorId).to.equal('my-user-name/actor');
             expect(config.input).to.deep.include({ pages: 1 });
             expect(config.memory).to.equal('512');
             expect(config.build).to.equal('latest');
