@@ -9,6 +9,7 @@ const {
     DATA_DIR,
     NAME_OF_KEBOOLA_INPUTS_STORE,
     TIME_TO_SAVE_STATE_MILLIS,
+    KEBOOLA_USER_AGENT,
 } = require('../constants');
 
 const pipeline = promisify(stream.pipeline);
@@ -53,6 +54,9 @@ async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, 
     }
     const datasetItemsStream = got.stream(datasetItemsUrl, {
         searchParams,
+        headers: {
+            'User-Agent': KEBOOLA_USER_AGENT,
+        },
     });
 
     console.log(`Saving ${paginationItemsOpts.offset} - ${paginationItemsOpts.offset + paginationItemsOpts.limit} items ...`);

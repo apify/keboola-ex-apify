@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { DATA_DIR } = require('./constants');
+const { DATA_DIR, KEBOOLA_USER_AGENT } = require('./constants');
 const { ApifyClient } = require('apify-client');
 const path = require('path');
 const getConfig = require('./helpers/config_helper');
@@ -37,7 +37,16 @@ const {
             fields,
         } = config;
 
-        const apifyClient = new ApifyClient({ token });
+        const apifyClient = new ApifyClient({
+            token,
+            requestInterceptors: [
+                (requestOptions) => {
+                    if (!requestOptions.headers) requestOptions.headers = {};
+                    requestOptions.headers['User-Agent'] = KEBOOLA_USER_AGENT;
+                    return requestOptions;
+                }
+            ]
+        });
 
         switch (action) {
             case ACTIONS.run:

@@ -36,3 +36,5 @@ exports.ACTION_TYPES = {
 };
 
 exports.NAME_OF_KEBOOLA_INPUTS_STORE = 'KEBOOLA-INPUTS'; // Name of Apify keyvalue store for Keboola inputs files
+
+exports.KEBOOLA_USER_AGENT = 'Keboola';
