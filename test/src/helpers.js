@@ -33,7 +33,7 @@ const DUMMY_INPUT_SCHEMA = {
 const createAndBuildDummyActor = async ({
     sourceCode = DUMMY_SOURCE_CODE,
     inputSchema = DUMMY_INPUT_SCHEMA,
-}) => {
+} = {}) => {
     // Create test actor
     const actorConf = {
         name: `Generated-${Math.random().toString().replace('.', '')}`,
