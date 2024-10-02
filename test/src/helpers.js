@@ -1,9 +1,7 @@
 const { ACTOR_SOURCE_TYPES } = require('@apify/consts');
 const { apifyClient } = require('./config');
 
-const createAndBuildDummyActor = async () => {
-    // Create test actor
-    const sourceCode = `
+const DUMMY_SOURCE_CODE = `
         const Apify = require('apify');
         Apify.main(async () => {
             const input = await Apify.getInput();
@@ -11,25 +9,32 @@ const createAndBuildDummyActor = async () => {
             await Apify.pushData(input.items);
         });
         `;
-    const inputSchema = {
-        title: 'Test',
-        type: 'object',
-        schemaVersion: 1,
-        properties: {
-            throw: {
-                title: 'Throw',
-                description: 'Bla',
-                type: 'boolean',
-            },
-            items: {
-                title: 'Items',
-                description: 'Bla',
-                type: 'array',
-                editor: 'json',
-            },
+
+const DUMMY_INPUT_SCHEMA = {
+    title: 'Test',
+    type: 'object',
+    schemaVersion: 1,
+    properties: {
+        throw: {
+            title: 'Throw',
+            description: 'Bla',
+            type: 'boolean',
         },
-        required: ['items'],
-    };
+        items: {
+            title: 'Items',
+            description: 'Bla',
+            type: 'array',
+            editor: 'json',
+        },
+    },
+    required: ['items'],
+};
+
+const createAndBuildDummyActor = async ({
+    sourceCode = DUMMY_SOURCE_CODE,
+    inputSchema = DUMMY_INPUT_SCHEMA,
+} = {}) => {
+    // Create test actor
     const actorConf = {
         name: `Generated-${Math.random().toString().replace('.', '')}`,
         versions: [
