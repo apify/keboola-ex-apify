@@ -25,7 +25,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '18.x'
-      - run: npm ci
+      - name: Try npm install, retry with mirror on 503
+        run: |
+          echo "Installing dependencies from default registry..."
+          if ! npm ci; then
+            echo "Initial npm install failed. Trying with npmmirror.com..."
+            npm config set registry https://registry.npmmirror.com
+            npm ci
+          fi
       - run: npm test
         env:
           APIFY_TEST_TOKEN: ${{ secrets.APIFY_TEST_USER_API_TOKEN }}
