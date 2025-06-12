@@ -12,7 +12,16 @@ if (!process.env.APIFY_TEST_TOKEN) {
     throw new Error('Missing APIFY_TEST_TOKEN environment variable for tests!');
 }
 
-const apifyClient = new ApifyClient({ token: process.env.APIFY_TEST_TOKEN });
+const apifyClient = new ApifyClient({
+    token: process.env.APIFY_TEST_TOKEN,
+    requestInterceptors: [
+        (requestOptions) => {
+            if (!requestOptions.headers) requestOptions.headers = {};
+            requestOptions.headers['x-apify-integration-platform'] = 'keboola';
+            return requestOptions;
+        },
+    ],
+});
 
 const getLocalResultRows = async (dataset) => {
     const fileName = (dataset) ? DATASET_FILE_NAME : RESULTS_FILE_NAME;

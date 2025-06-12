@@ -43,6 +43,7 @@ const {
                 (requestOptions) => {
                     if (!requestOptions.headers) requestOptions.headers = {};
                     requestOptions.headers['User-Agent'] = KEBOOLA_USER_AGENT;
+                    requestOptions.headers['x-apify-integration-platform'] = 'keboola';
                     return requestOptions;
                 }
             ]
