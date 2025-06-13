@@ -5,7 +5,7 @@ const { promisify } = require('util');
 const rimraf = require('rimraf');
 const path = require('path');
 const stripEof = require('strip-eof');
-const { RESULTS_FILE_NAME, DATASET_FILE_NAME, DEFAULT_TABLES_OUT_DIR } = require('../../src/constants');
+const { RESULTS_FILE_NAME, DATASET_FILE_NAME, DEFAULT_TABLES_OUT_DIR, KEBOOLA_REQUEST_HEADERS } = require('../../src/constants');
 const { createFolderPromised } = require('../../src/helpers/fs_helper');
 
 if (!process.env.APIFY_TEST_TOKEN) {

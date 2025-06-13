@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { DATA_DIR } = require('./constants');
+const { DATA_DIR, KEBOOLA_REQUEST_HEADERS } = require('./constants');
 const { ApifyClient } = require('apify-client');
 const path = require('path');
 const getConfig = require('./helpers/config_helper');
