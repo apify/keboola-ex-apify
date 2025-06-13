@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { DATA_DIR, KEBOOLA_USER_AGENT } = require('./constants');
+const { DATA_DIR } = require('./constants');
 const { ApifyClient } = require('apify-client');
 const path = require('path');
 const getConfig = require('./helpers/config_helper');
@@ -41,9 +41,10 @@ const {
             token,
             requestInterceptors: [
                 (requestOptions) => {
-                    if (!requestOptions.headers) requestOptions.headers = {};
-                    requestOptions.headers['User-Agent'] = KEBOOLA_USER_AGENT;
-                    requestOptions.headers['x-apify-integration-platform'] = 'keboola';
+                    requestOptions.headers = {
+                        ...KEBOOLA_REQUEST_HEADERS,
+                        ...(requestOptions.headers || {}),
+                    };
                     return requestOptions;
                 }
             ]

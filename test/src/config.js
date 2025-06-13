@@ -16,11 +16,13 @@ const apifyClient = new ApifyClient({
     token: process.env.APIFY_TEST_TOKEN,
     requestInterceptors: [
         (requestOptions) => {
-            if (!requestOptions.headers) requestOptions.headers = {};
-            requestOptions.headers['x-apify-integration-platform'] = 'keboola';
+            requestOptions.headers = {
+                ...KEBOOLA_REQUEST_HEADERS,
+                ...(requestOptions.headers || {}),
+            };
             return requestOptions;
-        },
-    ],
+        }
+    ]
 });
 
 const getLocalResultRows = async (dataset) => {
