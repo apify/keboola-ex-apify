@@ -5,14 +5,25 @@ const { promisify } = require('util');
 const rimraf = require('rimraf');
 const path = require('path');
 const stripEof = require('strip-eof');
-const { RESULTS_FILE_NAME, DATASET_FILE_NAME, DEFAULT_TABLES_OUT_DIR } = require('../../src/constants');
+const { RESULTS_FILE_NAME, DATASET_FILE_NAME, DEFAULT_TABLES_OUT_DIR, KEBOOLA_REQUEST_HEADERS } = require('../../src/constants');
 const { createFolderPromised } = require('../../src/helpers/fs_helper');
 
 if (!process.env.APIFY_TEST_TOKEN) {
     throw new Error('Missing APIFY_TEST_TOKEN environment variable for tests!');
 }
 
-const apifyClient = new ApifyClient({ token: process.env.APIFY_TEST_TOKEN });
+const apifyClient = new ApifyClient({
+    token: process.env.APIFY_TEST_TOKEN,
+    requestInterceptors: [
+        (requestOptions) => {
+            requestOptions.headers = {
+                ...(requestOptions.headers || {}),
+                ...KEBOOLA_REQUEST_HEADERS,
+            };
+            return requestOptions;
+        }
+    ]
+});
 
 const getLocalResultRows = async (dataset) => {
     const fileName = (dataset) ? DATASET_FILE_NAME : RESULTS_FILE_NAME;

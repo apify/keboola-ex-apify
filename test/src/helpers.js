@@ -68,8 +68,8 @@ const createAndBuildDummyActor = async ({
         ],
     };
     const actor = await apifyClient.actors().create(actorConf);
-    console.log(`Testing actor created ${actor.id}`);
-    await apifyClient.actor(actor.id).build('0.0', { tag: 'latest', waitForFinish: 120 });
+    const build = await apifyClient.actor(actor.id).build('0.0', { tag: 'latest' });
+    await apifyClient.build(build.id).waitForFinish();
     return actor;
 };
 
