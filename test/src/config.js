@@ -17,8 +17,8 @@ const apifyClient = new ApifyClient({
     requestInterceptors: [
         (requestOptions) => {
             requestOptions.headers = {
-                ...KEBOOLA_REQUEST_HEADERS,
                 ...(requestOptions.headers || {}),
+                ...KEBOOLA_REQUEST_HEADERS,
             };
             return requestOptions;
         }
