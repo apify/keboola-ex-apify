@@ -1,10 +1,11 @@
+const { SORT_BY } = require('../constants');
 const { printLargeStringToStdOut } = require('../helpers/apify_helper');
 
 /**
  * Outputs list of actors to stdout
  */
 module.exports = async function listActorsAction(apifyClient) {
-    const actors = await apifyClient.actors().list({ limit: 100000 });
+    const actors = await apifyClient.actors().list({ limit: 100000, sortBy: SORT_BY.LAST_RUN_STARTED_AT, desc: true });
     const actorsList = [];
     actors.items.forEach((actor) => {
         const actorId = actor.id;
