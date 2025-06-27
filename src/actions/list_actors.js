@@ -1,4 +1,4 @@
-import { ActorListSortBy } from 'apify-client';
+const { ActorListSortBy } = require('apify-client');
 
 const { printLargeStringToStdOut } = require('../helpers/apify_helper');
 
