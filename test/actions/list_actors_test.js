@@ -2,14 +2,14 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const { apifyClient } = require('../src/config');
 const listActorsAction = require('../../src/actions/list_actors');
-const { SORT_BY } = require('../../src/constants');
+const { ActorListSortBy } = require('apify-client');
 
 describe('List Actors action', () => {
     beforeEach(() => {
         sinon.spy(process.stdout, 'write');
     });
     it('should returns actors list to stdout', async () => {
-        const actors = await apifyClient.actors().list({ limit: 100000, sortBy: SORT_BY.LAST_RUN_STARTED_AT, desc: true });
+        const actors = await apifyClient.actors().list({ limit: 100000, sortBy: ActorListSortBy.LAST_RUN_STARTED_AT, desc: true });
 
         await listActorsAction(apifyClient);
 

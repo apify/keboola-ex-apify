@@ -36,7 +36,7 @@
   "dependencies": {
     "@apify/consts": "^2.14.0",
     "@apify/utilities": "^2.4.1",
-    "apify-client": "2.12.6-beta.5",
+    "apify-client": "2.12.6-beta.6",
     "csv-parse": "^5.3.10",
     "got": "^11.8.2",
     "is-there": "^4.5.1",

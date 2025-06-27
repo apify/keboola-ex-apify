@@ -41,8 +41,3 @@ exports.KEBOOLA_REQUEST_HEADERS = {
     'User-Agent': 'Keboola',
     'x-apify-integration-platform': 'keboola',
 };
-
-exports.SORT_BY = {
-    LAST_RUN_STARTED_AT: 'lastRunStartedAt',
-    CREATED_AT: 'createdAt',
-};
