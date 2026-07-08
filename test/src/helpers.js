@@ -2,11 +2,11 @@ const { ACTOR_SOURCE_TYPES } = require('@apify/consts');
 const { apifyClient } = require('./config');
 
 const DUMMY_SOURCE_CODE = `
-        const Apify = require('apify');
-        Apify.main(async () => {
-            const input = await Apify.getInput();
+        const { Actor } = require('apify');
+        Actor.main(async () => {
+            const input = await Actor.getInput();
             if (input.throw) throw new Error('Test error');
-            await Apify.pushData(input.items);
+            await Actor.pushData(input.items);
         });
         `;
 
@@ -51,7 +51,7 @@ const createAndBuildDummyActor = async ({
                     {
                         name: 'package.json',
                         format: 'TEXT',
-                        content: '{ "name": "my-actor", "version": "0.0.1", "dependencies": { "apify": "^1.1.2" }, "scripts": { "start": "node main.js" }, "author": "Me!"}',
+                        content: '{ "name": "my-actor", "version": "0.0.1", "dependencies": { "apify": "^3" }, "scripts": { "start": "node main.js" }, "author": "Me!"}',
                     },
                     {
                         name: 'INPUT_SCHEMA.json',
