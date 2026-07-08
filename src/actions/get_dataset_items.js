@@ -13,7 +13,7 @@ const DEFAULT_PAGINATION_LIMIT = 5000;
  * Outputs all data from Apify datasets to data/out
  */
 module.exports = async function getDatasetItems(apifyClient, datasetIdOrName, datasetOptions = {}) {
-    const { fields } = datasetOptions;
+    const { fields, token } = datasetOptions;
     let dataset = await apifyClient.dataset(datasetIdOrName).get();
     if (!dataset) {
         // Try to find dataset by name
@@ -71,6 +71,7 @@ module.exports = async function getDatasetItems(apifyClient, datasetIdOrName, da
                 RESULTS_FILE_LIMIT,
                 resultFile,
                 true,
+                token,
             );
             fileCounter += 1;
         }
@@ -80,7 +81,7 @@ module.exports = async function getDatasetItems(apifyClient, datasetIdOrName, da
         // save result to one file
         const resultFile = path.join(tableOutDir, DATASET_FILE_NAME);
         await createFilePromised(resultFile, '');
-        await apifyHelper.saveItemsToFile(datasetId, paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, false);
+        await apifyHelper.saveItemsToFile(datasetId, paginationItemsOpts, RESULTS_FILE_LIMIT, resultFile, false, token);
     }
     console.log(`Items from dataset ${datasetId} were saved!`);
 };

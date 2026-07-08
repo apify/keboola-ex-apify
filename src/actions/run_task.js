@@ -23,7 +23,7 @@ const { getInputFile } = require('../helpers/keboola_helper');
  * @param timeout
  * @return {Promise<void>}
  */
-module.exports = async function runActorTask({ apifyClient, actorTaskId, input, memory, build, timeout = DEFAULT_EXTRACTOR_TIMEOUT, fields }) {
+module.exports = async function runActorTask({ apifyClient, actorTaskId, input, memory, build, timeout = DEFAULT_EXTRACTOR_TIMEOUT, fields, token }) {
     const stateInFile = path.join(DATA_DIR, STATE_IN_FILE);
     const state = await loadJson(stateInFile);
     let { runId, actorId } = state;
@@ -76,5 +76,5 @@ module.exports = async function runActorTask({ apifyClient, actorTaskId, input, 
     } else {
         console.log(`Task run finished with ${status.toLowerCase()} status!`);
     }
-    await getDatasetItems(apifyClient, defaultDatasetId, { fields });
+    await getDatasetItems(apifyClient, defaultDatasetId, { fields, token });
 };

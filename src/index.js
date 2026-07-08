@@ -53,9 +53,9 @@ const {
         switch (action) {
             case ACTIONS.run:
                 if (actionType === ACTION_TYPES.getDatasetItems) {
-                    await getDatasetItems(apifyClient, datasetId, { fields });
+                    await getDatasetItems(apifyClient, datasetId, { fields, token });
                 } else if (actionType === ACTION_TYPES.runActor) {
-                    await runActorAction({ apifyClient, actorId, input, memory, build, timeout, fields });
+                    await runActorAction({ apifyClient, actorId, input, memory, build, timeout, fields, token });
                 } else if (actionType === ACTION_TYPES.runTask) {
                     await runTaskAction({
                         apifyClient,
@@ -64,12 +64,13 @@ const {
                         memory,
                         build,
                         timeout,
-                        fields
+                        fields,
+                        token,
                     });
                 } else if (actionType === ACTION_TYPES.getActorLastRunDatasetItems) {
-                    await getActorLastRunDatasetItems(apifyClient, actorId, { fields });
+                    await getActorLastRunDatasetItems(apifyClient, actorId, { fields, token });
                 } else if (actionType === ACTION_TYPES.getTaskLastRunDatasetItems) {
-                    await getTaskLastRunDatasetItems(apifyClient, actorTaskId, { fields });
+                    await getTaskLastRunDatasetItems(apifyClient, actorTaskId, { fields, token });
                 } else {
                     throw new Error(`Error: Unknown Action type ${actionType}`);
                 }
