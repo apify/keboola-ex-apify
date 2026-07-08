@@ -10,11 +10,11 @@ const { createAndBuildDummyActor } = require('../src/helpers');
 chai.use(chaiAsPromised);
 
 const testingActorSourceCode = `
-        const Apify = require('apify');
-        Apify.main(async () => {
-            const { pages = 10 } = await Apify.getInput();
+        const { Actor } = require('apify');
+        Actor.main(async () => {
+            const { pages = 10 } = await Actor.getInput();
             for (let i = 0; i < 100 * pages; i++) {
-                await Apify.pushData({ i, sort: Math.random(), const: 'test' });
+                await Actor.pushData({ i, sort: Math.random(), const: 'test' });
             }
         });
         `;
@@ -63,15 +63,19 @@ describe('Run Actor', () => {
 
     it('Run actor with input', async () => {
         sinon.spy(console, 'log');
-        const actorInput = {
-            pages: 1,
-            test: {
-                hello: 'test',
-            },
-        };
-        await runActorAction({ apifyClient, actorId, input: actorInput });
-        const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
-        console.log.restore();
+        let runId;
+        try {
+            const actorInput = {
+                pages: 1,
+                test: {
+                    hello: 'test',
+                },
+            };
+            await runActorAction({ apifyClient, actorId, input: actorInput });
+            runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
+        } finally {
+            console.log.restore();
+        }
 
         const { defaultDatasetId, defaultKeyValueStoreId } = await apifyClient.run(runId).get();
 
@@ -81,16 +85,20 @@ describe('Run Actor', () => {
         const runInput = await apifyClient.keyValueStore(defaultKeyValueStoreId).getRecord('INPUT');
 
         checkRows(localCsvRows, apiRows);
-        expect(actorInput).to.eql(runInput.value);
+        expect({ pages: 1, test: { hello: 'test' } }).to.eql(runInput.value);
     });
 
     it('Run actor with input file', async () => {
         const inputFileString = 'column,column2,column3\ntest,value,1\ntest2,value2,2\n';
         await saveInputFile(inputFileString);
         sinon.spy(console, 'log');
-        await runActorAction({ apifyClient, actorId, input: {} });
-        const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
-        console.log.restore();
+        let runId;
+        try {
+            await runActorAction({ apifyClient, actorId, input: {} });
+            runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
+        } finally {
+            console.log.restore();
+        }
 
         const { defaultDatasetId, defaultKeyValueStoreId } = await apifyClient.run(runId).get();
 
@@ -110,9 +118,13 @@ describe('Run Actor', () => {
         };
         const fields = ['i', 'sort'];
         sinon.spy(console, 'log');
-        await runActorAction({ apifyClient, actorId, input: actorInput, fields: fields.join(',') });
-        const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
-        console.log.restore();
+        let runId;
+        try {
+            await runActorAction({ apifyClient, actorId, input: actorInput, fields: fields.join(',') });
+            runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
+        } finally {
+            console.log.restore();
+        }
 
         const { defaultDatasetId, defaultKeyValueStoreId } = await apifyClient.run(runId).get();
 

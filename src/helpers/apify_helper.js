@@ -42,13 +42,13 @@ async function waitUntilRunFinished(runId, apifyClient) {
  * @param skipHeaderRow
  * @return {}
  */
-async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, skipHeaderRow) {
+async function saveItemsToFile(datasetId, paginationItemsOpts, fileLimit, file, skipHeaderRow, token) {
     paginationItemsOpts.limit = fileLimit;
     // NOTE: We need to stream data from API here and this functionality is not provided by Apify client yet.
     const fileWriteStream = fs.createWriteStream(file, { flags: 'a' });
     const datasetItemsUrl = `https://api.apify.com/v2/datasets/${datasetId}/items`;
     const { fields } = paginationItemsOpts;
-    const searchParams = { ...paginationItemsOpts, format: 'csv', skipHeaderRow: skipHeaderRow ? '1' : '0' };
+    const searchParams = { ...paginationItemsOpts, format: 'csv', skipHeaderRow: skipHeaderRow ? '1' : '0', ...(token && { token }) };
     if (fields) {
         searchParams.fields = fields.join(',');
     }

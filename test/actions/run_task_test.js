@@ -41,9 +41,13 @@ describe('Run Task', () => {
         });
         const task = await apifyClient.tasks().create({ actId: actorId, name: generateTaskName(), input: { items } });
         sinon.spy(console, 'log');
-        await runTaskAction({ apifyClient, actorTaskId: task.id });
-        const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
-        console.log.restore();
+        let runId;
+        try {
+            await runTaskAction({ apifyClient, actorTaskId: task.id });
+            runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
+        } finally {
+            console.log.restore();
+        }
 
         const { defaultDatasetId } = await apifyClient.run(runId).get();
 
@@ -62,9 +66,13 @@ describe('Run Task', () => {
         });
         const task = await apifyClient.tasks().create({ actId: actorId, name: generateTaskName(), input: { items: [{}] } });
         sinon.spy(console, 'log');
-        await runTaskAction({ apifyClient, actorTaskId: task.id, input: { items } });
-        const runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
-        console.log.restore();
+        let runId;
+        try {
+            await runTaskAction({ apifyClient, actorTaskId: task.id, input: { items } });
+            runId = console.log.args[0][0].match(/runId:\s(\w+)/)[1];
+        } finally {
+            console.log.restore();
+        }
 
         const { defaultDatasetId } = await apifyClient.run(runId).get();
 
