@@ -5,7 +5,8 @@
     "properties": {
         "#token": {
             "id": "/properties/parameters/properties/#token",
-            "type": "string"
+            "type": "string",
+            "description": "Create an API token for Keboola in [Apify Console](https://console.apify.com/settings/integrations?createApiToken=true&for=Keboola&utm_source=keboola&utm_medium=integrations) and copy it right after creating it — it is shown only once."
         },
         "crawlerId": {
             "id": "/properties/parameters/properties/crawlerId",

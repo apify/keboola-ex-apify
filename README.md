@@ -16,7 +16,8 @@ You can use it to connect data from [Apify platform](https://apify.com/) into [K
 If you are interested in adding a new feature or fixing a bug in the integration, feel free to open a pull request.
 
 Before you start developing this integration, you will need your Apify API token and user ID.
-You can find the token and user ID [on the Integrations page of your Apify account](https://console.apify.com/settings/integrations?utm_source=keboola&utm_medium=integrations).
+Create an API token for Keboola in [Apify Console](https://console.apify.com/settings/integrations?createApiToken=true&for=Keboola&utm_source=keboola&utm_medium=integrations) and copy it right after creating it — it is shown only once.
+You can find your user ID on the [Integrations page](https://console.apify.com/settings/integrations?utm_source=keboola&utm_medium=integrations) of your Apify account.
 
 ### Run Configuration
 
@@ -53,7 +54,7 @@ With this configuration, you will run the actor with specific options.
 ## Tests
 
 There are integrations tests, which check each action if it works with the Apify platform as expected.
-You can run these tests with your Apify token and user ID. You can find the token and user ID [on the Integrations page of your Apify account](https://console.apify.com/settings/integrations?utm_source=keboola&utm_medium=integrations).
+You can run these tests with your Apify token and user ID. Create an API token in [Apify Console](https://console.apify.com/settings/integrations?createApiToken=true&for=Keboola&utm_source=keboola&utm_medium=integrations) and copy it right after creating it — it is shown only once. You can find your user ID on the [Integrations page](https://console.apify.com/settings/integrations?utm_source=keboola&utm_medium=integrations) of your Apify account.
 
 1. Install dependencies `npm i`
 2. Run integration tests
